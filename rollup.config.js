@@ -12,7 +12,7 @@ import reactDom from 'react-dom';
 const dev = process.env.BUILD !== 'production'
 
 export default {
-    input: './src/main.js',
+    input: './src/main.tsx',
     output: {
         file: pkg.main,
         format: 'umd',
@@ -25,9 +25,14 @@ export default {
           'process.env.NODE_ENV': JSON.stringify( 'development' )
         }),
         babel({
-          presets: ["@babel/preset-react"]
+            extensions: [".js",".ts", ".tsx"],
+            presets: [
+              "@babel/preset-typescript",
+              "@babel/preset-react"
+          ]
         }),
         commonjs({
+            extensions: [".js",".ts", ".tsx"],
             include: 'node_modules/**',
             namedExports: {
                 react: Object.keys(react),

@@ -3,8 +3,7 @@ import React from 'react';
 
 import { App } from "./app"
 
-
-var DiffConfig = {};
+let DiffConfig: any = {};
 console.log('DiffViewer starting up');
 
 export default {

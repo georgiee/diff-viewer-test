@@ -8,12 +8,17 @@
 <body>
 good
 
-<div id="root"></div>
+<div id="diff-anchor"></div>
 
 	<script src="dist/bundle.min.js"></script>
 	<script>
-		DiffViewer.config({API: "http://abc"})
-	  	DiffViewer.attach(document.getElementById("root"))
+		DiffViewer.config({
+			API_BASE: "http://satellytes.lvh.me:3000/api",
+			diffId: "27",
+			token: "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MTMsImV4cCI6MTY1NTg1NjAwMCwidHlwZSI6IlVzZXIifQ.7RIAp3FdFrrO1cWSYPrb81wwSemIteGksq3AnerwDxo",
+			mode: "annotate",
+		})
+		DiffViewer.attach(document.getElementById("diff-anchor"))
 	</script>
 </body>
 </html>

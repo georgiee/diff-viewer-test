@@ -1,33 +1,29 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 
+const createApiClient = ({base, token}) => axios.create({
+  baseURL: base,
+  timeout: 1000,
+  headers: {'Authorization': 'Bearer '+ token}
+});
+
 export function App({config: {API_BASE, diffId, token}}){
   const [diffData, setDiffData] = useState(null);
   const [error, setError] = useState(null);
   
-  const API = `/diffs/${diffId}`
+  const apiClient = createApiClient({base: API_BASE, token });
   
-  useEffect(() => {
+  const API = `/diffs/${diffId}`
 
-    const fetchData = async () => {
-      try {
-        const response = await apiClient.get(API)
-        setDiffData(response.data);  
-      }catch (apiError) {
-        console.log()
-        setError(apiError.response.data.error)
-      }
-      
-    };
-
-    fetchData();
+  useEffect(async () => {
+    try {
+      const response = await apiClient.get(API)
+      setDiffData(response.data);
+    }catch (apiError: any) {
+      console.log()
+      setError(apiError.response.data.error)
+    }
   }, [])
-
-  const apiClient = axios.create({
-    baseURL: API_BASE,
-    timeout: 1000,
-    headers: {'Authorization': 'Bearer '+ token}
-  });
 
   if (diffData) {
     return <code>{diffData.source}</code>;
