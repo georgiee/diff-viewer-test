@@ -1,0 +1,32 @@
+{
+   "name": "diff-viewer-test",
+   "version": "1.0.0",
+   "main": "dist/bundle.min.js",
+   "scripts": {
+      "build": "BUILD=production rollup -c",
+      "build:watch": "rollup -c -w",
+      "serve": "live-server"
+   },
+   "repository": "git@github.com:georgiee/diff-viewer-test.git",
+   "author": "Georgios Kaleadis <georgios@kaleadis.de>",
+   "license": "MIT",
+   "devDependencies": {
+      "@babel/core": "^7.18.5",
+      "@babel/plugin-transform-runtime": "^7.18.5",
+      "@babel/preset-env": "^7.18.2",
+      "@babel/preset-react": "^7.17.12",
+      "@rollup/plugin-replace": "^4.0.0",
+      "rollup": "^2.75.6",
+      "rollup-plugin-babel": "^4.4.0",
+      "rollup-plugin-commonjs": "^10.1.0",
+      "rollup-plugin-copy": "^3.4.0",
+      "rollup-plugin-livereload": "^2.0.5",
+      "rollup-plugin-node-resolve": "^5.2.0",
+      "rollup-plugin-serve": "^1.1.0"
+   },
+   "dependencies": {
+      "@babel/runtime": "^7.18.3",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0"
+   }
+}
