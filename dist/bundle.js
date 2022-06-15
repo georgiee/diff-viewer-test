@@ -1,3 +1,5 @@
+
+(function(l, r) { if (!l || l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (self.location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(self.document);
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
 	typeof define === 'function' && define.amd ? define(factory) :
@@ -10350,14 +10352,18 @@
 	    token
 	  });
 	  const API = `/diffs/${diffId}`;
-	  react_24(async () => {
-	    try {
-	      const response = await apiClient.get(API);
-	      setDiffData(response.data);
-	    } catch (apiError) {
-	      console.log();
-	      setError(apiError.response.data.error);
-	    }
+	  react_24(() => {
+	    const fetchData = async () => {
+	      try {
+	        const response = await apiClient.get(API);
+	        setDiffData(response.data);
+	      } catch (apiError) {
+	        console.log();
+	        setError(apiError.response.data.error);
+	      }
+	    };
+
+	    fetchData();
 	  }, []);
 
 	  if (diffData) {

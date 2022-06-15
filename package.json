@@ -1,7 +1,7 @@
 {
    "name": "diff-viewer-test",
    "version": "1.0.0",
-   "main": "dist/bundle.min.js",
+   "main": "dist/bundle.js",
    "scripts": {
       "build": "BUILD=production rollup -c",
       "build:watch": "rollup -c -w",

@@ -15,15 +15,21 @@ export function App({config: {API_BASE, diffId, token}}){
   
   const API = `/diffs/${diffId}`
 
-  useEffect(async () => {
-    try {
-      const response = await apiClient.get(API)
-      setDiffData(response.data);
-    }catch (apiError: any) {
-      console.log()
-      setError(apiError.response.data.error)
-    }
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await apiClient.get(API)
+        setDiffData(response.data);
+      }catch (apiError: any) {
+        console.log()
+        setError(apiError.response.data.error)
+      }
+    };
+
+    fetchData();
   }, [])
+
+
 
   if (diffData) {
     return <code>{diffData.source}</code>;
