@@ -1,7 +1,7 @@
 import { createRoot } from 'react-dom/client';
 import React from 'react';
 
-import {App} from "./app"
+import { App } from "./app"
 
 
 var DiffConfig = {};
@@ -13,11 +13,9 @@ export default {
     DiffConfig = config;
   },
   attach: (element) => {
-  	console.log('attach diff', element)
-  	console.log('using config', DiffConfig)	
-    
+    const config = DiffConfig;
     const root = createRoot(element); // createRoot(container!) if you use TypeScript
-    root.render(<App/>);
+    root.render(<App config={config}/>);
   }
 }
 
