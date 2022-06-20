@@ -9,7 +9,7 @@ import pkg from './package.json';
 import react from 'react';
 import reactDom from 'react-dom';
 
-const dev = process.env.BUILD !== 'production'
+const isDev = process.env.NODE_ENV !== "production";
 
 export default {
     input: './src/main.tsx',
@@ -21,11 +21,12 @@ export default {
     plugins: [
         nodeResolve({browser: true}),
         replace({
-            preventAssignment: true,
-          'process.env.NODE_ENV': JSON.stringify( 'development' )
+           preventAssignment: true,
+          'process.env.NODE_ENV': JSON.stringify( process.env.NODE_ENV )
         }),
         babel({
             extensions: [".js",".ts", ".tsx"],
+            plugins: ["babel-plugin-styled-components"],
             presets: [
               "@babel/preset-typescript",
               "@babel/preset-react"
@@ -33,13 +34,15 @@ export default {
         }),
         commonjs({
             extensions: [".js",".ts", ".tsx"],
-            include: 'node_modules/**',
+            include: /\/node_modules\//,
+            ignoreGlobal: true,
             namedExports: {
                 react: Object.keys(react),
-                'react-dom': Object.keys(reactDom)
+                'react-dom': Object.keys(reactDom),
+                'react-is': Object.keys(require('react-is')),
             }
         }),
-        dev && serve(),
-        dev && livereload()
+        isDev && serve(),
+        isDev && livereload()
     ]
 }

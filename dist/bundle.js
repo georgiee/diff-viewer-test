@@ -1,3 +1,5 @@
+
+(function(l, r) { if (!l || l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (self.location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(self.document);
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
 	typeof define === 'function' && define.amd ? define(factory) :
@@ -7,6 +9,61 @@
 	function createCommonjsModule(fn, module) {
 		return module = { exports: {} }, fn(module, module.exports), module.exports;
 	}
+
+	/**
+	 * @license React
+	 * react.production.min.js
+	 *
+	 * Copyright (c) Facebook, Inc. and its affiliates.
+	 *
+	 * This source code is licensed under the MIT license found in the
+	 * LICENSE file in the root directory of this source tree.
+	 */
+
+	var B$1 = {
+	  isMounted: function () {
+	    return !1;
+	  },
+	  enqueueForceUpdate: function () {},
+	  enqueueReplaceState: function () {},
+	  enqueueSetState: function () {}
+	},
+	    C = Object.assign,
+	    D$1 = {};
+
+	function E$1(a, b, e) {
+	  this.props = a;
+	  this.context = b;
+	  this.refs = D$1;
+	  this.updater = e || B$1;
+	}
+
+	E$1.prototype.isReactComponent = {};
+
+	E$1.prototype.setState = function (a, b) {
+	  if ("object" !== typeof a && "function" !== typeof a && null != a) throw Error("setState(...): takes an object of state variables to update or a function which returns an object of state variables.");
+	  this.updater.enqueueSetState(this, a, b, "setState");
+	};
+
+	E$1.prototype.forceUpdate = function (a) {
+	  this.updater.enqueueForceUpdate(this, a, "forceUpdate");
+	};
+
+	function F$1() {}
+
+	F$1.prototype = E$1.prototype;
+
+	function G$1(a, b, e) {
+	  this.props = a;
+	  this.context = b;
+	  this.refs = D$1;
+	  this.updater = e || B$1;
+	}
+
+	var H$1 = G$1.prototype = new F$1();
+	H$1.constructor = G$1;
+	C(H$1, E$1.prototype);
+	H$1.isPureReactComponent = !0;
 
 	var react_development = createCommonjsModule(function (module, exports) {
 
@@ -2727,7 +2784,7 @@
 	react.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
 	react.cloneElement;
 	react.createContext;
-	react.createElement;
+	var react_11 = react.createElement;
 	react.createFactory;
 	react.createRef;
 	react.forwardRef;
@@ -2737,21 +2794,4370 @@
 	react.startTransition;
 	react.unstable_act;
 	react.useCallback;
-	react.useContext;
-	react.useDebugValue;
+	var react_21 = react.useContext;
+	var react_22 = react.useDebugValue;
 	react.useDeferredValue;
 	var react_24 = react.useEffect;
 	react.useId;
 	react.useImperativeHandle;
 	react.useInsertionEffect;
-	react.useLayoutEffect;
-	react.useMemo;
+	var react_28 = react.useLayoutEffect;
+	var react_29 = react.useMemo;
 	react.useReducer;
-	react.useRef;
+	var react_31 = react.useRef;
 	var react_32 = react.useState;
 	react.useSyncExternalStore;
 	react.useTransition;
 	react.version;
+
+	var reactIs_development = createCommonjsModule(function (module, exports) {
+
+	{
+	  (function () {
+	    // nor polyfill, then a plain number is used for performance.
+
+	    var hasSymbol = typeof Symbol === 'function' && Symbol.for;
+	    var REACT_ELEMENT_TYPE = hasSymbol ? Symbol.for('react.element') : 0xeac7;
+	    var REACT_PORTAL_TYPE = hasSymbol ? Symbol.for('react.portal') : 0xeaca;
+	    var REACT_FRAGMENT_TYPE = hasSymbol ? Symbol.for('react.fragment') : 0xeacb;
+	    var REACT_STRICT_MODE_TYPE = hasSymbol ? Symbol.for('react.strict_mode') : 0xeacc;
+	    var REACT_PROFILER_TYPE = hasSymbol ? Symbol.for('react.profiler') : 0xead2;
+	    var REACT_PROVIDER_TYPE = hasSymbol ? Symbol.for('react.provider') : 0xeacd;
+	    var REACT_CONTEXT_TYPE = hasSymbol ? Symbol.for('react.context') : 0xeace; // TODO: We don't use AsyncMode or ConcurrentMode anymore. They were temporary
+	    // (unstable) APIs that have been removed. Can we remove the symbols?
+
+	    var REACT_ASYNC_MODE_TYPE = hasSymbol ? Symbol.for('react.async_mode') : 0xeacf;
+	    var REACT_CONCURRENT_MODE_TYPE = hasSymbol ? Symbol.for('react.concurrent_mode') : 0xeacf;
+	    var REACT_FORWARD_REF_TYPE = hasSymbol ? Symbol.for('react.forward_ref') : 0xead0;
+	    var REACT_SUSPENSE_TYPE = hasSymbol ? Symbol.for('react.suspense') : 0xead1;
+	    var REACT_SUSPENSE_LIST_TYPE = hasSymbol ? Symbol.for('react.suspense_list') : 0xead8;
+	    var REACT_MEMO_TYPE = hasSymbol ? Symbol.for('react.memo') : 0xead3;
+	    var REACT_LAZY_TYPE = hasSymbol ? Symbol.for('react.lazy') : 0xead4;
+	    var REACT_BLOCK_TYPE = hasSymbol ? Symbol.for('react.block') : 0xead9;
+	    var REACT_FUNDAMENTAL_TYPE = hasSymbol ? Symbol.for('react.fundamental') : 0xead5;
+	    var REACT_RESPONDER_TYPE = hasSymbol ? Symbol.for('react.responder') : 0xead6;
+	    var REACT_SCOPE_TYPE = hasSymbol ? Symbol.for('react.scope') : 0xead7;
+
+	    function isValidElementType(type) {
+	      return typeof type === 'string' || typeof type === 'function' || // Note: its typeof might be other than 'symbol' or 'number' if it's a polyfill.
+	      type === REACT_FRAGMENT_TYPE || type === REACT_CONCURRENT_MODE_TYPE || type === REACT_PROFILER_TYPE || type === REACT_STRICT_MODE_TYPE || type === REACT_SUSPENSE_TYPE || type === REACT_SUSPENSE_LIST_TYPE || typeof type === 'object' && type !== null && (type.$$typeof === REACT_LAZY_TYPE || type.$$typeof === REACT_MEMO_TYPE || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE || type.$$typeof === REACT_FUNDAMENTAL_TYPE || type.$$typeof === REACT_RESPONDER_TYPE || type.$$typeof === REACT_SCOPE_TYPE || type.$$typeof === REACT_BLOCK_TYPE);
+	    }
+
+	    function typeOf(object) {
+	      if (typeof object === 'object' && object !== null) {
+	        var $$typeof = object.$$typeof;
+
+	        switch ($$typeof) {
+	          case REACT_ELEMENT_TYPE:
+	            var type = object.type;
+
+	            switch (type) {
+	              case REACT_ASYNC_MODE_TYPE:
+	              case REACT_CONCURRENT_MODE_TYPE:
+	              case REACT_FRAGMENT_TYPE:
+	              case REACT_PROFILER_TYPE:
+	              case REACT_STRICT_MODE_TYPE:
+	              case REACT_SUSPENSE_TYPE:
+	                return type;
+
+	              default:
+	                var $$typeofType = type && type.$$typeof;
+
+	                switch ($$typeofType) {
+	                  case REACT_CONTEXT_TYPE:
+	                  case REACT_FORWARD_REF_TYPE:
+	                  case REACT_LAZY_TYPE:
+	                  case REACT_MEMO_TYPE:
+	                  case REACT_PROVIDER_TYPE:
+	                    return $$typeofType;
+
+	                  default:
+	                    return $$typeof;
+	                }
+
+	            }
+
+	          case REACT_PORTAL_TYPE:
+	            return $$typeof;
+	        }
+	      }
+
+	      return undefined;
+	    } // AsyncMode is deprecated along with isAsyncMode
+
+
+	    var AsyncMode = REACT_ASYNC_MODE_TYPE;
+	    var ConcurrentMode = REACT_CONCURRENT_MODE_TYPE;
+	    var ContextConsumer = REACT_CONTEXT_TYPE;
+	    var ContextProvider = REACT_PROVIDER_TYPE;
+	    var Element = REACT_ELEMENT_TYPE;
+	    var ForwardRef = REACT_FORWARD_REF_TYPE;
+	    var Fragment = REACT_FRAGMENT_TYPE;
+	    var Lazy = REACT_LAZY_TYPE;
+	    var Memo = REACT_MEMO_TYPE;
+	    var Portal = REACT_PORTAL_TYPE;
+	    var Profiler = REACT_PROFILER_TYPE;
+	    var StrictMode = REACT_STRICT_MODE_TYPE;
+	    var Suspense = REACT_SUSPENSE_TYPE;
+	    var hasWarnedAboutDeprecatedIsAsyncMode = false; // AsyncMode should be deprecated
+
+	    function isAsyncMode(object) {
+	      {
+	        if (!hasWarnedAboutDeprecatedIsAsyncMode) {
+	          hasWarnedAboutDeprecatedIsAsyncMode = true; // Using console['warn'] to evade Babel and ESLint
+
+	          console['warn']('The ReactIs.isAsyncMode() alias has been deprecated, ' + 'and will be removed in React 17+. Update your code to use ' + 'ReactIs.isConcurrentMode() instead. It has the exact same API.');
+	        }
+	      }
+	      return isConcurrentMode(object) || typeOf(object) === REACT_ASYNC_MODE_TYPE;
+	    }
+
+	    function isConcurrentMode(object) {
+	      return typeOf(object) === REACT_CONCURRENT_MODE_TYPE;
+	    }
+
+	    function isContextConsumer(object) {
+	      return typeOf(object) === REACT_CONTEXT_TYPE;
+	    }
+
+	    function isContextProvider(object) {
+	      return typeOf(object) === REACT_PROVIDER_TYPE;
+	    }
+
+	    function isElement(object) {
+	      return typeof object === 'object' && object !== null && object.$$typeof === REACT_ELEMENT_TYPE;
+	    }
+
+	    function isForwardRef(object) {
+	      return typeOf(object) === REACT_FORWARD_REF_TYPE;
+	    }
+
+	    function isFragment(object) {
+	      return typeOf(object) === REACT_FRAGMENT_TYPE;
+	    }
+
+	    function isLazy(object) {
+	      return typeOf(object) === REACT_LAZY_TYPE;
+	    }
+
+	    function isMemo(object) {
+	      return typeOf(object) === REACT_MEMO_TYPE;
+	    }
+
+	    function isPortal(object) {
+	      return typeOf(object) === REACT_PORTAL_TYPE;
+	    }
+
+	    function isProfiler(object) {
+	      return typeOf(object) === REACT_PROFILER_TYPE;
+	    }
+
+	    function isStrictMode(object) {
+	      return typeOf(object) === REACT_STRICT_MODE_TYPE;
+	    }
+
+	    function isSuspense(object) {
+	      return typeOf(object) === REACT_SUSPENSE_TYPE;
+	    }
+
+	    exports.AsyncMode = AsyncMode;
+	    exports.ConcurrentMode = ConcurrentMode;
+	    exports.ContextConsumer = ContextConsumer;
+	    exports.ContextProvider = ContextProvider;
+	    exports.Element = Element;
+	    exports.ForwardRef = ForwardRef;
+	    exports.Fragment = Fragment;
+	    exports.Lazy = Lazy;
+	    exports.Memo = Memo;
+	    exports.Portal = Portal;
+	    exports.Profiler = Profiler;
+	    exports.StrictMode = StrictMode;
+	    exports.Suspense = Suspense;
+	    exports.isAsyncMode = isAsyncMode;
+	    exports.isConcurrentMode = isConcurrentMode;
+	    exports.isContextConsumer = isContextConsumer;
+	    exports.isContextProvider = isContextProvider;
+	    exports.isElement = isElement;
+	    exports.isForwardRef = isForwardRef;
+	    exports.isFragment = isFragment;
+	    exports.isLazy = isLazy;
+	    exports.isMemo = isMemo;
+	    exports.isPortal = isPortal;
+	    exports.isProfiler = isProfiler;
+	    exports.isStrictMode = isStrictMode;
+	    exports.isSuspense = isSuspense;
+	    exports.isValidElementType = isValidElementType;
+	    exports.typeOf = typeOf;
+	  })();
+	}
+	});
+	reactIs_development.AsyncMode;
+	reactIs_development.ConcurrentMode;
+	reactIs_development.ContextConsumer;
+	reactIs_development.ContextProvider;
+	reactIs_development.Element;
+	reactIs_development.ForwardRef;
+	reactIs_development.Fragment;
+	reactIs_development.Lazy;
+	reactIs_development.Memo;
+	reactIs_development.Portal;
+	reactIs_development.Profiler;
+	reactIs_development.StrictMode;
+	reactIs_development.Suspense;
+	reactIs_development.isAsyncMode;
+	reactIs_development.isConcurrentMode;
+	reactIs_development.isContextConsumer;
+	reactIs_development.isContextProvider;
+	reactIs_development.isElement;
+	reactIs_development.isForwardRef;
+	reactIs_development.isFragment;
+	reactIs_development.isLazy;
+	reactIs_development.isMemo;
+	reactIs_development.isPortal;
+	reactIs_development.isProfiler;
+	reactIs_development.isStrictMode;
+	reactIs_development.isSuspense;
+	reactIs_development.isValidElementType;
+	reactIs_development.typeOf;
+
+	var reactIs = createCommonjsModule(function (module) {
+
+	{
+	  module.exports = reactIs_development;
+	}
+	});
+	reactIs.AsyncMode;
+	reactIs.ConcurrentMode;
+	reactIs.ContextConsumer;
+	reactIs.ContextProvider;
+	reactIs.Element;
+	reactIs.ForwardRef;
+	reactIs.Fragment;
+	reactIs.Lazy;
+	reactIs.Memo;
+	reactIs.Portal;
+	reactIs.Profiler;
+	reactIs.StrictMode;
+	reactIs.Suspense;
+	reactIs.isAsyncMode;
+	reactIs.isConcurrentMode;
+	reactIs.isContextConsumer;
+	reactIs.isContextProvider;
+	var reactIs_18 = reactIs.isElement;
+	reactIs.isForwardRef;
+	reactIs.isFragment;
+	reactIs.isLazy;
+	reactIs.isMemo;
+	reactIs.isPortal;
+	reactIs.isProfiler;
+	reactIs.isStrictMode;
+	reactIs.isSuspense;
+	var reactIs_27 = reactIs.isValidElementType;
+	var reactIs_28 = reactIs.typeOf;
+
+	//
+	var shallowequal = function shallowEqual(objA, objB, compare, compareContext) {
+	  var ret = compare ? compare.call(compareContext, objA, objB) : void 0;
+
+	  if (ret !== void 0) {
+	    return !!ret;
+	  }
+
+	  if (objA === objB) {
+	    return true;
+	  }
+
+	  if (typeof objA !== "object" || !objA || typeof objB !== "object" || !objB) {
+	    return false;
+	  }
+
+	  var keysA = Object.keys(objA);
+	  var keysB = Object.keys(objB);
+
+	  if (keysA.length !== keysB.length) {
+	    return false;
+	  }
+
+	  var bHasOwnProperty = Object.prototype.hasOwnProperty.bind(objB); // Test for A's keys different from B.
+
+	  for (var idx = 0; idx < keysA.length; idx++) {
+	    var key = keysA[idx];
+
+	    if (!bHasOwnProperty(key)) {
+	      return false;
+	    }
+
+	    var valueA = objA[key];
+	    var valueB = objB[key];
+	    ret = compare ? compare.call(compareContext, valueA, valueB, key) : void 0;
+
+	    if (ret === false || ret === void 0 && valueA !== valueB) {
+	      return false;
+	    }
+	  }
+
+	  return true;
+	};
+
+	function stylis_min(W) {
+	  function M(d, c, e, h, a) {
+	    for (var m = 0, b = 0, v = 0, n = 0, q, g, x = 0, K = 0, k, u = k = q = 0, l = 0, r = 0, I = 0, t = 0, B = e.length, J = B - 1, y, f = '', p = '', F = '', G = '', C; l < B;) {
+	      g = e.charCodeAt(l);
+	      l === J && 0 !== b + n + v + m && (0 !== b && (g = 47 === b ? 10 : 47), n = v = m = 0, B++, J++);
+
+	      if (0 === b + n + v + m) {
+	        if (l === J && (0 < r && (f = f.replace(N, '')), 0 < f.trim().length)) {
+	          switch (g) {
+	            case 32:
+	            case 9:
+	            case 59:
+	            case 13:
+	            case 10:
+	              break;
+
+	            default:
+	              f += e.charAt(l);
+	          }
+
+	          g = 59;
+	        }
+
+	        switch (g) {
+	          case 123:
+	            f = f.trim();
+	            q = f.charCodeAt(0);
+	            k = 1;
+
+	            for (t = ++l; l < B;) {
+	              switch (g = e.charCodeAt(l)) {
+	                case 123:
+	                  k++;
+	                  break;
+
+	                case 125:
+	                  k--;
+	                  break;
+
+	                case 47:
+	                  switch (g = e.charCodeAt(l + 1)) {
+	                    case 42:
+	                    case 47:
+	                      a: {
+	                        for (u = l + 1; u < J; ++u) {
+	                          switch (e.charCodeAt(u)) {
+	                            case 47:
+	                              if (42 === g && 42 === e.charCodeAt(u - 1) && l + 2 !== u) {
+	                                l = u + 1;
+	                                break a;
+	                              }
+
+	                              break;
+
+	                            case 10:
+	                              if (47 === g) {
+	                                l = u + 1;
+	                                break a;
+	                              }
+
+	                          }
+	                        }
+
+	                        l = u;
+	                      }
+
+	                  }
+
+	                  break;
+
+	                case 91:
+	                  g++;
+
+	                case 40:
+	                  g++;
+
+	                case 34:
+	                case 39:
+	                  for (; l++ < J && e.charCodeAt(l) !== g;) {}
+
+	              }
+
+	              if (0 === k) break;
+	              l++;
+	            }
+
+	            k = e.substring(t, l);
+	            0 === q && (q = (f = f.replace(ca, '').trim()).charCodeAt(0));
+
+	            switch (q) {
+	              case 64:
+	                0 < r && (f = f.replace(N, ''));
+	                g = f.charCodeAt(1);
+
+	                switch (g) {
+	                  case 100:
+	                  case 109:
+	                  case 115:
+	                  case 45:
+	                    r = c;
+	                    break;
+
+	                  default:
+	                    r = O;
+	                }
+
+	                k = M(c, r, k, g, a + 1);
+	                t = k.length;
+	                0 < A && (r = X(O, f, I), C = H(3, k, r, c, D, z, t, g, a, h), f = r.join(''), void 0 !== C && 0 === (t = (k = C.trim()).length) && (g = 0, k = ''));
+	                if (0 < t) switch (g) {
+	                  case 115:
+	                    f = f.replace(da, ea);
+
+	                  case 100:
+	                  case 109:
+	                  case 45:
+	                    k = f + '{' + k + '}';
+	                    break;
+
+	                  case 107:
+	                    f = f.replace(fa, '$1 $2');
+	                    k = f + '{' + k + '}';
+	                    k = 1 === w || 2 === w && L('@' + k, 3) ? '@-webkit-' + k + '@' + k : '@' + k;
+	                    break;
+
+	                  default:
+	                    k = f + k, 112 === h && (k = (p += k, ''));
+	                } else k = '';
+	                break;
+
+	              default:
+	                k = M(c, X(c, f, I), k, h, a + 1);
+	            }
+
+	            F += k;
+	            k = I = r = u = q = 0;
+	            f = '';
+	            g = e.charCodeAt(++l);
+	            break;
+
+	          case 125:
+	          case 59:
+	            f = (0 < r ? f.replace(N, '') : f).trim();
+	            if (1 < (t = f.length)) switch (0 === u && (q = f.charCodeAt(0), 45 === q || 96 < q && 123 > q) && (t = (f = f.replace(' ', ':')).length), 0 < A && void 0 !== (C = H(1, f, c, d, D, z, p.length, h, a, h)) && 0 === (t = (f = C.trim()).length) && (f = '\x00\x00'), q = f.charCodeAt(0), g = f.charCodeAt(1), q) {
+	              case 0:
+	                break;
+
+	              case 64:
+	                if (105 === g || 99 === g) {
+	                  G += f + e.charAt(l);
+	                  break;
+	                }
+
+	              default:
+	                58 !== f.charCodeAt(t - 1) && (p += P(f, q, g, f.charCodeAt(2)));
+	            }
+	            I = r = u = q = 0;
+	            f = '';
+	            g = e.charCodeAt(++l);
+	        }
+	      }
+
+	      switch (g) {
+	        case 13:
+	        case 10:
+	          47 === b ? b = 0 : 0 === 1 + q && 107 !== h && 0 < f.length && (r = 1, f += '\x00');
+	          0 < A * Y && H(0, f, c, d, D, z, p.length, h, a, h);
+	          z = 1;
+	          D++;
+	          break;
+
+	        case 59:
+	        case 125:
+	          if (0 === b + n + v + m) {
+	            z++;
+	            break;
+	          }
+
+	        default:
+	          z++;
+	          y = e.charAt(l);
+
+	          switch (g) {
+	            case 9:
+	            case 32:
+	              if (0 === n + m + b) switch (x) {
+	                case 44:
+	                case 58:
+	                case 9:
+	                case 32:
+	                  y = '';
+	                  break;
+
+	                default:
+	                  32 !== g && (y = ' ');
+	              }
+	              break;
+
+	            case 0:
+	              y = '\\0';
+	              break;
+
+	            case 12:
+	              y = '\\f';
+	              break;
+
+	            case 11:
+	              y = '\\v';
+	              break;
+
+	            case 38:
+	              0 === n + b + m && (r = I = 1, y = '\f' + y);
+	              break;
+
+	            case 108:
+	              if (0 === n + b + m + E && 0 < u) switch (l - u) {
+	                case 2:
+	                  112 === x && 58 === e.charCodeAt(l - 3) && (E = x);
+
+	                case 8:
+	                  111 === K && (E = K);
+	              }
+	              break;
+
+	            case 58:
+	              0 === n + b + m && (u = l);
+	              break;
+
+	            case 44:
+	              0 === b + v + n + m && (r = 1, y += '\r');
+	              break;
+
+	            case 34:
+	            case 39:
+	              0 === b && (n = n === g ? 0 : 0 === n ? g : n);
+	              break;
+
+	            case 91:
+	              0 === n + b + v && m++;
+	              break;
+
+	            case 93:
+	              0 === n + b + v && m--;
+	              break;
+
+	            case 41:
+	              0 === n + b + m && v--;
+	              break;
+
+	            case 40:
+	              if (0 === n + b + m) {
+	                if (0 === q) switch (2 * x + 3 * K) {
+	                  case 533:
+	                    break;
+
+	                  default:
+	                    q = 1;
+	                }
+	                v++;
+	              }
+
+	              break;
+
+	            case 64:
+	              0 === b + v + n + m + u + k && (k = 1);
+	              break;
+
+	            case 42:
+	            case 47:
+	              if (!(0 < n + m + v)) switch (b) {
+	                case 0:
+	                  switch (2 * g + 3 * e.charCodeAt(l + 1)) {
+	                    case 235:
+	                      b = 47;
+	                      break;
+
+	                    case 220:
+	                      t = l, b = 42;
+	                  }
+
+	                  break;
+
+	                case 42:
+	                  47 === g && 42 === x && t + 2 !== l && (33 === e.charCodeAt(t + 2) && (p += e.substring(t, l + 1)), y = '', b = 0);
+	              }
+	          }
+
+	          0 === b && (f += y);
+	      }
+
+	      K = x;
+	      x = g;
+	      l++;
+	    }
+
+	    t = p.length;
+
+	    if (0 < t) {
+	      r = c;
+	      if (0 < A && (C = H(2, p, r, d, D, z, t, h, a, h), void 0 !== C && 0 === (p = C).length)) return G + p + F;
+	      p = r.join(',') + '{' + p + '}';
+
+	      if (0 !== w * E) {
+	        2 !== w || L(p, 2) || (E = 0);
+
+	        switch (E) {
+	          case 111:
+	            p = p.replace(ha, ':-moz-$1') + p;
+	            break;
+
+	          case 112:
+	            p = p.replace(Q, '::-webkit-input-$1') + p.replace(Q, '::-moz-$1') + p.replace(Q, ':-ms-input-$1') + p;
+	        }
+
+	        E = 0;
+	      }
+	    }
+
+	    return G + p + F;
+	  }
+
+	  function X(d, c, e) {
+	    var h = c.trim().split(ia);
+	    c = h;
+	    var a = h.length,
+	        m = d.length;
+
+	    switch (m) {
+	      case 0:
+	      case 1:
+	        var b = 0;
+
+	        for (d = 0 === m ? '' : d[0] + ' '; b < a; ++b) {
+	          c[b] = Z(d, c[b], e).trim();
+	        }
+
+	        break;
+
+	      default:
+	        var v = b = 0;
+
+	        for (c = []; b < a; ++b) {
+	          for (var n = 0; n < m; ++n) {
+	            c[v++] = Z(d[n] + ' ', h[b], e).trim();
+	          }
+	        }
+
+	    }
+
+	    return c;
+	  }
+
+	  function Z(d, c, e) {
+	    var h = c.charCodeAt(0);
+	    33 > h && (h = (c = c.trim()).charCodeAt(0));
+
+	    switch (h) {
+	      case 38:
+	        return c.replace(F, '$1' + d.trim());
+
+	      case 58:
+	        return d.trim() + c.replace(F, '$1' + d.trim());
+
+	      default:
+	        if (0 < 1 * e && 0 < c.indexOf('\f')) return c.replace(F, (58 === d.charCodeAt(0) ? '' : '$1') + d.trim());
+	    }
+
+	    return d + c;
+	  }
+
+	  function P(d, c, e, h) {
+	    var a = d + ';',
+	        m = 2 * c + 3 * e + 4 * h;
+
+	    if (944 === m) {
+	      d = a.indexOf(':', 9) + 1;
+	      var b = a.substring(d, a.length - 1).trim();
+	      b = a.substring(0, d).trim() + b + ';';
+	      return 1 === w || 2 === w && L(b, 1) ? '-webkit-' + b + b : b;
+	    }
+
+	    if (0 === w || 2 === w && !L(a, 1)) return a;
+
+	    switch (m) {
+	      case 1015:
+	        return 97 === a.charCodeAt(10) ? '-webkit-' + a + a : a;
+
+	      case 951:
+	        return 116 === a.charCodeAt(3) ? '-webkit-' + a + a : a;
+
+	      case 963:
+	        return 110 === a.charCodeAt(5) ? '-webkit-' + a + a : a;
+
+	      case 1009:
+	        if (100 !== a.charCodeAt(4)) break;
+
+	      case 969:
+	      case 942:
+	        return '-webkit-' + a + a;
+
+	      case 978:
+	        return '-webkit-' + a + '-moz-' + a + a;
+
+	      case 1019:
+	      case 983:
+	        return '-webkit-' + a + '-moz-' + a + '-ms-' + a + a;
+
+	      case 883:
+	        if (45 === a.charCodeAt(8)) return '-webkit-' + a + a;
+	        if (0 < a.indexOf('image-set(', 11)) return a.replace(ja, '$1-webkit-$2') + a;
+	        break;
+
+	      case 932:
+	        if (45 === a.charCodeAt(4)) switch (a.charCodeAt(5)) {
+	          case 103:
+	            return '-webkit-box-' + a.replace('-grow', '') + '-webkit-' + a + '-ms-' + a.replace('grow', 'positive') + a;
+
+	          case 115:
+	            return '-webkit-' + a + '-ms-' + a.replace('shrink', 'negative') + a;
+
+	          case 98:
+	            return '-webkit-' + a + '-ms-' + a.replace('basis', 'preferred-size') + a;
+	        }
+	        return '-webkit-' + a + '-ms-' + a + a;
+
+	      case 964:
+	        return '-webkit-' + a + '-ms-flex-' + a + a;
+
+	      case 1023:
+	        if (99 !== a.charCodeAt(8)) break;
+	        b = a.substring(a.indexOf(':', 15)).replace('flex-', '').replace('space-between', 'justify');
+	        return '-webkit-box-pack' + b + '-webkit-' + a + '-ms-flex-pack' + b + a;
+
+	      case 1005:
+	        return ka.test(a) ? a.replace(aa, ':-webkit-') + a.replace(aa, ':-moz-') + a : a;
+
+	      case 1e3:
+	        b = a.substring(13).trim();
+	        c = b.indexOf('-') + 1;
+
+	        switch (b.charCodeAt(0) + b.charCodeAt(c)) {
+	          case 226:
+	            b = a.replace(G, 'tb');
+	            break;
+
+	          case 232:
+	            b = a.replace(G, 'tb-rl');
+	            break;
+
+	          case 220:
+	            b = a.replace(G, 'lr');
+	            break;
+
+	          default:
+	            return a;
+	        }
+
+	        return '-webkit-' + a + '-ms-' + b + a;
+
+	      case 1017:
+	        if (-1 === a.indexOf('sticky', 9)) break;
+
+	      case 975:
+	        c = (a = d).length - 10;
+	        b = (33 === a.charCodeAt(c) ? a.substring(0, c) : a).substring(d.indexOf(':', 7) + 1).trim();
+
+	        switch (m = b.charCodeAt(0) + (b.charCodeAt(7) | 0)) {
+	          case 203:
+	            if (111 > b.charCodeAt(8)) break;
+
+	          case 115:
+	            a = a.replace(b, '-webkit-' + b) + ';' + a;
+	            break;
+
+	          case 207:
+	          case 102:
+	            a = a.replace(b, '-webkit-' + (102 < m ? 'inline-' : '') + 'box') + ';' + a.replace(b, '-webkit-' + b) + ';' + a.replace(b, '-ms-' + b + 'box') + ';' + a;
+	        }
+
+	        return a + ';';
+
+	      case 938:
+	        if (45 === a.charCodeAt(5)) switch (a.charCodeAt(6)) {
+	          case 105:
+	            return b = a.replace('-items', ''), '-webkit-' + a + '-webkit-box-' + b + '-ms-flex-' + b + a;
+
+	          case 115:
+	            return '-webkit-' + a + '-ms-flex-item-' + a.replace(ba, '') + a;
+
+	          default:
+	            return '-webkit-' + a + '-ms-flex-line-pack' + a.replace('align-content', '').replace(ba, '') + a;
+	        }
+	        break;
+
+	      case 973:
+	      case 989:
+	        if (45 !== a.charCodeAt(3) || 122 === a.charCodeAt(4)) break;
+
+	      case 931:
+	      case 953:
+	        if (!0 === la.test(d)) return 115 === (b = d.substring(d.indexOf(':') + 1)).charCodeAt(0) ? P(d.replace('stretch', 'fill-available'), c, e, h).replace(':fill-available', ':stretch') : a.replace(b, '-webkit-' + b) + a.replace(b, '-moz-' + b.replace('fill-', '')) + a;
+	        break;
+
+	      case 962:
+	        if (a = '-webkit-' + a + (102 === a.charCodeAt(5) ? '-ms-' + a : '') + a, 211 === e + h && 105 === a.charCodeAt(13) && 0 < a.indexOf('transform', 10)) return a.substring(0, a.indexOf(';', 27) + 1).replace(ma, '$1-webkit-$2') + a;
+	    }
+
+	    return a;
+	  }
+
+	  function L(d, c) {
+	    var e = d.indexOf(1 === c ? ':' : '{'),
+	        h = d.substring(0, 3 !== c ? e : 10);
+	    e = d.substring(e + 1, d.length - 1);
+	    return R(2 !== c ? h : h.replace(na, '$1'), e, c);
+	  }
+
+	  function ea(d, c) {
+	    var e = P(c, c.charCodeAt(0), c.charCodeAt(1), c.charCodeAt(2));
+	    return e !== c + ';' ? e.replace(oa, ' or ($1)').substring(4) : '(' + c + ')';
+	  }
+
+	  function H(d, c, e, h, a, m, b, v, n, q) {
+	    for (var g = 0, x = c, w; g < A; ++g) {
+	      switch (w = S[g].call(B, d, x, e, h, a, m, b, v, n, q)) {
+	        case void 0:
+	        case !1:
+	        case !0:
+	        case null:
+	          break;
+
+	        default:
+	          x = w;
+	      }
+	    }
+
+	    if (x !== c) return x;
+	  }
+
+	  function T(d) {
+	    switch (d) {
+	      case void 0:
+	      case null:
+	        A = S.length = 0;
+	        break;
+
+	      default:
+	        if ('function' === typeof d) S[A++] = d;else if ('object' === typeof d) for (var c = 0, e = d.length; c < e; ++c) {
+	          T(d[c]);
+	        } else Y = !!d | 0;
+	    }
+
+	    return T;
+	  }
+
+	  function U(d) {
+	    d = d.prefix;
+	    void 0 !== d && (R = null, d ? 'function' !== typeof d ? w = 1 : (w = 2, R = d) : w = 0);
+	    return U;
+	  }
+
+	  function B(d, c) {
+	    var e = d;
+	    33 > e.charCodeAt(0) && (e = e.trim());
+	    V = e;
+	    e = [V];
+
+	    if (0 < A) {
+	      var h = H(-1, c, e, e, D, z, 0, 0, 0, 0);
+	      void 0 !== h && 'string' === typeof h && (c = h);
+	    }
+
+	    var a = M(O, e, c, 0, 0);
+	    0 < A && (h = H(-2, a, e, e, D, z, a.length, 0, 0, 0), void 0 !== h && (a = h));
+	    V = '';
+	    E = 0;
+	    z = D = 1;
+	    return a;
+	  }
+
+	  var ca = /^\0+/g,
+	      N = /[\0\r\f]/g,
+	      aa = /: */g,
+	      ka = /zoo|gra/,
+	      ma = /([,: ])(transform)/g,
+	      ia = /,\r+?/g,
+	      F = /([\t\r\n ])*\f?&/g,
+	      fa = /@(k\w+)\s*(\S*)\s*/,
+	      Q = /::(place)/g,
+	      ha = /:(read-only)/g,
+	      G = /[svh]\w+-[tblr]{2}/,
+	      da = /\(\s*(.*)\s*\)/g,
+	      oa = /([\s\S]*?);/g,
+	      ba = /-self|flex-/g,
+	      na = /[^]*?(:[rp][el]a[\w-]+)[^]*/,
+	      la = /stretch|:\s*\w+\-(?:conte|avail)/,
+	      ja = /([^-])(image-set\()/,
+	      z = 1,
+	      D = 1,
+	      E = 0,
+	      w = 1,
+	      O = [],
+	      S = [],
+	      A = 0,
+	      R = null,
+	      Y = 0,
+	      V = '';
+	  B.use = T;
+	  B.set = U;
+	  void 0 !== W && U(W);
+	  return B;
+	}
+
+	var unitlessKeys = {
+	  animationIterationCount: 1,
+	  borderImageOutset: 1,
+	  borderImageSlice: 1,
+	  borderImageWidth: 1,
+	  boxFlex: 1,
+	  boxFlexGroup: 1,
+	  boxOrdinalGroup: 1,
+	  columnCount: 1,
+	  columns: 1,
+	  flex: 1,
+	  flexGrow: 1,
+	  flexPositive: 1,
+	  flexShrink: 1,
+	  flexNegative: 1,
+	  flexOrder: 1,
+	  gridRow: 1,
+	  gridRowEnd: 1,
+	  gridRowSpan: 1,
+	  gridRowStart: 1,
+	  gridColumn: 1,
+	  gridColumnEnd: 1,
+	  gridColumnSpan: 1,
+	  gridColumnStart: 1,
+	  msGridRow: 1,
+	  msGridRowSpan: 1,
+	  msGridColumn: 1,
+	  msGridColumnSpan: 1,
+	  fontWeight: 1,
+	  lineHeight: 1,
+	  opacity: 1,
+	  order: 1,
+	  orphans: 1,
+	  tabSize: 1,
+	  widows: 1,
+	  zIndex: 1,
+	  zoom: 1,
+	  WebkitLineClamp: 1,
+	  // SVG-related properties
+	  fillOpacity: 1,
+	  floodOpacity: 1,
+	  stopOpacity: 1,
+	  strokeDasharray: 1,
+	  strokeDashoffset: 1,
+	  strokeMiterlimit: 1,
+	  strokeOpacity: 1,
+	  strokeWidth: 1
+	};
+
+	function memoize(fn) {
+	  var cache = Object.create(null);
+	  return function (arg) {
+	    if (cache[arg] === undefined) cache[arg] = fn(arg);
+	    return cache[arg];
+	  };
+	}
+
+	var reactPropsRegex = /^((children|dangerouslySetInnerHTML|key|ref|autoFocus|defaultValue|defaultChecked|innerHTML|suppressContentEditableWarning|suppressHydrationWarning|valueLink|abbr|accept|acceptCharset|accessKey|action|allow|allowUserMedia|allowPaymentRequest|allowFullScreen|allowTransparency|alt|async|autoComplete|autoPlay|capture|cellPadding|cellSpacing|challenge|charSet|checked|cite|classID|className|cols|colSpan|content|contentEditable|contextMenu|controls|controlsList|coords|crossOrigin|data|dateTime|decoding|default|defer|dir|disabled|disablePictureInPicture|download|draggable|encType|enterKeyHint|form|formAction|formEncType|formMethod|formNoValidate|formTarget|frameBorder|headers|height|hidden|high|href|hrefLang|htmlFor|httpEquiv|id|inputMode|integrity|is|keyParams|keyType|kind|label|lang|list|loading|loop|low|marginHeight|marginWidth|max|maxLength|media|mediaGroup|method|min|minLength|multiple|muted|name|nonce|noValidate|open|optimum|pattern|placeholder|playsInline|poster|preload|profile|radioGroup|readOnly|referrerPolicy|rel|required|reversed|role|rows|rowSpan|sandbox|scope|scoped|scrolling|seamless|selected|shape|size|sizes|slot|span|spellCheck|src|srcDoc|srcLang|srcSet|start|step|style|summary|tabIndex|target|title|translate|type|useMap|value|width|wmode|wrap|about|datatype|inlist|prefix|property|resource|typeof|vocab|autoCapitalize|autoCorrect|autoSave|color|incremental|fallback|inert|itemProp|itemScope|itemType|itemID|itemRef|on|option|results|security|unselectable|accentHeight|accumulate|additive|alignmentBaseline|allowReorder|alphabetic|amplitude|arabicForm|ascent|attributeName|attributeType|autoReverse|azimuth|baseFrequency|baselineShift|baseProfile|bbox|begin|bias|by|calcMode|capHeight|clip|clipPathUnits|clipPath|clipRule|colorInterpolation|colorInterpolationFilters|colorProfile|colorRendering|contentScriptType|contentStyleType|cursor|cx|cy|d|decelerate|descent|diffuseConstant|direction|display|divisor|dominantBaseline|dur|dx|dy|edgeMode|elevation|enableBackground|end|exponent|externalResourcesRequired|fill|fillOpacity|fillRule|filter|filterRes|filterUnits|floodColor|floodOpacity|focusable|fontFamily|fontSize|fontSizeAdjust|fontStretch|fontStyle|fontVariant|fontWeight|format|from|fr|fx|fy|g1|g2|glyphName|glyphOrientationHorizontal|glyphOrientationVertical|glyphRef|gradientTransform|gradientUnits|hanging|horizAdvX|horizOriginX|ideographic|imageRendering|in|in2|intercept|k|k1|k2|k3|k4|kernelMatrix|kernelUnitLength|kerning|keyPoints|keySplines|keyTimes|lengthAdjust|letterSpacing|lightingColor|limitingConeAngle|local|markerEnd|markerMid|markerStart|markerHeight|markerUnits|markerWidth|mask|maskContentUnits|maskUnits|mathematical|mode|numOctaves|offset|opacity|operator|order|orient|orientation|origin|overflow|overlinePosition|overlineThickness|panose1|paintOrder|pathLength|patternContentUnits|patternTransform|patternUnits|pointerEvents|points|pointsAtX|pointsAtY|pointsAtZ|preserveAlpha|preserveAspectRatio|primitiveUnits|r|radius|refX|refY|renderingIntent|repeatCount|repeatDur|requiredExtensions|requiredFeatures|restart|result|rotate|rx|ry|scale|seed|shapeRendering|slope|spacing|specularConstant|specularExponent|speed|spreadMethod|startOffset|stdDeviation|stemh|stemv|stitchTiles|stopColor|stopOpacity|strikethroughPosition|strikethroughThickness|string|stroke|strokeDasharray|strokeDashoffset|strokeLinecap|strokeLinejoin|strokeMiterlimit|strokeOpacity|strokeWidth|surfaceScale|systemLanguage|tableValues|targetX|targetY|textAnchor|textDecoration|textRendering|textLength|to|transform|u1|u2|underlinePosition|underlineThickness|unicode|unicodeBidi|unicodeRange|unitsPerEm|vAlphabetic|vHanging|vIdeographic|vMathematical|values|vectorEffect|version|vertAdvY|vertOriginX|vertOriginY|viewBox|viewTarget|visibility|widths|wordSpacing|writingMode|x|xHeight|x1|x2|xChannelSelector|xlinkActuate|xlinkArcrole|xlinkHref|xlinkRole|xlinkShow|xlinkTitle|xlinkType|xmlBase|xmlns|xmlnsXlink|xmlLang|xmlSpace|y|y1|y2|yChannelSelector|z|zoomAndPan|for|class|autofocus)|(([Dd][Aa][Tt][Aa]|[Aa][Rr][Ii][Aa]|x)-.*))$/; // https://esbench.com/bench/5bfee68a4cd7e6009ef61d23
+
+	var isPropValid = /* #__PURE__ */memoize(function (prop) {
+	  return reactPropsRegex.test(prop) || prop.charCodeAt(0) === 111
+	  /* o */
+	  && prop.charCodeAt(1) === 110
+	  /* n */
+	  && prop.charCodeAt(2) < 91;
+	}
+	/* Z+1 */
+	);
+
+	/**
+	 * Copyright 2015, Yahoo! Inc.
+	 * Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
+	 */
+
+
+	var REACT_STATICS = {
+	  childContextTypes: true,
+	  contextType: true,
+	  contextTypes: true,
+	  defaultProps: true,
+	  displayName: true,
+	  getDefaultProps: true,
+	  getDerivedStateFromError: true,
+	  getDerivedStateFromProps: true,
+	  mixins: true,
+	  propTypes: true,
+	  type: true
+	};
+	var KNOWN_STATICS = {
+	  name: true,
+	  length: true,
+	  prototype: true,
+	  caller: true,
+	  callee: true,
+	  arguments: true,
+	  arity: true
+	};
+	var FORWARD_REF_STATICS = {
+	  '$$typeof': true,
+	  render: true,
+	  defaultProps: true,
+	  displayName: true,
+	  propTypes: true
+	};
+	var MEMO_STATICS = {
+	  '$$typeof': true,
+	  compare: true,
+	  defaultProps: true,
+	  displayName: true,
+	  propTypes: true,
+	  type: true
+	};
+	var TYPE_STATICS = {};
+	TYPE_STATICS[reactIs.ForwardRef] = FORWARD_REF_STATICS;
+	TYPE_STATICS[reactIs.Memo] = MEMO_STATICS;
+
+	function getStatics(component) {
+	  // React v16.11 and below
+	  if (reactIs.isMemo(component)) {
+	    return MEMO_STATICS;
+	  } // React v16.12 and above
+
+
+	  return TYPE_STATICS[component['$$typeof']] || REACT_STATICS;
+	}
+
+	var defineProperty = Object.defineProperty;
+	var getOwnPropertyNames = Object.getOwnPropertyNames;
+	var getOwnPropertySymbols = Object.getOwnPropertySymbols;
+	var getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
+	var getPrototypeOf = Object.getPrototypeOf;
+	var objectPrototype = Object.prototype;
+
+	function hoistNonReactStatics(targetComponent, sourceComponent, blacklist) {
+	  if (typeof sourceComponent !== 'string') {
+	    // don't hoist over string (html) components
+	    if (objectPrototype) {
+	      var inheritedComponent = getPrototypeOf(sourceComponent);
+
+	      if (inheritedComponent && inheritedComponent !== objectPrototype) {
+	        hoistNonReactStatics(targetComponent, inheritedComponent, blacklist);
+	      }
+	    }
+
+	    var keys = getOwnPropertyNames(sourceComponent);
+
+	    if (getOwnPropertySymbols) {
+	      keys = keys.concat(getOwnPropertySymbols(sourceComponent));
+	    }
+
+	    var targetStatics = getStatics(targetComponent);
+	    var sourceStatics = getStatics(sourceComponent);
+
+	    for (var i = 0; i < keys.length; ++i) {
+	      var key = keys[i];
+
+	      if (!KNOWN_STATICS[key] && !(blacklist && blacklist[key]) && !(sourceStatics && sourceStatics[key]) && !(targetStatics && targetStatics[key])) {
+	        var descriptor = getOwnPropertyDescriptor(sourceComponent, key);
+
+	        try {
+	          // Avoid failures from read-only properties
+	          defineProperty(targetComponent, key, descriptor);
+	        } catch (e) {}
+	      }
+	    }
+	  }
+
+	  return targetComponent;
+	}
+
+	var hoistNonReactStatics_cjs = hoistNonReactStatics;
+
+	function v$1() {
+	  return (v$1 = Object.assign || function (e) {
+	    for (var t = 1; t < arguments.length; t++) {
+	      var n = arguments[t];
+
+	      for (var r in n) Object.prototype.hasOwnProperty.call(n, r) && (e[r] = n[r]);
+	    }
+
+	    return e;
+	  }).apply(this, arguments);
+	}
+
+	var g = function (e, t) {
+	  for (var n = [e[0]], r = 0, o = t.length; r < o; r += 1) n.push(t[r], e[r + 1]);
+
+	  return n;
+	},
+	    S = function (t) {
+	  return null !== t && "object" == typeof t && "[object Object]" === (t.toString ? t.toString() : Object.prototype.toString.call(t)) && !reactIs_28(t);
+	},
+	    w = Object.freeze([]),
+	    E = Object.freeze({});
+
+	function b(e) {
+	  return "function" == typeof e;
+	}
+
+	function _(e) {
+	  return "string" == typeof e && e || e.displayName || e.name || "Component";
+	}
+
+	function N(e) {
+	  return e && "string" == typeof e.styledComponentId;
+	}
+
+	var A$1 = "undefined" != typeof process && (process.env.REACT_APP_SC_ATTR || process.env.SC_ATTR) || "data-styled",
+	    I = "undefined" != typeof window && "HTMLElement" in window,
+	    P = Boolean("boolean" == typeof SC_DISABLE_SPEEDY ? SC_DISABLE_SPEEDY : "undefined" != typeof process && void 0 !== process.env.REACT_APP_SC_DISABLE_SPEEDY && "" !== process.env.REACT_APP_SC_DISABLE_SPEEDY ? "false" !== process.env.REACT_APP_SC_DISABLE_SPEEDY && process.env.REACT_APP_SC_DISABLE_SPEEDY : "undefined" != typeof process && void 0 !== process.env.SC_DISABLE_SPEEDY && "" !== process.env.SC_DISABLE_SPEEDY ? "false" !== process.env.SC_DISABLE_SPEEDY && process.env.SC_DISABLE_SPEEDY : "production" !== undefined),
+	    O = {},
+	    R = {
+	  1: "Cannot create styled-component for component: %s.\n\n",
+	  2: "Can't collect styles once you've consumed a `ServerStyleSheet`'s styles! `ServerStyleSheet` is a one off instance for each server-side render cycle.\n\n- Are you trying to reuse it across renders?\n- Are you accidentally calling collectStyles twice?\n\n",
+	  3: "Streaming SSR is only supported in a Node.js environment; Please do not try to call this method in the browser.\n\n",
+	  4: "The `StyleSheetManager` expects a valid target or sheet prop!\n\n- Does this error occur on the client and is your target falsy?\n- Does this error occur on the server and is the sheet falsy?\n\n",
+	  5: "The clone method cannot be used on the client!\n\n- Are you running in a client-like environment on the server?\n- Are you trying to run SSR on the client?\n\n",
+	  6: "Trying to insert a new style tag, but the given Node is unmounted!\n\n- Are you using a custom target that isn't mounted?\n- Does your document not have a valid head element?\n- Have you accidentally removed a style tag manually?\n\n",
+	  7: 'ThemeProvider: Please return an object from your "theme" prop function, e.g.\n\n```js\ntheme={() => ({})}\n```\n\n',
+	  8: 'ThemeProvider: Please make your "theme" prop an object.\n\n',
+	  9: "Missing document `<head>`\n\n",
+	  10: "Cannot find a StyleSheet instance. Usually this happens if there are multiple copies of styled-components loaded at once. Check out this issue for how to troubleshoot and fix the common cases where this situation can happen: https://github.com/styled-components/styled-components/issues/1941#issuecomment-417862021\n\n",
+	  11: "_This error was replaced with a dev-time warning, it will be deleted for v4 final._ [createGlobalStyle] received children which will not be rendered. Please use the component without passing children elements.\n\n",
+	  12: "It seems you are interpolating a keyframe declaration (%s) into an untagged string. This was supported in styled-components v3, but is not longer supported in v4 as keyframes are now injected on-demand. Please wrap your string in the css\\`\\` helper which ensures the styles are injected correctly. See https://www.styled-components.com/docs/api#css\n\n",
+	  13: "%s is not a styled component and cannot be referred to via component selector. See https://www.styled-components.com/docs/advanced#referring-to-other-components for more details.\n\n",
+	  14: 'ThemeProvider: "theme" prop is required.\n\n',
+	  15: "A stylis plugin has been supplied that is not named. We need a name for each plugin to be able to prevent styling collisions between different stylis configurations within the same app. Before you pass your plugin to `<StyleSheetManager stylisPlugins={[]}>`, please make sure each plugin is uniquely-named, e.g.\n\n```js\nObject.defineProperty(importedPlugin, 'name', { value: 'some-unique-name' });\n```\n\n",
+	  16: "Reached the limit of how many styled components may be created at group %s.\nYou may only create up to 1,073,741,824 components. If you're creating components dynamically,\nas for instance in your render method then you may be running into this limitation.\n\n",
+	  17: "CSSStyleSheet could not be found on HTMLStyleElement.\nHas styled-components' style tag been unmounted or altered by another script?\n"
+	} ;
+
+	function D() {
+	  for (var e = arguments.length <= 0 ? void 0 : arguments[0], t = [], n = 1, r = arguments.length; n < r; n += 1) t.push(n < 0 || arguments.length <= n ? void 0 : arguments[n]);
+
+	  return t.forEach(function (t) {
+	    e = e.replace(/%[a-z]/, t);
+	  }), e;
+	}
+
+	function j(e) {
+	  for (var t = arguments.length, n = new Array(t > 1 ? t - 1 : 0), r = 1; r < t; r++) n[r - 1] = arguments[r];
+
+	  throw new Error(D.apply(void 0, [R[e]].concat(n)).trim());
+	}
+
+	var T = function () {
+	  function e(e) {
+	    this.groupSizes = new Uint32Array(512), this.length = 512, this.tag = e;
+	  }
+
+	  var t = e.prototype;
+	  return t.indexOfGroup = function (e) {
+	    for (var t = 0, n = 0; n < e; n++) t += this.groupSizes[n];
+
+	    return t;
+	  }, t.insertRules = function (e, t) {
+	    if (e >= this.groupSizes.length) {
+	      for (var n = this.groupSizes, r = n.length, o = r; e >= o;) (o <<= 1) < 0 && j(16, "" + e);
+
+	      this.groupSizes = new Uint32Array(o), this.groupSizes.set(n), this.length = o;
+
+	      for (var s = r; s < o; s++) this.groupSizes[s] = 0;
+	    }
+
+	    for (var i = this.indexOfGroup(e + 1), a = 0, c = t.length; a < c; a++) this.tag.insertRule(i, t[a]) && (this.groupSizes[e]++, i++);
+	  }, t.clearGroup = function (e) {
+	    if (e < this.length) {
+	      var t = this.groupSizes[e],
+	          n = this.indexOfGroup(e),
+	          r = n + t;
+	      this.groupSizes[e] = 0;
+
+	      for (var o = n; o < r; o++) this.tag.deleteRule(n);
+	    }
+	  }, t.getGroup = function (e) {
+	    var t = "";
+	    if (e >= this.length || 0 === this.groupSizes[e]) return t;
+
+	    for (var n = this.groupSizes[e], r = this.indexOfGroup(e), o = r + n, s = r; s < o; s++) t += this.tag.getRule(s) + "/*!sc*/\n";
+
+	    return t;
+	  }, e;
+	}(),
+	    x = new Map(),
+	    k = new Map(),
+	    V = 1,
+	    B = function (e) {
+	  if (x.has(e)) return x.get(e);
+
+	  for (; k.has(V);) V++;
+
+	  var t = V++;
+	  return ((0 | t) < 0 || t > 1 << 30) && j(16, "" + t), x.set(e, t), k.set(t, e), t;
+	},
+	    z = function (e) {
+	  return k.get(e);
+	},
+	    M = function (e, t) {
+	  t >= V && (V = t + 1), x.set(e, t), k.set(t, e);
+	},
+	    G = "style[" + A$1 + '][data-styled-version="5.3.5"]',
+	    L = new RegExp("^" + A$1 + '\\.g(\\d+)\\[id="([\\w\\d-]+)"\\].*?"([^"]*)'),
+	    F = function (e, t, n) {
+	  for (var r, o = n.split(","), s = 0, i = o.length; s < i; s++) (r = o[s]) && e.registerName(t, r);
+	},
+	    Y = function (e, t) {
+	  for (var n = (t.textContent || "").split("/*!sc*/\n"), r = [], o = 0, s = n.length; o < s; o++) {
+	    var i = n[o].trim();
+
+	    if (i) {
+	      var a = i.match(L);
+
+	      if (a) {
+	        var c = 0 | parseInt(a[1], 10),
+	            u = a[2];
+	        0 !== c && (M(u, c), F(e, u, a[3]), e.getTag().insertRules(c, r)), r.length = 0;
+	      } else r.push(i);
+	    }
+	  }
+	},
+	    q = function () {
+	  return "undefined" != typeof window && void 0 !== window.__webpack_nonce__ ? window.__webpack_nonce__ : null;
+	},
+	    H = function (e) {
+	  var t = document.head,
+	      n = e || t,
+	      r = document.createElement("style"),
+	      o = function (e) {
+	    for (var t = e.childNodes, n = t.length; n >= 0; n--) {
+	      var r = t[n];
+	      if (r && 1 === r.nodeType && r.hasAttribute(A$1)) return r;
+	    }
+	  }(n),
+	      s = void 0 !== o ? o.nextSibling : null;
+
+	  r.setAttribute(A$1, "active"), r.setAttribute("data-styled-version", "5.3.5");
+	  var i = q();
+	  return i && r.setAttribute("nonce", i), n.insertBefore(r, s), r;
+	},
+	    $ = function () {
+	  function e(e) {
+	    var t = this.element = H(e);
+	    t.appendChild(document.createTextNode("")), this.sheet = function (e) {
+	      if (e.sheet) return e.sheet;
+
+	      for (var t = document.styleSheets, n = 0, r = t.length; n < r; n++) {
+	        var o = t[n];
+	        if (o.ownerNode === e) return o;
+	      }
+
+	      j(17);
+	    }(t), this.length = 0;
+	  }
+
+	  var t = e.prototype;
+	  return t.insertRule = function (e, t) {
+	    try {
+	      return this.sheet.insertRule(t, e), this.length++, !0;
+	    } catch (e) {
+	      return !1;
+	    }
+	  }, t.deleteRule = function (e) {
+	    this.sheet.deleteRule(e), this.length--;
+	  }, t.getRule = function (e) {
+	    var t = this.sheet.cssRules[e];
+	    return void 0 !== t && "string" == typeof t.cssText ? t.cssText : "";
+	  }, e;
+	}(),
+	    W = function () {
+	  function e(e) {
+	    var t = this.element = H(e);
+	    this.nodes = t.childNodes, this.length = 0;
+	  }
+
+	  var t = e.prototype;
+	  return t.insertRule = function (e, t) {
+	    if (e <= this.length && e >= 0) {
+	      var n = document.createTextNode(t),
+	          r = this.nodes[e];
+	      return this.element.insertBefore(n, r || null), this.length++, !0;
+	    }
+
+	    return !1;
+	  }, t.deleteRule = function (e) {
+	    this.element.removeChild(this.nodes[e]), this.length--;
+	  }, t.getRule = function (e) {
+	    return e < this.length ? this.nodes[e].textContent : "";
+	  }, e;
+	}(),
+	    U = function () {
+	  function e(e) {
+	    this.rules = [], this.length = 0;
+	  }
+
+	  var t = e.prototype;
+	  return t.insertRule = function (e, t) {
+	    return e <= this.length && (this.rules.splice(e, 0, t), this.length++, !0);
+	  }, t.deleteRule = function (e) {
+	    this.rules.splice(e, 1), this.length--;
+	  }, t.getRule = function (e) {
+	    return e < this.length ? this.rules[e] : "";
+	  }, e;
+	}(),
+	    J = I,
+	    X = {
+	  isServer: !I,
+	  useCSSOMInjection: !P
+	},
+	    Z = function () {
+	  function e(e, t, n) {
+	    void 0 === e && (e = E), void 0 === t && (t = {}), this.options = v$1({}, X, {}, e), this.gs = t, this.names = new Map(n), this.server = !!e.isServer, !this.server && I && J && (J = !1, function (e) {
+	      for (var t = document.querySelectorAll(G), n = 0, r = t.length; n < r; n++) {
+	        var o = t[n];
+	        o && "active" !== o.getAttribute(A$1) && (Y(e, o), o.parentNode && o.parentNode.removeChild(o));
+	      }
+	    }(this));
+	  }
+
+	  e.registerId = function (e) {
+	    return B(e);
+	  };
+
+	  var t = e.prototype;
+	  return t.reconstructWithOptions = function (t, n) {
+	    return void 0 === n && (n = !0), new e(v$1({}, this.options, {}, t), this.gs, n && this.names || void 0);
+	  }, t.allocateGSInstance = function (e) {
+	    return this.gs[e] = (this.gs[e] || 0) + 1;
+	  }, t.getTag = function () {
+	    return this.tag || (this.tag = (n = (t = this.options).isServer, r = t.useCSSOMInjection, o = t.target, e = n ? new U(o) : r ? new $(o) : new W(o), new T(e)));
+	    var e, t, n, r, o;
+	  }, t.hasNameForId = function (e, t) {
+	    return this.names.has(e) && this.names.get(e).has(t);
+	  }, t.registerName = function (e, t) {
+	    if (B(e), this.names.has(e)) this.names.get(e).add(t);else {
+	      var n = new Set();
+	      n.add(t), this.names.set(e, n);
+	    }
+	  }, t.insertRules = function (e, t, n) {
+	    this.registerName(e, t), this.getTag().insertRules(B(e), n);
+	  }, t.clearNames = function (e) {
+	    this.names.has(e) && this.names.get(e).clear();
+	  }, t.clearRules = function (e) {
+	    this.getTag().clearGroup(B(e)), this.clearNames(e);
+	  }, t.clearTag = function () {
+	    this.tag = void 0;
+	  }, t.toString = function () {
+	    return function (e) {
+	      for (var t = e.getTag(), n = t.length, r = "", o = 0; o < n; o++) {
+	        var s = z(o);
+
+	        if (void 0 !== s) {
+	          var i = e.names.get(s),
+	              a = t.getGroup(o);
+
+	          if (i && a && i.size) {
+	            var c = A$1 + ".g" + o + '[id="' + s + '"]',
+	                u = "";
+	            void 0 !== i && i.forEach(function (e) {
+	              e.length > 0 && (u += e + ",");
+	            }), r += "" + a + c + '{content:"' + u + '"}/*!sc*/\n';
+	          }
+	        }
+	      }
+
+	      return r;
+	    }(this);
+	  }, e;
+	}(),
+	    K = /(a)(d)/gi,
+	    Q = function (e) {
+	  return String.fromCharCode(e + (e > 25 ? 39 : 97));
+	};
+
+	function ee(e) {
+	  var t,
+	      n = "";
+
+	  for (t = Math.abs(e); t > 52; t = t / 52 | 0) n = Q(t % 52) + n;
+
+	  return (Q(t % 52) + n).replace(K, "$1-$2");
+	}
+
+	var te = function (e, t) {
+	  for (var n = t.length; n;) e = 33 * e ^ t.charCodeAt(--n);
+
+	  return e;
+	},
+	    ne = function (e) {
+	  return te(5381, e);
+	};
+
+	function re(e) {
+	  for (var t = 0; t < e.length; t += 1) {
+	    var n = e[t];
+	    if (b(n) && !N(n)) return !1;
+	  }
+
+	  return !0;
+	}
+
+	var oe = ne("5.3.5"),
+	    se = function () {
+	  function e(e, t, n) {
+	    this.rules = e, this.staticRulesId = "", this.isStatic = "production" === undefined  , this.componentId = t, this.baseHash = te(oe, t), this.baseStyle = n, Z.registerId(t);
+	  }
+
+	  return e.prototype.generateAndInjectStyles = function (e, t, n) {
+	    var r = this.componentId,
+	        o = [];
+	    if (this.baseStyle && o.push(this.baseStyle.generateAndInjectStyles(e, t, n)), this.isStatic && !n.hash) {
+	      if (this.staticRulesId && t.hasNameForId(r, this.staticRulesId)) o.push(this.staticRulesId);else {
+	        var s = Ne(this.rules, e, t, n).join(""),
+	            i = ee(te(this.baseHash, s) >>> 0);
+
+	        if (!t.hasNameForId(r, i)) {
+	          var a = n(s, "." + i, void 0, r);
+	          t.insertRules(r, i, a);
+	        }
+
+	        o.push(i), this.staticRulesId = i;
+	      }
+	    } else {
+	      for (var c = this.rules.length, u = te(this.baseHash, n.hash), l = "", d = 0; d < c; d++) {
+	        var h = this.rules[d];
+	        if ("string" == typeof h) l += h, (u = te(u, h + d));else if (h) {
+	          var p = Ne(h, e, t, n),
+	              f = Array.isArray(p) ? p.join("") : p;
+	          u = te(u, f + d), l += f;
+	        }
+	      }
+
+	      if (l) {
+	        var m = ee(u >>> 0);
+
+	        if (!t.hasNameForId(r, m)) {
+	          var y = n(l, "." + m, void 0, r);
+	          t.insertRules(r, m, y);
+	        }
+
+	        o.push(m);
+	      }
+	    }
+	    return o.join(" ");
+	  }, e;
+	}(),
+	    ie = /^\s*\/\/.*$/gm,
+	    ae = [":", "[", ".", "#"];
+
+	function ce(e) {
+	  var t,
+	      n,
+	      r,
+	      o,
+	      s = void 0 === e ? E : e,
+	      i = s.options,
+	      a = void 0 === i ? E : i,
+	      c = s.plugins,
+	      u = void 0 === c ? w : c,
+	      l = new stylis_min(a),
+	      d = [],
+	      h = function (e) {
+	    function t(t) {
+	      if (t) try {
+	        e(t + "}");
+	      } catch (e) {}
+	    }
+
+	    return function (n, r, o, s, i, a, c, u, l, d) {
+	      switch (n) {
+	        case 1:
+	          if (0 === l && 64 === r.charCodeAt(0)) return e(r + ";"), "";
+	          break;
+
+	        case 2:
+	          if (0 === u) return r + "/*|*/";
+	          break;
+
+	        case 3:
+	          switch (u) {
+	            case 102:
+	            case 112:
+	              return e(o[0] + r), "";
+
+	            default:
+	              return r + (0 === d ? "/*|*/" : "");
+	          }
+
+	        case -2:
+	          r.split("/*|*/}").forEach(t);
+	      }
+	    };
+	  }(function (e) {
+	    d.push(e);
+	  }),
+	      f = function (e, r, s) {
+	    return 0 === r && -1 !== ae.indexOf(s[n.length]) || s.match(o) ? e : "." + t;
+	  };
+
+	  function m(e, s, i, a) {
+	    void 0 === a && (a = "&");
+	    var c = e.replace(ie, ""),
+	        u = s && i ? i + " " + s + " { " + c + " }" : c;
+	    return t = a, n = s, r = new RegExp("\\" + n + "\\b", "g"), o = new RegExp("(\\" + n + "\\b){2,}"), l(i || !s ? "" : s, u);
+	  }
+
+	  return l.use([].concat(u, [function (e, t, o) {
+	    2 === e && o.length && o[0].lastIndexOf(n) > 0 && (o[0] = o[0].replace(r, f));
+	  }, h, function (e) {
+	    if (-2 === e) {
+	      var t = d;
+	      return d = [], t;
+	    }
+	  }])), m.hash = u.length ? u.reduce(function (e, t) {
+	    return t.name || j(15), te(e, t.name);
+	  }, 5381).toString() : "", m;
+	}
+
+	var ue = /*#__PURE__*/react.createContext();
+	    ue.Consumer;
+	    var de = /*#__PURE__*/react.createContext(),
+	    he = (de.Consumer, new Z()),
+	    pe = ce();
+
+	function fe() {
+	  return react_21(ue) || he;
+	}
+
+	function me() {
+	  return react_21(de) || pe;
+	}
+
+	function ye$1(e) {
+	  var t = react_32(e.stylisPlugins),
+	      n = t[0],
+	      s = t[1],
+	      c = fe(),
+	      u = react_29(function () {
+	    var t = c;
+	    return e.sheet ? t = e.sheet : e.target && (t = t.reconstructWithOptions({
+	      target: e.target
+	    }, !1)), e.disableCSSOMInjection && (t = t.reconstructWithOptions({
+	      useCSSOMInjection: !1
+	    })), t;
+	  }, [e.disableCSSOMInjection, e.sheet, e.target]),
+	      l = react_29(function () {
+	    return ce({
+	      options: {
+	        prefix: !e.disableVendorPrefixes
+	      },
+	      plugins: n
+	    });
+	  }, [e.disableVendorPrefixes, n]);
+	  return react_24(function () {
+	    shallowequal(n, e.stylisPlugins) || s(e.stylisPlugins);
+	  }, [e.stylisPlugins]), /*#__PURE__*/react.createElement(ue.Provider, {
+	    value: u
+	  }, /*#__PURE__*/react.createElement(de.Provider, {
+	    value: l
+	  }, react.Children.only(e.children) ));
+	}
+
+	var ve = function () {
+	  function e(e, t) {
+	    var n = this;
+	    this.inject = function (e, t) {
+	      void 0 === t && (t = pe);
+	      var r = n.name + t.hash;
+	      e.hasNameForId(n.id, r) || e.insertRules(n.id, r, t(n.rules, r, "@keyframes"));
+	    }, this.toString = function () {
+	      return j(12, String(n.name));
+	    }, this.name = e, this.id = "sc-keyframes-" + e, this.rules = t;
+	  }
+
+	  return e.prototype.getName = function (e) {
+	    return void 0 === e && (e = pe), this.name + e.hash;
+	  }, e;
+	}(),
+	    ge = /([A-Z])/,
+	    Se = /([A-Z])/g,
+	    we = /^ms-/,
+	    Ee = function (e) {
+	  return "-" + e.toLowerCase();
+	};
+
+	function be(e) {
+	  return ge.test(e) ? e.replace(Se, Ee).replace(we, "-ms-") : e;
+	}
+
+	var _e = function (e) {
+	  return null == e || !1 === e || "" === e;
+	};
+
+	function Ne(e, n, r, o) {
+	  if (Array.isArray(e)) {
+	    for (var s, i = [], a = 0, c = e.length; a < c; a += 1) "" !== (s = Ne(e[a], n, r, o)) && (Array.isArray(s) ? i.push.apply(i, s) : i.push(s));
+
+	    return i;
+	  }
+
+	  if (_e(e)) return "";
+	  if (N(e)) return "." + e.styledComponentId;
+
+	  if (b(e)) {
+	    if ("function" != typeof (l = e) || l.prototype && l.prototype.isReactComponent || !n) return e;
+	    var u = e(n);
+	    return reactIs_18(u) && console.warn(_(e) + " is not a styled component and cannot be referred to via component selector. See https://www.styled-components.com/docs/advanced#referring-to-other-components for more details."), Ne(u, n, r, o);
+	  }
+
+	  var l;
+	  return e instanceof ve ? r ? (e.inject(r, o), e.getName(o)) : e : S(e) ? function e(t, n) {
+	    var r,
+	        o,
+	        s = [];
+
+	    for (var i in t) t.hasOwnProperty(i) && !_e(t[i]) && (Array.isArray(t[i]) && t[i].isCss || b(t[i]) ? s.push(be(i) + ":", t[i], ";") : S(t[i]) ? s.push.apply(s, e(t[i], i)) : s.push(be(i) + ": " + (r = i, null == (o = t[i]) || "boolean" == typeof o || "" === o ? "" : "number" != typeof o || 0 === o || r in unitlessKeys ? String(o).trim() : o + "px") + ";"));
+
+	    return n ? [n + " {"].concat(s, ["}"]) : s;
+	  }(e) : e.toString();
+	}
+
+	var Ae = function (e) {
+	  return Array.isArray(e) && (e.isCss = !0), e;
+	};
+
+	function Ce(e) {
+	  for (var t = arguments.length, n = new Array(t > 1 ? t - 1 : 0), r = 1; r < t; r++) n[r - 1] = arguments[r];
+
+	  return b(e) || S(e) ? Ae(Ne(g(w, [e].concat(n)))) : 0 === n.length && 1 === e.length && "string" == typeof e[0] ? e : Ae(Ne(g(e, n)));
+	}
+
+	var Ie = /invalid hook call/i,
+	    Pe = new Set(),
+	    Oe = function (e, t) {
+	  {
+	    var n = "The component " + e + (t ? ' with the id of "' + t + '"' : "") + " has been created dynamically.\nYou may see this warning because you've called styled inside another component.\nTo resolve this only create new StyledComponents outside of any render method and function component.",
+	        r = console.error;
+
+	    try {
+	      var o = !0;
+	      console.error = function (e) {
+	        if (Ie.test(e)) o = !1, Pe.delete(n);else {
+	          for (var t = arguments.length, s = new Array(t > 1 ? t - 1 : 0), i = 1; i < t; i++) s[i - 1] = arguments[i];
+
+	          r.apply(void 0, [e].concat(s));
+	        }
+	      }, react_31(), o && !Pe.has(n) && (console.warn(n), Pe.add(n));
+	    } catch (e) {
+	      Ie.test(e.message) && Pe.delete(n);
+	    } finally {
+	      console.error = r;
+	    }
+	  }
+	},
+	    Re = function (e, t, n) {
+	  return void 0 === n && (n = E), e.theme !== n.theme && e.theme || t || n.theme;
+	},
+	    De = /[!"#$%&'()*+,./:;<=>?@[\\\]^`{|}~-]+/g,
+	    je = /(^-|-$)/g;
+
+	function Te(e) {
+	  return e.replace(De, "-").replace(je, "");
+	}
+
+	var xe = function (e) {
+	  return ee(ne(e) >>> 0);
+	};
+
+	function ke(e) {
+	  return "string" == typeof e && (e.charAt(0) === e.charAt(0).toLowerCase());
+	}
+
+	var Ve$1 = function (e) {
+	  return "function" == typeof e || "object" == typeof e && null !== e && !Array.isArray(e);
+	},
+	    Be = function (e) {
+	  return "__proto__" !== e && "constructor" !== e && "prototype" !== e;
+	};
+
+	function ze$1(e, t, n) {
+	  var r = e[n];
+	  Ve$1(t) && Ve$1(r) ? Me(r, t) : e[n] = t;
+	}
+
+	function Me(e) {
+	  for (var t = arguments.length, n = new Array(t > 1 ? t - 1 : 0), r = 1; r < t; r++) n[r - 1] = arguments[r];
+
+	  for (var o = 0, s = n; o < s.length; o++) {
+	    var i = s[o];
+	    if (Ve$1(i)) for (var a in i) Be(a) && ze$1(e, i[a], a);
+	  }
+
+	  return e;
+	}
+
+	var Ge = /*#__PURE__*/react.createContext();
+	    Ge.Consumer;
+
+	var Ye$1 = {};
+
+	function qe(e, t, n) {
+	  var o = N(e),
+	      i = !ke(e),
+	      a = t.attrs,
+	      c = void 0 === a ? w : a,
+	      d = t.componentId,
+	      h = void 0 === d ? function (e, t) {
+	    var n = "string" != typeof e ? "sc" : Te(e);
+	    Ye$1[n] = (Ye$1[n] || 0) + 1;
+	    var r = n + "-" + xe("5.3.5" + n + Ye$1[n]);
+	    return t ? t + "-" + r : r;
+	  }(t.displayName, t.parentComponentId) : d,
+	      p = t.displayName,
+	      f = void 0 === p ? function (e) {
+	    return ke(e) ? "styled." + e : "Styled(" + _(e) + ")";
+	  }(e) : p,
+	      g = t.displayName && t.componentId ? Te(t.displayName) + "-" + t.componentId : t.componentId || h,
+	      S = o && e.attrs ? Array.prototype.concat(e.attrs, c).filter(Boolean) : c,
+	      A = t.shouldForwardProp;
+	  o && e.shouldForwardProp && (A = t.shouldForwardProp ? function (n, r, o) {
+	    return e.shouldForwardProp(n, r, o) && t.shouldForwardProp(n, r, o);
+	  } : e.shouldForwardProp);
+
+	  var C,
+	      I = new se(n, g, o ? e.componentStyle : void 0),
+	      P = I.isStatic && 0 === c.length,
+	      O = function (e, t) {
+	    return function (e, t, n, r) {
+	      var o = e.attrs,
+	          i = e.componentStyle,
+	          a = e.defaultProps,
+	          c = e.foldedComponentIds,
+	          d = e.shouldForwardProp,
+	          h = e.styledComponentId,
+	          p = e.target;
+	      react_22(h);
+
+	      var f = function (e, t, n) {
+	        void 0 === e && (e = E);
+	        var r = v$1({}, t, {
+	          theme: e
+	        }),
+	            o = {};
+	        return n.forEach(function (e) {
+	          var t,
+	              n,
+	              s,
+	              i = e;
+
+	          for (t in b(i) && (i = i(r)), i) r[t] = o[t] = "className" === t ? (n = o[t], s = i[t], n && s ? n + " " + s : n || s) : i[t];
+	        }), [r, o];
+	      }(Re(t, react_21(Ge), a) || E, t, o),
+	          y = f[0],
+	          g = f[1],
+	          S = function (e, t, n, r) {
+	        var o = fe(),
+	            s = me(),
+	            i = t ? e.generateAndInjectStyles(E, o, s) : e.generateAndInjectStyles(n, o, s);
+	        return react_22(i), !t && r && r(i), i;
+	      }(i, r, y, e.warnTooManyClasses ),
+	          w = n,
+	          _ = g.$as || t.$as || g.as || t.as || p,
+	          N = ke(_),
+	          A = g !== t ? v$1({}, t, {}, g) : t,
+	          C = {};
+
+	      for (var I in A) "$" !== I[0] && "as" !== I && ("forwardedAs" === I ? C.as = A[I] : (d ? d(I, isPropValid, _) : !N || isPropValid(I)) && (C[I] = A[I]));
+
+	      return t.style && g.style !== t.style && (C.style = v$1({}, t.style, {}, g.style)), C.className = Array.prototype.concat(c, h, S !== h ? S : null, t.className, g.className).filter(Boolean).join(" "), C.ref = w, /*#__PURE__*/react_11(_, C);
+	    }(C, e, t, P);
+	  };
+
+	  return O.displayName = f, (C = /*#__PURE__*/react.forwardRef(O)).attrs = S, C.componentStyle = I, C.displayName = f, C.shouldForwardProp = A, C.foldedComponentIds = o ? Array.prototype.concat(e.foldedComponentIds, e.styledComponentId) : w, C.styledComponentId = g, C.target = o ? e.target : e, C.withComponent = function (e) {
+	    var r = t.componentId,
+	        o = function (e, t) {
+	      if (null == e) return {};
+	      var n,
+	          r,
+	          o = {},
+	          s = Object.keys(e);
+
+	      for (r = 0; r < s.length; r++) n = s[r], t.indexOf(n) >= 0 || (o[n] = e[n]);
+
+	      return o;
+	    }(t, ["componentId"]),
+	        s = r && r + "-" + (ke(e) ? e : Te(_(e)));
+
+	    return qe(e, v$1({}, o, {
+	      attrs: S,
+	      componentId: s
+	    }), n);
+	  }, Object.defineProperty(C, "defaultProps", {
+	    get: function () {
+	      return this._foldedDefaultProps;
+	    },
+	    set: function (t) {
+	      this._foldedDefaultProps = o ? Me({}, e.defaultProps, t) : t;
+	    }
+	  }), (Oe(f, g), C.warnTooManyClasses = function (e, t) {
+	    var n = {},
+	        r = !1;
+	    return function (o) {
+	      if (!r && (n[o] = !0, Object.keys(n).length >= 200)) {
+	        var s = t ? ' with the id of "' + t + '"' : "";
+	        console.warn("Over 200 classes were generated for component " + e + s + ".\nConsider using the attrs method, together with a style object for frequently changed styles.\nExample:\n  const Component = styled.div.attrs(props => ({\n    style: {\n      background: props.background,\n    },\n  }))`width: 100%;`\n\n  <Component />"), r = !0, n = {};
+	      }
+	    };
+	  }(f, g)), C.toString = function () {
+	    return "." + C.styledComponentId;
+	  }, i && hoistNonReactStatics_cjs(C, e, {
+	    attrs: !0,
+	    componentStyle: !0,
+	    displayName: !0,
+	    foldedComponentIds: !0,
+	    shouldForwardProp: !0,
+	    styledComponentId: !0,
+	    target: !0,
+	    withComponent: !0
+	  }), C;
+	}
+
+	var He = function (e) {
+	  return function e(t, r, o) {
+	    if (void 0 === o && (o = E), !reactIs_27(r)) return j(1, String(r));
+
+	    var s = function () {
+	      return t(r, o, Ce.apply(void 0, arguments));
+	    };
+
+	    return s.withConfig = function (n) {
+	      return e(t, r, v$1({}, o, {}, n));
+	    }, s.attrs = function (n) {
+	      return e(t, r, v$1({}, o, {
+	        attrs: Array.prototype.concat(o.attrs, n).filter(Boolean)
+	      }));
+	    }, s;
+	  }(qe, e);
+	};
+
+	["a", "abbr", "address", "area", "article", "aside", "audio", "b", "base", "bdi", "bdo", "big", "blockquote", "body", "br", "button", "canvas", "caption", "cite", "code", "col", "colgroup", "data", "datalist", "dd", "del", "details", "dfn", "dialog", "div", "dl", "dt", "em", "embed", "fieldset", "figcaption", "figure", "footer", "form", "h1", "h2", "h3", "h4", "h5", "h6", "head", "header", "hgroup", "hr", "html", "i", "iframe", "img", "input", "ins", "kbd", "keygen", "label", "legend", "li", "link", "main", "map", "mark", "marquee", "menu", "menuitem", "meta", "meter", "nav", "noscript", "object", "ol", "optgroup", "option", "output", "p", "param", "picture", "pre", "progress", "q", "rp", "rt", "ruby", "s", "samp", "script", "section", "select", "small", "source", "span", "strong", "style", "sub", "summary", "sup", "table", "tbody", "td", "textarea", "tfoot", "th", "thead", "time", "title", "tr", "track", "u", "ul", "var", "video", "wbr", "circle", "clipPath", "defs", "ellipse", "foreignObject", "g", "image", "line", "linearGradient", "marker", "mask", "path", "pattern", "polygon", "polyline", "radialGradient", "rect", "stop", "svg", "text", "textPath", "tspan"].forEach(function (e) {
+	  He[e] = He(e);
+	});
+
+	var $e$1 = function () {
+	  function e(e, t) {
+	    this.rules = e, this.componentId = t, this.isStatic = re(e), Z.registerId(this.componentId + 1);
+	  }
+
+	  var t = e.prototype;
+	  return t.createStyles = function (e, t, n, r) {
+	    var o = r(Ne(this.rules, t, n, r).join(""), ""),
+	        s = this.componentId + e;
+	    n.insertRules(s, s, o);
+	  }, t.removeStyles = function (e, t) {
+	    t.clearRules(this.componentId + e);
+	  }, t.renderStyles = function (e, t, n, r) {
+	    e > 2 && Z.registerId(this.componentId + e), this.removeStyles(e, n), this.createStyles(e, t, n, r);
+	  }, e;
+	}();
+
+	function We$1(e) {
+	  for (var t = arguments.length, n = new Array(t > 1 ? t - 1 : 0), o = 1; o < t; o++) n[o - 1] = arguments[o];
+
+	  var i = Ce.apply(void 0, [e].concat(n)),
+	      a = "sc-global-" + xe(JSON.stringify(i)),
+	      u = new $e$1(i, a);
+
+	  function l(e) {
+	    var t = fe(),
+	        n = me(),
+	        o = react_21(Ge),
+	        l = react_31(t.allocateGSInstance(a)).current;
+	    return react.Children.count(e.children) && console.warn("The global style component " + a + " was given child JSX. createGlobalStyle does not render children."), i.some(function (e) {
+	      return "string" == typeof e && -1 !== e.indexOf("@import");
+	    }) && console.warn("Please do not use @import CSS syntax in createGlobalStyle at this time, as the CSSOM APIs we use in production do not handle it well. Instead, we recommend using a library such as react-helmet to inject a typical <link> meta tag to the stylesheet, or simply embedding it manually in your index.html <head> section for a simpler app."), t.server && h(l, e, t, o, n), react_28(function () {
+	      if (!t.server) return h(l, e, t, o, n), function () {
+	        return u.removeStyles(l, t);
+	      };
+	    }, [l, e, t, o, n]), null;
+	  }
+
+	  function h(e, t, n, r, o) {
+	    if (u.isStatic) u.renderStyles(e, O, n, o);else {
+	      var s = v$1({}, t, {
+	        theme: Re(t, r, l.defaultProps)
+	      });
+	      u.renderStyles(e, s, n, o);
+	    }
+	  }
+
+	  return Oe(a), /*#__PURE__*/react.memo(l);
+	}
+
+	"undefined" != typeof navigator && "ReactNative" === navigator.product && console.warn("It looks like you've imported 'styled-components' on React Native.\nPerhaps you're looking to import 'styled-components/native'?\nRead more about this at https://www.styled-components.com/docs/basics#react-native"), "undefined" != typeof window && (window["__styled-components-init__"] = window["__styled-components-init__"] || 0, 1 === window["__styled-components-init__"] && console.warn("It looks like there are several instances of 'styled-components' initialized in this application. This may cause dynamic styles to not render properly, errors during the rehydration process, a missing theme prop, and makes your application bigger without good reason.\n\nSee https://s-c.sh/2BAXzed for more info."), window["__styled-components-init__"] += 1);
+	var styled = He;
+
+	const LineContainer = styled.div.withConfig({
+	  displayName: "line__LineContainer",
+	  componentId: "sc-luma8-0"
+	})(["display:grid;grid-template-columns:50px 50px 30px 30px auto 1fr;white-space:pre;padding-left:16px;background-color:", ";"], ({
+	  type
+	}) => getLineColor(type));
+	const ActionContainer = styled.div.withConfig({
+	  displayName: "line__ActionContainer",
+	  componentId: "sc-luma8-1"
+	})(["color:blue;cursor:pointer;"]);
+
+	const getLineColor = type => {
+	  switch (type) {
+	    case "add":
+	      return "#ecfdf0";
+
+	    case "remove":
+	      return "#fbe9eb";
+	  }
+	};
+
+	const getLineGutter = type => {
+	  switch (type) {
+	    case "add":
+	      return "+";
+
+	    case "remove":
+	      return "-";
+	  }
+	};
+
+	const Line = ({
+	  line
+	}) => {
+	  const [hoverActive, setHoverActive] = react_32(false);
+	  return /*#__PURE__*/react.createElement(react.Fragment, null, /*#__PURE__*/react.createElement(LineContainer, {
+	    type: line.type,
+	    onMouseEnter: () => setHoverActive(true),
+	    onMouseLeave: () => setHoverActive(false)
+	  }, /*#__PURE__*/react.createElement("div", null, line.original_line_number), /*#__PURE__*/react.createElement("div", null, line.new_line_number), /*#__PURE__*/react.createElement(ActionContainer, {
+	    onClick: () => {}
+	  }, hoverActive && "+"), /*#__PURE__*/react.createElement("div", null, getLineGutter(line.type)), /*#__PURE__*/react.createElement("div", null, line.content)));
+	};
+
+	const HunkContainer = styled.div.withConfig({
+	  displayName: "Hunk__HunkContainer",
+	  componentId: "sc-1gul13o-0"
+	})(["overflow-x:scroll;"]);
+	const Header = styled.p.withConfig({
+	  displayName: "Hunk__Header",
+	  componentId: "sc-1gul13o-1"
+	})(["background-color:#ddf4ff;"]);
+	const Hunk = ({
+	  hunk
+	}) => {
+	  return /*#__PURE__*/react.createElement(HunkContainer, null, /*#__PURE__*/react.createElement(Header, null, hunk.header), hunk.lines.map(line => /*#__PURE__*/react.createElement(Line, {
+	    line: line,
+	    key: line.locator.join()
+	  })));
+	};
+
+	const FileContainer = styled.div.withConfig({
+	  displayName: "File__FileContainer",
+	  componentId: "sc-3yb3qd-0"
+	})(["padding:0 8px;margin-bottom:48px;border:1px solid #2c3e50;border-radius:8px;"]);
+	const NameContainer = styled.p.withConfig({
+	  displayName: "File__NameContainer",
+	  componentId: "sc-3yb3qd-1"
+	})(["font-size:24px;font-weight:700;margin:8px 0;"]);
+	const File = ({
+	  file
+	}) => {
+	  return /*#__PURE__*/react.createElement(FileContainer, null, /*#__PURE__*/react.createElement(NameContainer, null, file.new_path ?? file.old_path), file.hunks.map(hunk => /*#__PURE__*/react.createElement(Hunk, {
+	    hunk: hunk,
+	    key: hunk.index
+	  })));
+	};
+
+	const DiffViewer = ({
+	  data
+	}) => {
+	  return /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement("h1", null, data.title, "1"), data?.files.map(file => /*#__PURE__*/react.createElement(File, {
+	    file: file,
+	    key: file.index
+	  })));
+	};
+
+	var bind = function bind(fn, thisArg) {
+	  return function wrap() {
+	    var args = new Array(arguments.length);
+
+	    for (var i = 0; i < args.length; i++) {
+	      args[i] = arguments[i];
+	    }
+
+	    return fn.apply(thisArg, args);
+	  };
+	};
+
+	// utils is a library of generic helper functions non-specific to axios
+
+
+	var toString = Object.prototype.toString; // eslint-disable-next-line func-names
+
+	var kindOf = function (cache) {
+	  // eslint-disable-next-line func-names
+	  return function (thing) {
+	    var str = toString.call(thing);
+	    return cache[str] || (cache[str] = str.slice(8, -1).toLowerCase());
+	  };
+	}(Object.create(null));
+
+	function kindOfTest(type) {
+	  type = type.toLowerCase();
+	  return function isKindOf(thing) {
+	    return kindOf(thing) === type;
+	  };
+	}
+	/**
+	 * Determine if a value is an Array
+	 *
+	 * @param {Object} val The value to test
+	 * @returns {boolean} True if value is an Array, otherwise false
+	 */
+
+
+	function isArray(val) {
+	  return Array.isArray(val);
+	}
+	/**
+	 * Determine if a value is undefined
+	 *
+	 * @param {Object} val The value to test
+	 * @returns {boolean} True if the value is undefined, otherwise false
+	 */
+
+
+	function isUndefined(val) {
+	  return typeof val === 'undefined';
+	}
+	/**
+	 * Determine if a value is a Buffer
+	 *
+	 * @param {Object} val The value to test
+	 * @returns {boolean} True if value is a Buffer, otherwise false
+	 */
+
+
+	function isBuffer(val) {
+	  return val !== null && !isUndefined(val) && val.constructor !== null && !isUndefined(val.constructor) && typeof val.constructor.isBuffer === 'function' && val.constructor.isBuffer(val);
+	}
+	/**
+	 * Determine if a value is an ArrayBuffer
+	 *
+	 * @function
+	 * @param {Object} val The value to test
+	 * @returns {boolean} True if value is an ArrayBuffer, otherwise false
+	 */
+
+
+	var isArrayBuffer = kindOfTest('ArrayBuffer');
+	/**
+	 * Determine if a value is a view on an ArrayBuffer
+	 *
+	 * @param {Object} val The value to test
+	 * @returns {boolean} True if value is a view on an ArrayBuffer, otherwise false
+	 */
+
+	function isArrayBufferView(val) {
+	  var result;
+
+	  if (typeof ArrayBuffer !== 'undefined' && ArrayBuffer.isView) {
+	    result = ArrayBuffer.isView(val);
+	  } else {
+	    result = val && val.buffer && isArrayBuffer(val.buffer);
+	  }
+
+	  return result;
+	}
+	/**
+	 * Determine if a value is a String
+	 *
+	 * @param {Object} val The value to test
+	 * @returns {boolean} True if value is a String, otherwise false
+	 */
+
+
+	function isString(val) {
+	  return typeof val === 'string';
+	}
+	/**
+	 * Determine if a value is a Number
+	 *
+	 * @param {Object} val The value to test
+	 * @returns {boolean} True if value is a Number, otherwise false
+	 */
+
+
+	function isNumber(val) {
+	  return typeof val === 'number';
+	}
+	/**
+	 * Determine if a value is an Object
+	 *
+	 * @param {Object} val The value to test
+	 * @returns {boolean} True if value is an Object, otherwise false
+	 */
+
+
+	function isObject(val) {
+	  return val !== null && typeof val === 'object';
+	}
+	/**
+	 * Determine if a value is a plain Object
+	 *
+	 * @param {Object} val The value to test
+	 * @return {boolean} True if value is a plain Object, otherwise false
+	 */
+
+
+	function isPlainObject(val) {
+	  if (kindOf(val) !== 'object') {
+	    return false;
+	  }
+
+	  var prototype = Object.getPrototypeOf(val);
+	  return prototype === null || prototype === Object.prototype;
+	}
+	/**
+	 * Determine if a value is a Date
+	 *
+	 * @function
+	 * @param {Object} val The value to test
+	 * @returns {boolean} True if value is a Date, otherwise false
+	 */
+
+
+	var isDate = kindOfTest('Date');
+	/**
+	 * Determine if a value is a File
+	 *
+	 * @function
+	 * @param {Object} val The value to test
+	 * @returns {boolean} True if value is a File, otherwise false
+	 */
+
+	var isFile = kindOfTest('File');
+	/**
+	 * Determine if a value is a Blob
+	 *
+	 * @function
+	 * @param {Object} val The value to test
+	 * @returns {boolean} True if value is a Blob, otherwise false
+	 */
+
+	var isBlob = kindOfTest('Blob');
+	/**
+	 * Determine if a value is a FileList
+	 *
+	 * @function
+	 * @param {Object} val The value to test
+	 * @returns {boolean} True if value is a File, otherwise false
+	 */
+
+	var isFileList = kindOfTest('FileList');
+	/**
+	 * Determine if a value is a Function
+	 *
+	 * @param {Object} val The value to test
+	 * @returns {boolean} True if value is a Function, otherwise false
+	 */
+
+	function isFunction(val) {
+	  return toString.call(val) === '[object Function]';
+	}
+	/**
+	 * Determine if a value is a Stream
+	 *
+	 * @param {Object} val The value to test
+	 * @returns {boolean} True if value is a Stream, otherwise false
+	 */
+
+
+	function isStream(val) {
+	  return isObject(val) && isFunction(val.pipe);
+	}
+	/**
+	 * Determine if a value is a FormData
+	 *
+	 * @param {Object} thing The value to test
+	 * @returns {boolean} True if value is an FormData, otherwise false
+	 */
+
+
+	function isFormData(thing) {
+	  var pattern = '[object FormData]';
+	  return thing && (typeof FormData === 'function' && thing instanceof FormData || toString.call(thing) === pattern || isFunction(thing.toString) && thing.toString() === pattern);
+	}
+	/**
+	 * Determine if a value is a URLSearchParams object
+	 * @function
+	 * @param {Object} val The value to test
+	 * @returns {boolean} True if value is a URLSearchParams object, otherwise false
+	 */
+
+
+	var isURLSearchParams = kindOfTest('URLSearchParams');
+	/**
+	 * Trim excess whitespace off the beginning and end of a string
+	 *
+	 * @param {String} str The String to trim
+	 * @returns {String} The String freed of excess whitespace
+	 */
+
+	function trim(str) {
+	  return str.trim ? str.trim() : str.replace(/^\s+|\s+$/g, '');
+	}
+	/**
+	 * Determine if we're running in a standard browser environment
+	 *
+	 * This allows axios to run in a web worker, and react-native.
+	 * Both environments support XMLHttpRequest, but not fully standard globals.
+	 *
+	 * web workers:
+	 *  typeof window -> undefined
+	 *  typeof document -> undefined
+	 *
+	 * react-native:
+	 *  navigator.product -> 'ReactNative'
+	 * nativescript
+	 *  navigator.product -> 'NativeScript' or 'NS'
+	 */
+
+
+	function isStandardBrowserEnv() {
+	  if (typeof navigator !== 'undefined' && (navigator.product === 'ReactNative' || navigator.product === 'NativeScript' || navigator.product === 'NS')) {
+	    return false;
+	  }
+
+	  return typeof window !== 'undefined' && typeof document !== 'undefined';
+	}
+	/**
+	 * Iterate over an Array or an Object invoking a function for each item.
+	 *
+	 * If `obj` is an Array callback will be called passing
+	 * the value, index, and complete array for each item.
+	 *
+	 * If 'obj' is an Object callback will be called passing
+	 * the value, key, and complete object for each property.
+	 *
+	 * @param {Object|Array} obj The object to iterate
+	 * @param {Function} fn The callback to invoke for each item
+	 */
+
+
+	function forEach(obj, fn) {
+	  // Don't bother if no value provided
+	  if (obj === null || typeof obj === 'undefined') {
+	    return;
+	  } // Force an array if not already something iterable
+
+
+	  if (typeof obj !== 'object') {
+	    /*eslint no-param-reassign:0*/
+	    obj = [obj];
+	  }
+
+	  if (isArray(obj)) {
+	    // Iterate over array values
+	    for (var i = 0, l = obj.length; i < l; i++) {
+	      fn.call(null, obj[i], i, obj);
+	    }
+	  } else {
+	    // Iterate over object keys
+	    for (var key in obj) {
+	      if (Object.prototype.hasOwnProperty.call(obj, key)) {
+	        fn.call(null, obj[key], key, obj);
+	      }
+	    }
+	  }
+	}
+	/**
+	 * Accepts varargs expecting each argument to be an object, then
+	 * immutably merges the properties of each object and returns result.
+	 *
+	 * When multiple objects contain the same key the later object in
+	 * the arguments list will take precedence.
+	 *
+	 * Example:
+	 *
+	 * ```js
+	 * var result = merge({foo: 123}, {foo: 456});
+	 * console.log(result.foo); // outputs 456
+	 * ```
+	 *
+	 * @param {Object} obj1 Object to merge
+	 * @returns {Object} Result of all merge properties
+	 */
+
+
+	function
+	  /* obj1, obj2, obj3, ... */
+	merge() {
+	  var result = {};
+
+	  function assignValue(val, key) {
+	    if (isPlainObject(result[key]) && isPlainObject(val)) {
+	      result[key] = merge(result[key], val);
+	    } else if (isPlainObject(val)) {
+	      result[key] = merge({}, val);
+	    } else if (isArray(val)) {
+	      result[key] = val.slice();
+	    } else {
+	      result[key] = val;
+	    }
+	  }
+
+	  for (var i = 0, l = arguments.length; i < l; i++) {
+	    forEach(arguments[i], assignValue);
+	  }
+
+	  return result;
+	}
+	/**
+	 * Extends object a by mutably adding to it the properties of object b.
+	 *
+	 * @param {Object} a The object to be extended
+	 * @param {Object} b The object to copy properties from
+	 * @param {Object} thisArg The object to bind function to
+	 * @return {Object} The resulting value of object a
+	 */
+
+
+	function extend(a, b, thisArg) {
+	  forEach(b, function assignValue(val, key) {
+	    if (thisArg && typeof val === 'function') {
+	      a[key] = bind(val, thisArg);
+	    } else {
+	      a[key] = val;
+	    }
+	  });
+	  return a;
+	}
+	/**
+	 * Remove byte order marker. This catches EF BB BF (the UTF-8 BOM)
+	 *
+	 * @param {string} content with BOM
+	 * @return {string} content value without BOM
+	 */
+
+
+	function stripBOM(content) {
+	  if (content.charCodeAt(0) === 0xFEFF) {
+	    content = content.slice(1);
+	  }
+
+	  return content;
+	}
+	/**
+	 * Inherit the prototype methods from one constructor into another
+	 * @param {function} constructor
+	 * @param {function} superConstructor
+	 * @param {object} [props]
+	 * @param {object} [descriptors]
+	 */
+
+
+	function inherits(constructor, superConstructor, props, descriptors) {
+	  constructor.prototype = Object.create(superConstructor.prototype, descriptors);
+	  constructor.prototype.constructor = constructor;
+	  props && Object.assign(constructor.prototype, props);
+	}
+	/**
+	 * Resolve object with deep prototype chain to a flat object
+	 * @param {Object} sourceObj source object
+	 * @param {Object} [destObj]
+	 * @param {Function} [filter]
+	 * @returns {Object}
+	 */
+
+
+	function toFlatObject(sourceObj, destObj, filter) {
+	  var props;
+	  var i;
+	  var prop;
+	  var merged = {};
+	  destObj = destObj || {};
+
+	  do {
+	    props = Object.getOwnPropertyNames(sourceObj);
+	    i = props.length;
+
+	    while (i-- > 0) {
+	      prop = props[i];
+
+	      if (!merged[prop]) {
+	        destObj[prop] = sourceObj[prop];
+	        merged[prop] = true;
+	      }
+	    }
+
+	    sourceObj = Object.getPrototypeOf(sourceObj);
+	  } while (sourceObj && (!filter || filter(sourceObj, destObj)) && sourceObj !== Object.prototype);
+
+	  return destObj;
+	}
+	/*
+	 * determines whether a string ends with the characters of a specified string
+	 * @param {String} str
+	 * @param {String} searchString
+	 * @param {Number} [position= 0]
+	 * @returns {boolean}
+	 */
+
+
+	function endsWith(str, searchString, position) {
+	  str = String(str);
+
+	  if (position === undefined || position > str.length) {
+	    position = str.length;
+	  }
+
+	  position -= searchString.length;
+	  var lastIndex = str.indexOf(searchString, position);
+	  return lastIndex !== -1 && lastIndex === position;
+	}
+	/**
+	 * Returns new array from array like object
+	 * @param {*} [thing]
+	 * @returns {Array}
+	 */
+
+
+	function toArray(thing) {
+	  if (!thing) return null;
+	  var i = thing.length;
+	  if (isUndefined(i)) return null;
+	  var arr = new Array(i);
+
+	  while (i-- > 0) {
+	    arr[i] = thing[i];
+	  }
+
+	  return arr;
+	} // eslint-disable-next-line func-names
+
+
+	var isTypedArray = function (TypedArray) {
+	  // eslint-disable-next-line func-names
+	  return function (thing) {
+	    return TypedArray && thing instanceof TypedArray;
+	  };
+	}(typeof Uint8Array !== 'undefined' && Object.getPrototypeOf(Uint8Array));
+
+	var utils = {
+	  isArray: isArray,
+	  isArrayBuffer: isArrayBuffer,
+	  isBuffer: isBuffer,
+	  isFormData: isFormData,
+	  isArrayBufferView: isArrayBufferView,
+	  isString: isString,
+	  isNumber: isNumber,
+	  isObject: isObject,
+	  isPlainObject: isPlainObject,
+	  isUndefined: isUndefined,
+	  isDate: isDate,
+	  isFile: isFile,
+	  isBlob: isBlob,
+	  isFunction: isFunction,
+	  isStream: isStream,
+	  isURLSearchParams: isURLSearchParams,
+	  isStandardBrowserEnv: isStandardBrowserEnv,
+	  forEach: forEach,
+	  merge: merge,
+	  extend: extend,
+	  trim: trim,
+	  stripBOM: stripBOM,
+	  inherits: inherits,
+	  toFlatObject: toFlatObject,
+	  kindOf: kindOf,
+	  kindOfTest: kindOfTest,
+	  endsWith: endsWith,
+	  toArray: toArray,
+	  isTypedArray: isTypedArray,
+	  isFileList: isFileList
+	};
+
+	function encode(val) {
+	  return encodeURIComponent(val).replace(/%3A/gi, ':').replace(/%24/g, '$').replace(/%2C/gi, ',').replace(/%20/g, '+').replace(/%5B/gi, '[').replace(/%5D/gi, ']');
+	}
+	/**
+	 * Build a URL by appending params to the end
+	 *
+	 * @param {string} url The base of the url (e.g., http://www.google.com)
+	 * @param {object} [params] The params to be appended
+	 * @returns {string} The formatted url
+	 */
+
+
+	var buildURL = function buildURL(url, params, paramsSerializer) {
+	  /*eslint no-param-reassign:0*/
+	  if (!params) {
+	    return url;
+	  }
+
+	  var serializedParams;
+
+	  if (paramsSerializer) {
+	    serializedParams = paramsSerializer(params);
+	  } else if (utils.isURLSearchParams(params)) {
+	    serializedParams = params.toString();
+	  } else {
+	    var parts = [];
+	    utils.forEach(params, function serialize(val, key) {
+	      if (val === null || typeof val === 'undefined') {
+	        return;
+	      }
+
+	      if (utils.isArray(val)) {
+	        key = key + '[]';
+	      } else {
+	        val = [val];
+	      }
+
+	      utils.forEach(val, function parseValue(v) {
+	        if (utils.isDate(v)) {
+	          v = v.toISOString();
+	        } else if (utils.isObject(v)) {
+	          v = JSON.stringify(v);
+	        }
+
+	        parts.push(encode(key) + '=' + encode(v));
+	      });
+	    });
+	    serializedParams = parts.join('&');
+	  }
+
+	  if (serializedParams) {
+	    var hashmarkIndex = url.indexOf('#');
+
+	    if (hashmarkIndex !== -1) {
+	      url = url.slice(0, hashmarkIndex);
+	    }
+
+	    url += (url.indexOf('?') === -1 ? '?' : '&') + serializedParams;
+	  }
+
+	  return url;
+	};
+
+	function InterceptorManager() {
+	  this.handlers = [];
+	}
+	/**
+	 * Add a new interceptor to the stack
+	 *
+	 * @param {Function} fulfilled The function to handle `then` for a `Promise`
+	 * @param {Function} rejected The function to handle `reject` for a `Promise`
+	 *
+	 * @return {Number} An ID used to remove interceptor later
+	 */
+
+
+	InterceptorManager.prototype.use = function use(fulfilled, rejected, options) {
+	  this.handlers.push({
+	    fulfilled: fulfilled,
+	    rejected: rejected,
+	    synchronous: options ? options.synchronous : false,
+	    runWhen: options ? options.runWhen : null
+	  });
+	  return this.handlers.length - 1;
+	};
+	/**
+	 * Remove an interceptor from the stack
+	 *
+	 * @param {Number} id The ID that was returned by `use`
+	 */
+
+
+	InterceptorManager.prototype.eject = function eject(id) {
+	  if (this.handlers[id]) {
+	    this.handlers[id] = null;
+	  }
+	};
+	/**
+	 * Iterate over all the registered interceptors
+	 *
+	 * This method is particularly useful for skipping over any
+	 * interceptors that may have become `null` calling `eject`.
+	 *
+	 * @param {Function} fn The function to call for each interceptor
+	 */
+
+
+	InterceptorManager.prototype.forEach = function forEach(fn) {
+	  utils.forEach(this.handlers, function forEachHandler(h) {
+	    if (h !== null) {
+	      fn(h);
+	    }
+	  });
+	};
+
+	var InterceptorManager_1 = InterceptorManager;
+
+	var normalizeHeaderName = function normalizeHeaderName(headers, normalizedName) {
+	  utils.forEach(headers, function processHeader(value, name) {
+	    if (name !== normalizedName && name.toUpperCase() === normalizedName.toUpperCase()) {
+	      headers[normalizedName] = value;
+	      delete headers[name];
+	    }
+	  });
+	};
+
+	/**
+	 * Create an Error with the specified message, config, error code, request and response.
+	 *
+	 * @param {string} message The error message.
+	 * @param {string} [code] The error code (for example, 'ECONNABORTED').
+	 * @param {Object} [config] The config.
+	 * @param {Object} [request] The request.
+	 * @param {Object} [response] The response.
+	 * @returns {Error} The created error.
+	 */
+
+
+	function AxiosError(message, code, config, request, response) {
+	  Error.call(this);
+	  this.message = message;
+	  this.name = 'AxiosError';
+	  code && (this.code = code);
+	  config && (this.config = config);
+	  request && (this.request = request);
+	  response && (this.response = response);
+	}
+
+	utils.inherits(AxiosError, Error, {
+	  toJSON: function toJSON() {
+	    return {
+	      // Standard
+	      message: this.message,
+	      name: this.name,
+	      // Microsoft
+	      description: this.description,
+	      number: this.number,
+	      // Mozilla
+	      fileName: this.fileName,
+	      lineNumber: this.lineNumber,
+	      columnNumber: this.columnNumber,
+	      stack: this.stack,
+	      // Axios
+	      config: this.config,
+	      code: this.code,
+	      status: this.response && this.response.status ? this.response.status : null
+	    };
+	  }
+	});
+	var prototype = AxiosError.prototype;
+	var descriptors = {};
+	['ERR_BAD_OPTION_VALUE', 'ERR_BAD_OPTION', 'ECONNABORTED', 'ETIMEDOUT', 'ERR_NETWORK', 'ERR_FR_TOO_MANY_REDIRECTS', 'ERR_DEPRECATED', 'ERR_BAD_RESPONSE', 'ERR_BAD_REQUEST', 'ERR_CANCELED' // eslint-disable-next-line func-names
+	].forEach(function (code) {
+	  descriptors[code] = {
+	    value: code
+	  };
+	});
+	Object.defineProperties(AxiosError, descriptors);
+	Object.defineProperty(prototype, 'isAxiosError', {
+	  value: true
+	}); // eslint-disable-next-line func-names
+
+	AxiosError.from = function (error, code, config, request, response, customProps) {
+	  var axiosError = Object.create(prototype);
+	  utils.toFlatObject(error, axiosError, function filter(obj) {
+	    return obj !== Error.prototype;
+	  });
+	  AxiosError.call(axiosError, error.message, code, config, request, response);
+	  axiosError.name = error.name;
+	  customProps && Object.assign(axiosError, customProps);
+	  return axiosError;
+	};
+
+	var AxiosError_1 = AxiosError;
+
+	var transitional = {
+	  silentJSONParsing: true,
+	  forcedJSONParsing: true,
+	  clarifyTimeoutError: false
+	};
+	transitional.silentJSONParsing;
+	transitional.forcedJSONParsing;
+	transitional.clarifyTimeoutError;
+
+	/**
+	 * Convert a data object to FormData
+	 * @param {Object} obj
+	 * @param {?Object} [formData]
+	 * @returns {Object}
+	 **/
+
+
+	function toFormData(obj, formData) {
+	  // eslint-disable-next-line no-param-reassign
+	  formData = formData || new FormData();
+	  var stack = [];
+
+	  function convertValue(value) {
+	    if (value === null) return '';
+
+	    if (utils.isDate(value)) {
+	      return value.toISOString();
+	    }
+
+	    if (utils.isArrayBuffer(value) || utils.isTypedArray(value)) {
+	      return typeof Blob === 'function' ? new Blob([value]) : Buffer.from(value);
+	    }
+
+	    return value;
+	  }
+
+	  function build(data, parentKey) {
+	    if (utils.isPlainObject(data) || utils.isArray(data)) {
+	      if (stack.indexOf(data) !== -1) {
+	        throw Error('Circular reference detected in ' + parentKey);
+	      }
+
+	      stack.push(data);
+	      utils.forEach(data, function each(value, key) {
+	        if (utils.isUndefined(value)) return;
+	        var fullKey = parentKey ? parentKey + '.' + key : key;
+	        var arr;
+
+	        if (value && !parentKey && typeof value === 'object') {
+	          if (utils.endsWith(key, '{}')) {
+	            // eslint-disable-next-line no-param-reassign
+	            value = JSON.stringify(value);
+	          } else if (utils.endsWith(key, '[]') && (arr = utils.toArray(value))) {
+	            // eslint-disable-next-line func-names
+	            arr.forEach(function (el) {
+	              !utils.isUndefined(el) && formData.append(fullKey, convertValue(el));
+	            });
+	            return;
+	          }
+	        }
+
+	        build(value, fullKey);
+	      });
+	      stack.pop();
+	    } else {
+	      formData.append(parentKey, convertValue(data));
+	    }
+	  }
+
+	  build(obj);
+	  return formData;
+	}
+
+	var toFormData_1 = toFormData;
+
+	/**
+	 * Resolve or reject a Promise based on response status.
+	 *
+	 * @param {Function} resolve A function that resolves the promise.
+	 * @param {Function} reject A function that rejects the promise.
+	 * @param {object} response The response.
+	 */
+
+
+	var settle = function settle(resolve, reject, response) {
+	  var validateStatus = response.config.validateStatus;
+
+	  if (!response.status || !validateStatus || validateStatus(response.status)) {
+	    resolve(response);
+	  } else {
+	    reject(new AxiosError_1('Request failed with status code ' + response.status, [AxiosError_1.ERR_BAD_REQUEST, AxiosError_1.ERR_BAD_RESPONSE][Math.floor(response.status / 100) - 4], response.config, response.request, response));
+	  }
+	};
+
+	var cookies = utils.isStandardBrowserEnv() ? // Standard browser envs support document.cookie
+	function standardBrowserEnv() {
+	  return {
+	    write: function write(name, value, expires, path, domain, secure) {
+	      var cookie = [];
+	      cookie.push(name + '=' + encodeURIComponent(value));
+
+	      if (utils.isNumber(expires)) {
+	        cookie.push('expires=' + new Date(expires).toGMTString());
+	      }
+
+	      if (utils.isString(path)) {
+	        cookie.push('path=' + path);
+	      }
+
+	      if (utils.isString(domain)) {
+	        cookie.push('domain=' + domain);
+	      }
+
+	      if (secure === true) {
+	        cookie.push('secure');
+	      }
+
+	      document.cookie = cookie.join('; ');
+	    },
+	    read: function read(name) {
+	      var match = document.cookie.match(new RegExp('(^|;\\s*)(' + name + ')=([^;]*)'));
+	      return match ? decodeURIComponent(match[3]) : null;
+	    },
+	    remove: function remove(name) {
+	      this.write(name, '', Date.now() - 86400000);
+	    }
+	  };
+	}() : // Non standard browser env (web workers, react-native) lack needed support.
+	function nonStandardBrowserEnv() {
+	  return {
+	    write: function write() {},
+	    read: function read() {
+	      return null;
+	    },
+	    remove: function remove() {}
+	  };
+	}();
+
+	/**
+	 * Determines whether the specified URL is absolute
+	 *
+	 * @param {string} url The URL to test
+	 * @returns {boolean} True if the specified URL is absolute, otherwise false
+	 */
+
+	var isAbsoluteURL = function isAbsoluteURL(url) {
+	  // A URL is considered absolute if it begins with "<scheme>://" or "//" (protocol-relative URL).
+	  // RFC 3986 defines scheme name as a sequence of characters beginning with a letter and followed
+	  // by any combination of letters, digits, plus, period, or hyphen.
+	  return /^([a-z][a-z\d+\-.]*:)?\/\//i.test(url);
+	};
+
+	/**
+	 * Creates a new URL by combining the specified URLs
+	 *
+	 * @param {string} baseURL The base URL
+	 * @param {string} relativeURL The relative URL
+	 * @returns {string} The combined URL
+	 */
+
+	var combineURLs = function combineURLs(baseURL, relativeURL) {
+	  return relativeURL ? baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '') : baseURL;
+	};
+
+	/**
+	 * Creates a new URL by combining the baseURL with the requestedURL,
+	 * only when the requestedURL is not already an absolute URL.
+	 * If the requestURL is absolute, this function returns the requestedURL untouched.
+	 *
+	 * @param {string} baseURL The base URL
+	 * @param {string} requestedURL Absolute or relative URL to combine
+	 * @returns {string} The combined full path
+	 */
+
+
+	var buildFullPath = function buildFullPath(baseURL, requestedURL) {
+	  if (baseURL && !isAbsoluteURL(requestedURL)) {
+	    return combineURLs(baseURL, requestedURL);
+	  }
+
+	  return requestedURL;
+	};
+
+	// Headers whose duplicates are ignored by node
+	// c.f. https://nodejs.org/api/http.html#http_message_headers
+
+
+	var ignoreDuplicateOf = ['age', 'authorization', 'content-length', 'content-type', 'etag', 'expires', 'from', 'host', 'if-modified-since', 'if-unmodified-since', 'last-modified', 'location', 'max-forwards', 'proxy-authorization', 'referer', 'retry-after', 'user-agent'];
+	/**
+	 * Parse headers into an object
+	 *
+	 * ```
+	 * Date: Wed, 27 Aug 2014 08:58:49 GMT
+	 * Content-Type: application/json
+	 * Connection: keep-alive
+	 * Transfer-Encoding: chunked
+	 * ```
+	 *
+	 * @param {String} headers Headers needing to be parsed
+	 * @returns {Object} Headers parsed into an object
+	 */
+
+	var parseHeaders = function parseHeaders(headers) {
+	  var parsed = {};
+	  var key;
+	  var val;
+	  var i;
+
+	  if (!headers) {
+	    return parsed;
+	  }
+
+	  utils.forEach(headers.split('\n'), function parser(line) {
+	    i = line.indexOf(':');
+	    key = utils.trim(line.substr(0, i)).toLowerCase();
+	    val = utils.trim(line.substr(i + 1));
+
+	    if (key) {
+	      if (parsed[key] && ignoreDuplicateOf.indexOf(key) >= 0) {
+	        return;
+	      }
+
+	      if (key === 'set-cookie') {
+	        parsed[key] = (parsed[key] ? parsed[key] : []).concat([val]);
+	      } else {
+	        parsed[key] = parsed[key] ? parsed[key] + ', ' + val : val;
+	      }
+	    }
+	  });
+	  return parsed;
+	};
+
+	var isURLSameOrigin = utils.isStandardBrowserEnv() ? // Standard browser envs have full support of the APIs needed to test
+	// whether the request URL is of the same origin as current location.
+	function standardBrowserEnv() {
+	  var msie = /(msie|trident)/i.test(navigator.userAgent);
+	  var urlParsingNode = document.createElement('a');
+	  var originURL;
+	  /**
+	  * Parse a URL to discover it's components
+	  *
+	  * @param {String} url The URL to be parsed
+	  * @returns {Object}
+	  */
+
+	  function resolveURL(url) {
+	    var href = url;
+
+	    if (msie) {
+	      // IE needs attribute set twice to normalize properties
+	      urlParsingNode.setAttribute('href', href);
+	      href = urlParsingNode.href;
+	    }
+
+	    urlParsingNode.setAttribute('href', href); // urlParsingNode provides the UrlUtils interface - http://url.spec.whatwg.org/#urlutils
+
+	    return {
+	      href: urlParsingNode.href,
+	      protocol: urlParsingNode.protocol ? urlParsingNode.protocol.replace(/:$/, '') : '',
+	      host: urlParsingNode.host,
+	      search: urlParsingNode.search ? urlParsingNode.search.replace(/^\?/, '') : '',
+	      hash: urlParsingNode.hash ? urlParsingNode.hash.replace(/^#/, '') : '',
+	      hostname: urlParsingNode.hostname,
+	      port: urlParsingNode.port,
+	      pathname: urlParsingNode.pathname.charAt(0) === '/' ? urlParsingNode.pathname : '/' + urlParsingNode.pathname
+	    };
+	  }
+
+	  originURL = resolveURL(window.location.href);
+	  /**
+	  * Determine if a URL shares the same origin as the current location
+	  *
+	  * @param {String} requestURL The URL to test
+	  * @returns {boolean} True if URL shares the same origin, otherwise false
+	  */
+
+	  return function isURLSameOrigin(requestURL) {
+	    var parsed = utils.isString(requestURL) ? resolveURL(requestURL) : requestURL;
+	    return parsed.protocol === originURL.protocol && parsed.host === originURL.host;
+	  };
+	}() : // Non standard browser envs (web workers, react-native) lack needed support.
+	function nonStandardBrowserEnv() {
+	  return function isURLSameOrigin() {
+	    return true;
+	  };
+	}();
+
+	/**
+	 * A `CanceledError` is an object that is thrown when an operation is canceled.
+	 *
+	 * @class
+	 * @param {string=} message The message.
+	 */
+
+
+	function CanceledError(message) {
+	  // eslint-disable-next-line no-eq-null,eqeqeq
+	  AxiosError_1.call(this, message == null ? 'canceled' : message, AxiosError_1.ERR_CANCELED);
+	  this.name = 'CanceledError';
+	}
+
+	utils.inherits(CanceledError, AxiosError_1, {
+	  __CANCEL__: true
+	});
+	var CanceledError_1 = CanceledError;
+
+	var parseProtocol = function parseProtocol(url) {
+	  var match = /^([-+\w]{1,25})(:?\/\/|:)/.exec(url);
+	  return match && match[1] || '';
+	};
+
+	var xhr = function xhrAdapter(config) {
+	  return new Promise(function dispatchXhrRequest(resolve, reject) {
+	    var requestData = config.data;
+	    var requestHeaders = config.headers;
+	    var responseType = config.responseType;
+	    var onCanceled;
+
+	    function done() {
+	      if (config.cancelToken) {
+	        config.cancelToken.unsubscribe(onCanceled);
+	      }
+
+	      if (config.signal) {
+	        config.signal.removeEventListener('abort', onCanceled);
+	      }
+	    }
+
+	    if (utils.isFormData(requestData) && utils.isStandardBrowserEnv()) {
+	      delete requestHeaders['Content-Type']; // Let the browser set it
+	    }
+
+	    var request = new XMLHttpRequest(); // HTTP basic authentication
+
+	    if (config.auth) {
+	      var username = config.auth.username || '';
+	      var password = config.auth.password ? unescape(encodeURIComponent(config.auth.password)) : '';
+	      requestHeaders.Authorization = 'Basic ' + btoa(username + ':' + password);
+	    }
+
+	    var fullPath = buildFullPath(config.baseURL, config.url);
+	    request.open(config.method.toUpperCase(), buildURL(fullPath, config.params, config.paramsSerializer), true); // Set the request timeout in MS
+
+	    request.timeout = config.timeout;
+
+	    function onloadend() {
+	      if (!request) {
+	        return;
+	      } // Prepare the response
+
+
+	      var responseHeaders = 'getAllResponseHeaders' in request ? parseHeaders(request.getAllResponseHeaders()) : null;
+	      var responseData = !responseType || responseType === 'text' || responseType === 'json' ? request.responseText : request.response;
+	      var response = {
+	        data: responseData,
+	        status: request.status,
+	        statusText: request.statusText,
+	        headers: responseHeaders,
+	        config: config,
+	        request: request
+	      };
+	      settle(function _resolve(value) {
+	        resolve(value);
+	        done();
+	      }, function _reject(err) {
+	        reject(err);
+	        done();
+	      }, response); // Clean up request
+
+	      request = null;
+	    }
+
+	    if ('onloadend' in request) {
+	      // Use onloadend if available
+	      request.onloadend = onloadend;
+	    } else {
+	      // Listen for ready state to emulate onloadend
+	      request.onreadystatechange = function handleLoad() {
+	        if (!request || request.readyState !== 4) {
+	          return;
+	        } // The request errored out and we didn't get a response, this will be
+	        // handled by onerror instead
+	        // With one exception: request that using file: protocol, most browsers
+	        // will return status as 0 even though it's a successful request
+
+
+	        if (request.status === 0 && !(request.responseURL && request.responseURL.indexOf('file:') === 0)) {
+	          return;
+	        } // readystate handler is calling before onerror or ontimeout handlers,
+	        // so we should call onloadend on the next 'tick'
+
+
+	        setTimeout(onloadend);
+	      };
+	    } // Handle browser request cancellation (as opposed to a manual cancellation)
+
+
+	    request.onabort = function handleAbort() {
+	      if (!request) {
+	        return;
+	      }
+
+	      reject(new AxiosError_1('Request aborted', AxiosError_1.ECONNABORTED, config, request)); // Clean up request
+
+	      request = null;
+	    }; // Handle low level network errors
+
+
+	    request.onerror = function handleError() {
+	      // Real errors are hidden from us by the browser
+	      // onerror should only fire if it's a network error
+	      reject(new AxiosError_1('Network Error', AxiosError_1.ERR_NETWORK, config, request, request)); // Clean up request
+
+	      request = null;
+	    }; // Handle timeout
+
+
+	    request.ontimeout = function handleTimeout() {
+	      var timeoutErrorMessage = config.timeout ? 'timeout of ' + config.timeout + 'ms exceeded' : 'timeout exceeded';
+	      var transitional$1 = config.transitional || transitional;
+
+	      if (config.timeoutErrorMessage) {
+	        timeoutErrorMessage = config.timeoutErrorMessage;
+	      }
+
+	      reject(new AxiosError_1(timeoutErrorMessage, transitional$1.clarifyTimeoutError ? AxiosError_1.ETIMEDOUT : AxiosError_1.ECONNABORTED, config, request)); // Clean up request
+
+	      request = null;
+	    }; // Add xsrf header
+	    // This is only done if running in a standard browser environment.
+	    // Specifically not if we're in a web worker, or react-native.
+
+
+	    if (utils.isStandardBrowserEnv()) {
+	      // Add xsrf header
+	      var xsrfValue = (config.withCredentials || isURLSameOrigin(fullPath)) && config.xsrfCookieName ? cookies.read(config.xsrfCookieName) : undefined;
+
+	      if (xsrfValue) {
+	        requestHeaders[config.xsrfHeaderName] = xsrfValue;
+	      }
+	    } // Add headers to the request
+
+
+	    if ('setRequestHeader' in request) {
+	      utils.forEach(requestHeaders, function setRequestHeader(val, key) {
+	        if (typeof requestData === 'undefined' && key.toLowerCase() === 'content-type') {
+	          // Remove Content-Type if data is undefined
+	          delete requestHeaders[key];
+	        } else {
+	          // Otherwise add header to the request
+	          request.setRequestHeader(key, val);
+	        }
+	      });
+	    } // Add withCredentials to request if needed
+
+
+	    if (!utils.isUndefined(config.withCredentials)) {
+	      request.withCredentials = !!config.withCredentials;
+	    } // Add responseType to request if needed
+
+
+	    if (responseType && responseType !== 'json') {
+	      request.responseType = config.responseType;
+	    } // Handle progress if needed
+
+
+	    if (typeof config.onDownloadProgress === 'function') {
+	      request.addEventListener('progress', config.onDownloadProgress);
+	    } // Not all browsers support upload events
+
+
+	    if (typeof config.onUploadProgress === 'function' && request.upload) {
+	      request.upload.addEventListener('progress', config.onUploadProgress);
+	    }
+
+	    if (config.cancelToken || config.signal) {
+	      // Handle cancellation
+	      // eslint-disable-next-line func-names
+	      onCanceled = function (cancel) {
+	        if (!request) {
+	          return;
+	        }
+
+	        reject(!cancel || cancel && cancel.type ? new CanceledError_1() : cancel);
+	        request.abort();
+	        request = null;
+	      };
+
+	      config.cancelToken && config.cancelToken.subscribe(onCanceled);
+
+	      if (config.signal) {
+	        config.signal.aborted ? onCanceled() : config.signal.addEventListener('abort', onCanceled);
+	      }
+	    }
+
+	    if (!requestData) {
+	      requestData = null;
+	    }
+
+	    var protocol = parseProtocol(fullPath);
+
+	    if (protocol && ['http', 'https', 'file'].indexOf(protocol) === -1) {
+	      reject(new AxiosError_1('Unsupported protocol ' + protocol + ':', AxiosError_1.ERR_BAD_REQUEST, config));
+	      return;
+	    } // Send the request
+
+
+	    request.send(requestData);
+	  });
+	};
+
+	// eslint-disable-next-line strict
+	var _null = null;
+
+	var DEFAULT_CONTENT_TYPE = {
+	  'Content-Type': 'application/x-www-form-urlencoded'
+	};
+
+	function setContentTypeIfUnset(headers, value) {
+	  if (!utils.isUndefined(headers) && utils.isUndefined(headers['Content-Type'])) {
+	    headers['Content-Type'] = value;
+	  }
+	}
+
+	function getDefaultAdapter() {
+	  var adapter;
+
+	  if (typeof XMLHttpRequest !== 'undefined') {
+	    // For browsers use XHR adapter
+	    adapter = xhr;
+	  } else if (typeof process !== 'undefined' && Object.prototype.toString.call(process) === '[object process]') {
+	    // For node use HTTP adapter
+	    adapter = xhr;
+	  }
+
+	  return adapter;
+	}
+
+	function stringifySafely(rawValue, parser, encoder) {
+	  if (utils.isString(rawValue)) {
+	    try {
+	      (parser || JSON.parse)(rawValue);
+	      return utils.trim(rawValue);
+	    } catch (e) {
+	      if (e.name !== 'SyntaxError') {
+	        throw e;
+	      }
+	    }
+	  }
+
+	  return (encoder || JSON.stringify)(rawValue);
+	}
+
+	var defaults = {
+	  transitional: transitional,
+	  adapter: getDefaultAdapter(),
+	  transformRequest: [function transformRequest(data, headers) {
+	    normalizeHeaderName(headers, 'Accept');
+	    normalizeHeaderName(headers, 'Content-Type');
+
+	    if (utils.isFormData(data) || utils.isArrayBuffer(data) || utils.isBuffer(data) || utils.isStream(data) || utils.isFile(data) || utils.isBlob(data)) {
+	      return data;
+	    }
+
+	    if (utils.isArrayBufferView(data)) {
+	      return data.buffer;
+	    }
+
+	    if (utils.isURLSearchParams(data)) {
+	      setContentTypeIfUnset(headers, 'application/x-www-form-urlencoded;charset=utf-8');
+	      return data.toString();
+	    }
+
+	    var isObjectPayload = utils.isObject(data);
+	    var contentType = headers && headers['Content-Type'];
+	    var isFileList;
+
+	    if ((isFileList = utils.isFileList(data)) || isObjectPayload && contentType === 'multipart/form-data') {
+	      var _FormData = this.env && this.env.FormData;
+
+	      return toFormData_1(isFileList ? {
+	        'files[]': data
+	      } : data, _FormData && new _FormData());
+	    } else if (isObjectPayload || contentType === 'application/json') {
+	      setContentTypeIfUnset(headers, 'application/json');
+	      return stringifySafely(data);
+	    }
+
+	    return data;
+	  }],
+	  transformResponse: [function transformResponse(data) {
+	    var transitional = this.transitional || defaults.transitional;
+	    var silentJSONParsing = transitional && transitional.silentJSONParsing;
+	    var forcedJSONParsing = transitional && transitional.forcedJSONParsing;
+	    var strictJSONParsing = !silentJSONParsing && this.responseType === 'json';
+
+	    if (strictJSONParsing || forcedJSONParsing && utils.isString(data) && data.length) {
+	      try {
+	        return JSON.parse(data);
+	      } catch (e) {
+	        if (strictJSONParsing) {
+	          if (e.name === 'SyntaxError') {
+	            throw AxiosError_1.from(e, AxiosError_1.ERR_BAD_RESPONSE, this, null, this.response);
+	          }
+
+	          throw e;
+	        }
+	      }
+	    }
+
+	    return data;
+	  }],
+
+	  /**
+	   * A timeout in milliseconds to abort a request. If set to 0 (default) a
+	   * timeout is not created.
+	   */
+	  timeout: 0,
+	  xsrfCookieName: 'XSRF-TOKEN',
+	  xsrfHeaderName: 'X-XSRF-TOKEN',
+	  maxContentLength: -1,
+	  maxBodyLength: -1,
+	  env: {
+	    FormData: _null
+	  },
+	  validateStatus: function validateStatus(status) {
+	    return status >= 200 && status < 300;
+	  },
+	  headers: {
+	    common: {
+	      'Accept': 'application/json, text/plain, */*'
+	    }
+	  }
+	};
+	utils.forEach(['delete', 'get', 'head'], function forEachMethodNoData(method) {
+	  defaults.headers[method] = {};
+	});
+	utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
+	  defaults.headers[method] = utils.merge(DEFAULT_CONTENT_TYPE);
+	});
+	var defaults_1 = defaults;
+
+	/**
+	 * Transform the data for a request or a response
+	 *
+	 * @param {Object|String} data The data to be transformed
+	 * @param {Array} headers The headers for the request or response
+	 * @param {Array|Function} fns A single function or Array of functions
+	 * @returns {*} The resulting transformed data
+	 */
+
+
+	var transformData = function transformData(data, headers, fns) {
+	  var context = this || defaults_1;
+	  /*eslint no-param-reassign:0*/
+
+	  utils.forEach(fns, function transform(fn) {
+	    data = fn.call(context, data, headers);
+	  });
+	  return data;
+	};
+
+	var isCancel = function isCancel(value) {
+	  return !!(value && value.__CANCEL__);
+	};
+
+	/**
+	 * Throws a `CanceledError` if cancellation has been requested.
+	 */
+
+
+	function throwIfCancellationRequested(config) {
+	  if (config.cancelToken) {
+	    config.cancelToken.throwIfRequested();
+	  }
+
+	  if (config.signal && config.signal.aborted) {
+	    throw new CanceledError_1();
+	  }
+	}
+	/**
+	 * Dispatch a request to the server using the configured adapter.
+	 *
+	 * @param {object} config The config that is to be used for the request
+	 * @returns {Promise} The Promise to be fulfilled
+	 */
+
+
+	var dispatchRequest = function dispatchRequest(config) {
+	  throwIfCancellationRequested(config); // Ensure headers exist
+
+	  config.headers = config.headers || {}; // Transform request data
+
+	  config.data = transformData.call(config, config.data, config.headers, config.transformRequest); // Flatten headers
+
+	  config.headers = utils.merge(config.headers.common || {}, config.headers[config.method] || {}, config.headers);
+	  utils.forEach(['delete', 'get', 'head', 'post', 'put', 'patch', 'common'], function cleanHeaderConfig(method) {
+	    delete config.headers[method];
+	  });
+	  var adapter = config.adapter || defaults_1.adapter;
+	  return adapter(config).then(function onAdapterResolution(response) {
+	    throwIfCancellationRequested(config); // Transform response data
+
+	    response.data = transformData.call(config, response.data, response.headers, config.transformResponse);
+	    return response;
+	  }, function onAdapterRejection(reason) {
+	    if (!isCancel(reason)) {
+	      throwIfCancellationRequested(config); // Transform response data
+
+	      if (reason && reason.response) {
+	        reason.response.data = transformData.call(config, reason.response.data, reason.response.headers, config.transformResponse);
+	      }
+	    }
+
+	    return Promise.reject(reason);
+	  });
+	};
+
+	/**
+	 * Config-specific merge-function which creates a new config-object
+	 * by merging two configuration objects together.
+	 *
+	 * @param {Object} config1
+	 * @param {Object} config2
+	 * @returns {Object} New object resulting from merging config2 to config1
+	 */
+
+
+	var mergeConfig = function mergeConfig(config1, config2) {
+	  // eslint-disable-next-line no-param-reassign
+	  config2 = config2 || {};
+	  var config = {};
+
+	  function getMergedValue(target, source) {
+	    if (utils.isPlainObject(target) && utils.isPlainObject(source)) {
+	      return utils.merge(target, source);
+	    } else if (utils.isPlainObject(source)) {
+	      return utils.merge({}, source);
+	    } else if (utils.isArray(source)) {
+	      return source.slice();
+	    }
+
+	    return source;
+	  } // eslint-disable-next-line consistent-return
+
+
+	  function mergeDeepProperties(prop) {
+	    if (!utils.isUndefined(config2[prop])) {
+	      return getMergedValue(config1[prop], config2[prop]);
+	    } else if (!utils.isUndefined(config1[prop])) {
+	      return getMergedValue(undefined, config1[prop]);
+	    }
+	  } // eslint-disable-next-line consistent-return
+
+
+	  function valueFromConfig2(prop) {
+	    if (!utils.isUndefined(config2[prop])) {
+	      return getMergedValue(undefined, config2[prop]);
+	    }
+	  } // eslint-disable-next-line consistent-return
+
+
+	  function defaultToConfig2(prop) {
+	    if (!utils.isUndefined(config2[prop])) {
+	      return getMergedValue(undefined, config2[prop]);
+	    } else if (!utils.isUndefined(config1[prop])) {
+	      return getMergedValue(undefined, config1[prop]);
+	    }
+	  } // eslint-disable-next-line consistent-return
+
+
+	  function mergeDirectKeys(prop) {
+	    if (prop in config2) {
+	      return getMergedValue(config1[prop], config2[prop]);
+	    } else if (prop in config1) {
+	      return getMergedValue(undefined, config1[prop]);
+	    }
+	  }
+
+	  var mergeMap = {
+	    'url': valueFromConfig2,
+	    'method': valueFromConfig2,
+	    'data': valueFromConfig2,
+	    'baseURL': defaultToConfig2,
+	    'transformRequest': defaultToConfig2,
+	    'transformResponse': defaultToConfig2,
+	    'paramsSerializer': defaultToConfig2,
+	    'timeout': defaultToConfig2,
+	    'timeoutMessage': defaultToConfig2,
+	    'withCredentials': defaultToConfig2,
+	    'adapter': defaultToConfig2,
+	    'responseType': defaultToConfig2,
+	    'xsrfCookieName': defaultToConfig2,
+	    'xsrfHeaderName': defaultToConfig2,
+	    'onUploadProgress': defaultToConfig2,
+	    'onDownloadProgress': defaultToConfig2,
+	    'decompress': defaultToConfig2,
+	    'maxContentLength': defaultToConfig2,
+	    'maxBodyLength': defaultToConfig2,
+	    'beforeRedirect': defaultToConfig2,
+	    'transport': defaultToConfig2,
+	    'httpAgent': defaultToConfig2,
+	    'httpsAgent': defaultToConfig2,
+	    'cancelToken': defaultToConfig2,
+	    'socketPath': defaultToConfig2,
+	    'responseEncoding': defaultToConfig2,
+	    'validateStatus': mergeDirectKeys
+	  };
+	  utils.forEach(Object.keys(config1).concat(Object.keys(config2)), function computeConfigValue(prop) {
+	    var merge = mergeMap[prop] || mergeDeepProperties;
+	    var configValue = merge(prop);
+	    utils.isUndefined(configValue) && merge !== mergeDirectKeys || (config[prop] = configValue);
+	  });
+	  return config;
+	};
+
+	var data = {
+	  "version": "0.27.2"
+	};
+
+	var VERSION = data.version;
+
+
+
+	var validators$1 = {}; // eslint-disable-next-line func-names
+
+	['object', 'boolean', 'number', 'function', 'string', 'symbol'].forEach(function (type, i) {
+	  validators$1[type] = function validator(thing) {
+	    return typeof thing === type || 'a' + (i < 1 ? 'n ' : ' ') + type;
+	  };
+	});
+	var deprecatedWarnings = {};
+	/**
+	 * Transitional option validator
+	 * @param {function|boolean?} validator - set to false if the transitional option has been removed
+	 * @param {string?} version - deprecated version / removed since version
+	 * @param {string?} message - some message with additional info
+	 * @returns {function}
+	 */
+
+	validators$1.transitional = function transitional(validator, version, message) {
+	  function formatMessage(opt, desc) {
+	    return '[Axios v' + VERSION + '] Transitional option \'' + opt + '\'' + desc + (message ? '. ' + message : '');
+	  } // eslint-disable-next-line func-names
+
+
+	  return function (value, opt, opts) {
+	    if (validator === false) {
+	      throw new AxiosError_1(formatMessage(opt, ' has been removed' + (version ? ' in ' + version : '')), AxiosError_1.ERR_DEPRECATED);
+	    }
+
+	    if (version && !deprecatedWarnings[opt]) {
+	      deprecatedWarnings[opt] = true; // eslint-disable-next-line no-console
+
+	      console.warn(formatMessage(opt, ' has been deprecated since v' + version + ' and will be removed in the near future'));
+	    }
+
+	    return validator ? validator(value, opt, opts) : true;
+	  };
+	};
+	/**
+	 * Assert object's properties type
+	 * @param {object} options
+	 * @param {object} schema
+	 * @param {boolean?} allowUnknown
+	 */
+
+
+	function assertOptions(options, schema, allowUnknown) {
+	  if (typeof options !== 'object') {
+	    throw new AxiosError_1('options must be an object', AxiosError_1.ERR_BAD_OPTION_VALUE);
+	  }
+
+	  var keys = Object.keys(options);
+	  var i = keys.length;
+
+	  while (i-- > 0) {
+	    var opt = keys[i];
+	    var validator = schema[opt];
+
+	    if (validator) {
+	      var value = options[opt];
+	      var result = value === undefined || validator(value, opt, options);
+
+	      if (result !== true) {
+	        throw new AxiosError_1('option ' + opt + ' must be ' + result, AxiosError_1.ERR_BAD_OPTION_VALUE);
+	      }
+
+	      continue;
+	    }
+
+	    if (allowUnknown !== true) {
+	      throw new AxiosError_1('Unknown option ' + opt, AxiosError_1.ERR_BAD_OPTION);
+	    }
+	  }
+	}
+
+	var validator = {
+	  assertOptions: assertOptions,
+	  validators: validators$1
+	};
+
+	var validators = validator.validators;
+	/**
+	 * Create a new instance of Axios
+	 *
+	 * @param {Object} instanceConfig The default config for the instance
+	 */
+
+	function Axios(instanceConfig) {
+	  this.defaults = instanceConfig;
+	  this.interceptors = {
+	    request: new InterceptorManager_1(),
+	    response: new InterceptorManager_1()
+	  };
+	}
+	/**
+	 * Dispatch a request
+	 *
+	 * @param {Object} config The config specific for this request (merged with this.defaults)
+	 */
+
+
+	Axios.prototype.request = function request(configOrUrl, config) {
+	  /*eslint no-param-reassign:0*/
+	  // Allow for axios('example/url'[, config]) a la fetch API
+	  if (typeof configOrUrl === 'string') {
+	    config = config || {};
+	    config.url = configOrUrl;
+	  } else {
+	    config = configOrUrl || {};
+	  }
+
+	  config = mergeConfig(this.defaults, config); // Set config.method
+
+	  if (config.method) {
+	    config.method = config.method.toLowerCase();
+	  } else if (this.defaults.method) {
+	    config.method = this.defaults.method.toLowerCase();
+	  } else {
+	    config.method = 'get';
+	  }
+
+	  var transitional = config.transitional;
+
+	  if (transitional !== undefined) {
+	    validator.assertOptions(transitional, {
+	      silentJSONParsing: validators.transitional(validators.boolean),
+	      forcedJSONParsing: validators.transitional(validators.boolean),
+	      clarifyTimeoutError: validators.transitional(validators.boolean)
+	    }, false);
+	  } // filter out skipped interceptors
+
+
+	  var requestInterceptorChain = [];
+	  var synchronousRequestInterceptors = true;
+	  this.interceptors.request.forEach(function unshiftRequestInterceptors(interceptor) {
+	    if (typeof interceptor.runWhen === 'function' && interceptor.runWhen(config) === false) {
+	      return;
+	    }
+
+	    synchronousRequestInterceptors = synchronousRequestInterceptors && interceptor.synchronous;
+	    requestInterceptorChain.unshift(interceptor.fulfilled, interceptor.rejected);
+	  });
+	  var responseInterceptorChain = [];
+	  this.interceptors.response.forEach(function pushResponseInterceptors(interceptor) {
+	    responseInterceptorChain.push(interceptor.fulfilled, interceptor.rejected);
+	  });
+	  var promise;
+
+	  if (!synchronousRequestInterceptors) {
+	    var chain = [dispatchRequest, undefined];
+	    Array.prototype.unshift.apply(chain, requestInterceptorChain);
+	    chain = chain.concat(responseInterceptorChain);
+	    promise = Promise.resolve(config);
+
+	    while (chain.length) {
+	      promise = promise.then(chain.shift(), chain.shift());
+	    }
+
+	    return promise;
+	  }
+
+	  var newConfig = config;
+
+	  while (requestInterceptorChain.length) {
+	    var onFulfilled = requestInterceptorChain.shift();
+	    var onRejected = requestInterceptorChain.shift();
+
+	    try {
+	      newConfig = onFulfilled(newConfig);
+	    } catch (error) {
+	      onRejected(error);
+	      break;
+	    }
+	  }
+
+	  try {
+	    promise = dispatchRequest(newConfig);
+	  } catch (error) {
+	    return Promise.reject(error);
+	  }
+
+	  while (responseInterceptorChain.length) {
+	    promise = promise.then(responseInterceptorChain.shift(), responseInterceptorChain.shift());
+	  }
+
+	  return promise;
+	};
+
+	Axios.prototype.getUri = function getUri(config) {
+	  config = mergeConfig(this.defaults, config);
+	  var fullPath = buildFullPath(config.baseURL, config.url);
+	  return buildURL(fullPath, config.params, config.paramsSerializer);
+	}; // Provide aliases for supported request methods
+
+
+	utils.forEach(['delete', 'get', 'head', 'options'], function forEachMethodNoData(method) {
+	  /*eslint func-names:0*/
+	  Axios.prototype[method] = function (url, config) {
+	    return this.request(mergeConfig(config || {}, {
+	      method: method,
+	      url: url,
+	      data: (config || {}).data
+	    }));
+	  };
+	});
+	utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
+	  /*eslint func-names:0*/
+	  function generateHTTPMethod(isForm) {
+	    return function httpMethod(url, data, config) {
+	      return this.request(mergeConfig(config || {}, {
+	        method: method,
+	        headers: isForm ? {
+	          'Content-Type': 'multipart/form-data'
+	        } : {},
+	        url: url,
+	        data: data
+	      }));
+	    };
+	  }
+
+	  Axios.prototype[method] = generateHTTPMethod();
+	  Axios.prototype[method + 'Form'] = generateHTTPMethod(true);
+	});
+	var Axios_1 = Axios;
+
+	/**
+	 * A `CancelToken` is an object that can be used to request cancellation of an operation.
+	 *
+	 * @class
+	 * @param {Function} executor The executor function.
+	 */
+
+
+	function CancelToken(executor) {
+	  if (typeof executor !== 'function') {
+	    throw new TypeError('executor must be a function.');
+	  }
+
+	  var resolvePromise;
+	  this.promise = new Promise(function promiseExecutor(resolve) {
+	    resolvePromise = resolve;
+	  });
+	  var token = this; // eslint-disable-next-line func-names
+
+	  this.promise.then(function (cancel) {
+	    if (!token._listeners) return;
+	    var i;
+	    var l = token._listeners.length;
+
+	    for (i = 0; i < l; i++) {
+	      token._listeners[i](cancel);
+	    }
+
+	    token._listeners = null;
+	  }); // eslint-disable-next-line func-names
+
+	  this.promise.then = function (onfulfilled) {
+	    var _resolve; // eslint-disable-next-line func-names
+
+
+	    var promise = new Promise(function (resolve) {
+	      token.subscribe(resolve);
+	      _resolve = resolve;
+	    }).then(onfulfilled);
+
+	    promise.cancel = function reject() {
+	      token.unsubscribe(_resolve);
+	    };
+
+	    return promise;
+	  };
+
+	  executor(function cancel(message) {
+	    if (token.reason) {
+	      // Cancellation has already been requested
+	      return;
+	    }
+
+	    token.reason = new CanceledError_1(message);
+	    resolvePromise(token.reason);
+	  });
+	}
+	/**
+	 * Throws a `CanceledError` if cancellation has been requested.
+	 */
+
+
+	CancelToken.prototype.throwIfRequested = function throwIfRequested() {
+	  if (this.reason) {
+	    throw this.reason;
+	  }
+	};
+	/**
+	 * Subscribe to the cancel signal
+	 */
+
+
+	CancelToken.prototype.subscribe = function subscribe(listener) {
+	  if (this.reason) {
+	    listener(this.reason);
+	    return;
+	  }
+
+	  if (this._listeners) {
+	    this._listeners.push(listener);
+	  } else {
+	    this._listeners = [listener];
+	  }
+	};
+	/**
+	 * Unsubscribe from the cancel signal
+	 */
+
+
+	CancelToken.prototype.unsubscribe = function unsubscribe(listener) {
+	  if (!this._listeners) {
+	    return;
+	  }
+
+	  var index = this._listeners.indexOf(listener);
+
+	  if (index !== -1) {
+	    this._listeners.splice(index, 1);
+	  }
+	};
+	/**
+	 * Returns an object that contains a new `CancelToken` and a function that, when called,
+	 * cancels the `CancelToken`.
+	 */
+
+
+	CancelToken.source = function source() {
+	  var cancel;
+	  var token = new CancelToken(function executor(c) {
+	    cancel = c;
+	  });
+	  return {
+	    token: token,
+	    cancel: cancel
+	  };
+	};
+
+	var CancelToken_1 = CancelToken;
+
+	/**
+	 * Syntactic sugar for invoking a function and expanding an array for arguments.
+	 *
+	 * Common use case would be to use `Function.prototype.apply`.
+	 *
+	 *  ```js
+	 *  function f(x, y, z) {}
+	 *  var args = [1, 2, 3];
+	 *  f.apply(null, args);
+	 *  ```
+	 *
+	 * With `spread` this example can be re-written.
+	 *
+	 *  ```js
+	 *  spread(function(x, y, z) {})([1, 2, 3]);
+	 *  ```
+	 *
+	 * @param {Function} callback
+	 * @returns {Function}
+	 */
+
+	var spread = function spread(callback) {
+	  return function wrap(arr) {
+	    return callback.apply(null, arr);
+	  };
+	};
+
+	/**
+	 * Determines whether the payload is an error thrown by Axios
+	 *
+	 * @param {*} payload The value to test
+	 * @returns {boolean} True if the payload is an error thrown by Axios, otherwise false
+	 */
+
+
+	var isAxiosError = function isAxiosError(payload) {
+	  return utils.isObject(payload) && payload.isAxiosError === true;
+	};
+
+	/**
+	 * Create an instance of Axios
+	 *
+	 * @param {Object} defaultConfig The default config for the instance
+	 * @return {Axios} A new instance of Axios
+	 */
+
+
+	function createInstance(defaultConfig) {
+	  var context = new Axios_1(defaultConfig);
+	  var instance = bind(Axios_1.prototype.request, context); // Copy axios.prototype to instance
+
+	  utils.extend(instance, Axios_1.prototype, context); // Copy context to instance
+
+	  utils.extend(instance, context); // Factory for creating new instances
+
+	  instance.create = function create(instanceConfig) {
+	    return createInstance(mergeConfig(defaultConfig, instanceConfig));
+	  };
+
+	  return instance;
+	} // Create the default instance to be exported
+
+
+	var axios$1 = createInstance(defaults_1); // Expose Axios class to allow class inheritance
+
+	axios$1.Axios = Axios_1; // Expose Cancel & CancelToken
+
+	axios$1.CanceledError = CanceledError_1;
+	axios$1.CancelToken = CancelToken_1;
+	axios$1.isCancel = isCancel;
+	axios$1.VERSION = data.version;
+	axios$1.toFormData = toFormData_1; // Expose AxiosError class
+
+	axios$1.AxiosError = AxiosError_1; // alias for CanceledError for backward compatibility
+
+	axios$1.Cancel = axios$1.CanceledError; // Expose all/spread
+
+	axios$1.all = function all(promises) {
+	  return Promise.all(promises);
+	};
+
+	axios$1.spread = spread; // Expose isAxiosError
+
+	axios$1.isAxiosError = isAxiosError;
+	var axios_1 = axios$1; // Allow use of default import syntax in TypeScript
+
+	var default_1 = axios$1;
+	axios_1.default = default_1;
+
+	var axios = axios_1;
+
+	const createApiClient = ({
+	  base,
+	  token
+	}) => axios.create({
+	  baseURL: base,
+	  timeout: 1000,
+	  headers: {
+	    'Authorization': 'Bearer ' + token
+	  }
+	});
+
+	function createDiffApi({
+	  token,
+	  diffId,
+	  apiBaseUrl
+	}) {
+	  const apiClient = createApiClient({
+	    base: apiBaseUrl,
+	    token
+	  });
+
+	  const fetchDiff = async () => {
+	    const response = await apiClient.get(`/diffs/${diffId}`);
+	    return response.data;
+	  };
+
+	  return {
+	    fetchDiff
+	  };
+	}
+	const useDiffApi = config => {
+	  const diffyApi = createDiffApi(config);
+	  const cache = react_31({});
+	  const [status, setStatus] = react_32('idle');
+	  const [data, setData] = react_32([]);
+	  react_24(() => {
+	    const fetchData = async () => {
+	      setStatus('fetching');
+	      const data = await diffyApi.fetchDiff();
+	      cache.current[config.diffId] = data;
+	      setData(data);
+	      setStatus('fetched');
+	    };
+
+	    fetchData();
+	  }, [config.diffId]);
+	  return {
+	    status,
+	    data
+	  };
+	};
+
+	// globalStyles.js
+	const GlobalStyle = We$1([":host{@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap');font-family:'Roboto Mono',monospace;}"]);
+
+	function App({
+	  config: {
+	    API_BASE,
+	    diffId,
+	    token
+	  }
+	}) {
+	  const {
+	    data,
+	    status
+	  } = useDiffApi({
+	    apiBaseUrl: API_BASE,
+	    diffId,
+	    token
+	  });
+
+	  const renderDiff = () => {
+	    if (status === 'error') {
+	      return /*#__PURE__*/react.createElement("div", {
+	        style: {
+	          color: 'red'
+	        }
+	      }, "\u26A0\uFE0F error loading the given diff");
+	    } else {
+	      if (status === 'fetched') {
+	        return /*#__PURE__*/react.createElement(DiffViewer, {
+	          data: data
+	        });
+	      } else {
+	        return /*#__PURE__*/react.createElement("div", null, "loading diff daya");
+	      }
+	    }
+	  };
+
+	  return /*#__PURE__*/react.createElement(react.Fragment, null, /*#__PURE__*/react.createElement(GlobalStyle, null), renderDiff());
+	}
+
+	var scheduler_production_min = createCommonjsModule(function (module, exports) {
+
+	function f(a, b) {
+	  var c = a.length;
+	  a.push(b);
+
+	  a: for (; 0 < c;) {
+	    var d = c - 1 >>> 1,
+	        e = a[d];
+	    if (0 < g(e, b)) a[d] = b, a[c] = e, c = d;else break a;
+	  }
+	}
+
+	function h(a) {
+	  return 0 === a.length ? null : a[0];
+	}
+
+	function k(a) {
+	  if (0 === a.length) return null;
+	  var b = a[0],
+	      c = a.pop();
+
+	  if (c !== b) {
+	    a[0] = c;
+
+	    a: for (var d = 0, e = a.length, w = e >>> 1; d < w;) {
+	      var m = 2 * (d + 1) - 1,
+	          C = a[m],
+	          n = m + 1,
+	          x = a[n];
+	      if (0 > g(C, c)) n < e && 0 > g(x, C) ? (a[d] = x, a[n] = c, d = n) : (a[d] = C, a[m] = c, d = m);else if (n < e && 0 > g(x, c)) a[d] = x, a[n] = c, d = n;else break a;
+	    }
+	  }
+
+	  return b;
+	}
+
+	function g(a, b) {
+	  var c = a.sortIndex - b.sortIndex;
+	  return 0 !== c ? c : a.id - b.id;
+	}
+
+	if ("object" === typeof performance && "function" === typeof performance.now) {
+	  var l = performance;
+
+	  exports.unstable_now = function () {
+	    return l.now();
+	  };
+	} else {
+	  var p = Date,
+	      q = p.now();
+
+	  exports.unstable_now = function () {
+	    return p.now() - q;
+	  };
+	}
+
+	var r = [],
+	    t = [],
+	    u = 1,
+	    v = null,
+	    y = 3,
+	    z = !1,
+	    A = !1,
+	    B = !1,
+	    D = "function" === typeof setTimeout ? setTimeout : null,
+	    E = "function" === typeof clearTimeout ? clearTimeout : null,
+	    F = "undefined" !== typeof setImmediate ? setImmediate : null;
+	"undefined" !== typeof navigator && void 0 !== navigator.scheduling && void 0 !== navigator.scheduling.isInputPending && navigator.scheduling.isInputPending.bind(navigator.scheduling);
+
+	function G(a) {
+	  for (var b = h(t); null !== b;) {
+	    if (null === b.callback) k(t);else if (b.startTime <= a) k(t), b.sortIndex = b.expirationTime, f(r, b);else break;
+	    b = h(t);
+	  }
+	}
+
+	function H(a) {
+	  B = !1;
+	  G(a);
+	  if (!A) if (null !== h(r)) A = !0, I(J);else {
+	    var b = h(t);
+	    null !== b && K(H, b.startTime - a);
+	  }
+	}
+
+	function J(a, b) {
+	  A = !1;
+	  B && (B = !1, E(L), L = -1);
+	  z = !0;
+	  var c = y;
+
+	  try {
+	    G(b);
+
+	    for (v = h(r); null !== v && (!(v.expirationTime > b) || a && !M());) {
+	      var d = v.callback;
+
+	      if ("function" === typeof d) {
+	        v.callback = null;
+	        y = v.priorityLevel;
+	        var e = d(v.expirationTime <= b);
+	        b = exports.unstable_now();
+	        "function" === typeof e ? v.callback = e : v === h(r) && k(r);
+	        G(b);
+	      } else k(r);
+
+	      v = h(r);
+	    }
+
+	    if (null !== v) var w = !0;else {
+	      var m = h(t);
+	      null !== m && K(H, m.startTime - b);
+	      w = !1;
+	    }
+	    return w;
+	  } finally {
+	    v = null, y = c, z = !1;
+	  }
+	}
+
+	var N = !1,
+	    O = null,
+	    L = -1,
+	    P = 5,
+	    Q = -1;
+
+	function M() {
+	  return exports.unstable_now() - Q < P ? !1 : !0;
+	}
+
+	function R() {
+	  if (null !== O) {
+	    var a = exports.unstable_now();
+	    Q = a;
+	    var b = !0;
+
+	    try {
+	      b = O(!0, a);
+	    } finally {
+	      b ? S() : (N = !1, O = null);
+	    }
+	  } else N = !1;
+	}
+
+	var S;
+	if ("function" === typeof F) S = function () {
+	  F(R);
+	};else if ("undefined" !== typeof MessageChannel) {
+	  var T = new MessageChannel(),
+	      U = T.port2;
+	  T.port1.onmessage = R;
+
+	  S = function () {
+	    U.postMessage(null);
+	  };
+	} else S = function () {
+	  D(R, 0);
+	};
+
+	function I(a) {
+	  O = a;
+	  N || (N = !0, S());
+	}
+
+	function K(a, b) {
+	  L = D(function () {
+	    a(exports.unstable_now());
+	  }, b);
+	}
+
+	exports.unstable_IdlePriority = 5;
+	exports.unstable_ImmediatePriority = 1;
+	exports.unstable_LowPriority = 4;
+	exports.unstable_NormalPriority = 3;
+	exports.unstable_Profiling = null;
+	exports.unstable_UserBlockingPriority = 2;
+
+	exports.unstable_cancelCallback = function (a) {
+	  a.callback = null;
+	};
+
+	exports.unstable_continueExecution = function () {
+	  A || z || (A = !0, I(J));
+	};
+
+	exports.unstable_forceFrameRate = function (a) {
+	  0 > a || 125 < a ? console.error("forceFrameRate takes a positive int between 0 and 125, forcing frame rates higher than 125 fps is not supported") : P = 0 < a ? Math.floor(1E3 / a) : 5;
+	};
+
+	exports.unstable_getCurrentPriorityLevel = function () {
+	  return y;
+	};
+
+	exports.unstable_getFirstCallbackNode = function () {
+	  return h(r);
+	};
+
+	exports.unstable_next = function (a) {
+	  switch (y) {
+	    case 1:
+	    case 2:
+	    case 3:
+	      var b = 3;
+	      break;
+
+	    default:
+	      b = y;
+	  }
+
+	  var c = y;
+	  y = b;
+
+	  try {
+	    return a();
+	  } finally {
+	    y = c;
+	  }
+	};
+
+	exports.unstable_pauseExecution = function () {};
+
+	exports.unstable_requestPaint = function () {};
+
+	exports.unstable_runWithPriority = function (a, b) {
+	  switch (a) {
+	    case 1:
+	    case 2:
+	    case 3:
+	    case 4:
+	    case 5:
+	      break;
+
+	    default:
+	      a = 3;
+	  }
+
+	  var c = y;
+	  y = a;
+
+	  try {
+	    return b();
+	  } finally {
+	    y = c;
+	  }
+	};
+
+	exports.unstable_scheduleCallback = function (a, b, c) {
+	  var d = exports.unstable_now();
+	  "object" === typeof c && null !== c ? (c = c.delay, c = "number" === typeof c && 0 < c ? d + c : d) : c = d;
+
+	  switch (a) {
+	    case 1:
+	      var e = -1;
+	      break;
+
+	    case 2:
+	      e = 250;
+	      break;
+
+	    case 5:
+	      e = 1073741823;
+	      break;
+
+	    case 4:
+	      e = 1E4;
+	      break;
+
+	    default:
+	      e = 5E3;
+	  }
+
+	  e = c + e;
+	  a = {
+	    id: u++,
+	    callback: b,
+	    priorityLevel: a,
+	    startTime: c,
+	    expirationTime: e,
+	    sortIndex: -1
+	  };
+	  c > d ? (a.sortIndex = c, f(t, a), null === h(r) && a === h(t) && (B ? (E(L), L = -1) : B = !0, K(H, c - d))) : (a.sortIndex = e, f(r, a), A || z || (A = !0, I(J)));
+	  return a;
+	};
+
+	exports.unstable_shouldYield = M;
+
+	exports.unstable_wrapCallback = function (a) {
+	  var b = y;
+	  return function () {
+	    var c = y;
+	    y = b;
+
+	    try {
+	      return a.apply(this, arguments);
+	    } finally {
+	      y = c;
+	    }
+	  };
+	};
+	});
+	scheduler_production_min.unstable_now;
+	scheduler_production_min.unstable_IdlePriority;
+	scheduler_production_min.unstable_ImmediatePriority;
+	scheduler_production_min.unstable_LowPriority;
+	scheduler_production_min.unstable_NormalPriority;
+	scheduler_production_min.unstable_Profiling;
+	scheduler_production_min.unstable_UserBlockingPriority;
+	scheduler_production_min.unstable_cancelCallback;
+	scheduler_production_min.unstable_continueExecution;
+	scheduler_production_min.unstable_forceFrameRate;
+	scheduler_production_min.unstable_getCurrentPriorityLevel;
+	scheduler_production_min.unstable_getFirstCallbackNode;
+	scheduler_production_min.unstable_next;
+	scheduler_production_min.unstable_pauseExecution;
+	scheduler_production_min.unstable_requestPaint;
+	scheduler_production_min.unstable_runWithPriority;
+	scheduler_production_min.unstable_scheduleCallback;
+	scheduler_production_min.unstable_shouldYield;
+	scheduler_production_min.unstable_wrapCallback;
 
 	var scheduler_development = createCommonjsModule(function (module, exports) {
 
@@ -3373,6 +7779,776 @@
 	  module.exports = scheduler_development;
 	}
 	});
+
+	function p(a) {
+	  for (var b = "https://reactjs.org/docs/error-decoder.html?invariant=" + a, c = 1; c < arguments.length; c++) b += "&args[]=" + encodeURIComponent(arguments[c]);
+
+	  return "Minified React error #" + a + "; visit " + b + " for the full message or use the non-minified dev environment for full errors and additional helpful warnings.";
+	}
+
+	var da = new Set(),
+	    ea = {};
+
+	function fa(a, b) {
+	  ha(a, b);
+	  ha(a + "Capture", b);
+	}
+
+	function ha(a, b) {
+	  ea[a] = b;
+
+	  for (a = 0; a < b.length; a++) da.add(b[a]);
+	}
+
+	var ia = !("undefined" === typeof window || "undefined" === typeof window.document || "undefined" === typeof window.document.createElement);
+
+	function v(a, b, c, d, e, f, g) {
+	  this.acceptsBooleans = 2 === b || 3 === b || 4 === b;
+	  this.attributeName = d;
+	  this.attributeNamespace = e;
+	  this.mustUseProperty = c;
+	  this.propertyName = a;
+	  this.type = b;
+	  this.sanitizeURL = f;
+	  this.removeEmptyString = g;
+	}
+	"children dangerouslySetInnerHTML defaultValue defaultChecked innerHTML suppressContentEditableWarning suppressHydrationWarning style".split(" ").forEach(function (a) {
+	  new v(a, 0, !1, a, null, !1, !1);
+	});
+	[["acceptCharset", "accept-charset"], ["className", "class"], ["htmlFor", "for"], ["httpEquiv", "http-equiv"]].forEach(function (a) {
+	  var b = a[0];
+	  new v(b, 1, !1, a[1], null, !1, !1);
+	});
+	["contentEditable", "draggable", "spellCheck", "value"].forEach(function (a) {
+	  new v(a, 2, !1, a.toLowerCase(), null, !1, !1);
+	});
+	["autoReverse", "externalResourcesRequired", "focusable", "preserveAlpha"].forEach(function (a) {
+	  new v(a, 2, !1, a, null, !1, !1);
+	});
+	"allowFullScreen async autoFocus autoPlay controls default defer disabled disablePictureInPicture disableRemotePlayback formNoValidate hidden loop noModule noValidate open playsInline readOnly required reversed scoped seamless itemScope".split(" ").forEach(function (a) {
+	  new v(a, 3, !1, a.toLowerCase(), null, !1, !1);
+	});
+	["checked", "multiple", "muted", "selected"].forEach(function (a) {
+	  new v(a, 3, !0, a, null, !1, !1);
+	});
+	["capture", "download"].forEach(function (a) {
+	  new v(a, 4, !1, a, null, !1, !1);
+	});
+	["cols", "rows", "size", "span"].forEach(function (a) {
+	  new v(a, 6, !1, a, null, !1, !1);
+	});
+	["rowSpan", "start"].forEach(function (a) {
+	  new v(a, 5, !1, a.toLowerCase(), null, !1, !1);
+	});
+	var ra = /[\-:]([a-z])/g;
+
+	function sa(a) {
+	  return a[1].toUpperCase();
+	}
+
+	"accent-height alignment-baseline arabic-form baseline-shift cap-height clip-path clip-rule color-interpolation color-interpolation-filters color-profile color-rendering dominant-baseline enable-background fill-opacity fill-rule flood-color flood-opacity font-family font-size font-size-adjust font-stretch font-style font-variant font-weight glyph-name glyph-orientation-horizontal glyph-orientation-vertical horiz-adv-x horiz-origin-x image-rendering letter-spacing lighting-color marker-end marker-mid marker-start overline-position overline-thickness paint-order panose-1 pointer-events rendering-intent shape-rendering stop-color stop-opacity strikethrough-position strikethrough-thickness stroke-dasharray stroke-dashoffset stroke-linecap stroke-linejoin stroke-miterlimit stroke-opacity stroke-width text-anchor text-decoration text-rendering underline-position underline-thickness unicode-bidi unicode-range units-per-em v-alphabetic v-hanging v-ideographic v-mathematical vector-effect vert-adv-y vert-origin-x vert-origin-y word-spacing writing-mode xmlns:xlink x-height".split(" ").forEach(function (a) {
+	  var b = a.replace(ra, sa);
+	  new v(b, 1, !1, a, null, !1, !1);
+	});
+	"xlink:actuate xlink:arcrole xlink:role xlink:show xlink:title xlink:type".split(" ").forEach(function (a) {
+	  var b = a.replace(ra, sa);
+	  new v(b, 1, !1, a, "http://www.w3.org/1999/xlink", !1, !1);
+	});
+	["xml:base", "xml:lang", "xml:space"].forEach(function (a) {
+	  var b = a.replace(ra, sa);
+	  new v(b, 1, !1, a, "http://www.w3.org/XML/1998/namespace", !1, !1);
+	});
+	["tabIndex", "crossOrigin"].forEach(function (a) {
+	  new v(a, 1, !1, a.toLowerCase(), null, !1, !1);
+	});
+	new v("xlinkHref", 1, !1, "xlink:href", "http://www.w3.org/1999/xlink", !0, !1);
+	["src", "href", "action", "formAction"].forEach(function (a) {
+	  new v(a, 1, !1, a.toLowerCase(), null, !0, !0);
+	});
+
+	var ua = react.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+
+	var A = Object.assign;
+
+	var mb;
+	    (function (a) {
+	  return "undefined" !== typeof MSApp && MSApp.execUnsafeLocalFunction ? function (b, c, d, e) {
+	    MSApp.execUnsafeLocalFunction(function () {
+	      return a(b, c, d, e);
+	    });
+	  } : a;
+	})(function (a, b) {
+	  if ("http://www.w3.org/2000/svg" !== a.namespaceURI || "innerHTML" in a) a.innerHTML = b;else {
+	    mb = mb || document.createElement("div");
+	    mb.innerHTML = "<svg>" + b.valueOf().toString() + "</svg>";
+
+	    for (b = mb.firstChild; a.firstChild;) a.removeChild(a.firstChild);
+
+	    for (; b.firstChild;) a.appendChild(b.firstChild);
+	  }
+	});
+
+	var pb = {
+	  animationIterationCount: !0,
+	  aspectRatio: !0,
+	  borderImageOutset: !0,
+	  borderImageSlice: !0,
+	  borderImageWidth: !0,
+	  boxFlex: !0,
+	  boxFlexGroup: !0,
+	  boxOrdinalGroup: !0,
+	  columnCount: !0,
+	  columns: !0,
+	  flex: !0,
+	  flexGrow: !0,
+	  flexPositive: !0,
+	  flexShrink: !0,
+	  flexNegative: !0,
+	  flexOrder: !0,
+	  gridArea: !0,
+	  gridRow: !0,
+	  gridRowEnd: !0,
+	  gridRowSpan: !0,
+	  gridRowStart: !0,
+	  gridColumn: !0,
+	  gridColumnEnd: !0,
+	  gridColumnSpan: !0,
+	  gridColumnStart: !0,
+	  fontWeight: !0,
+	  lineClamp: !0,
+	  lineHeight: !0,
+	  opacity: !0,
+	  order: !0,
+	  orphans: !0,
+	  tabSize: !0,
+	  widows: !0,
+	  zIndex: !0,
+	  zoom: !0,
+	  fillOpacity: !0,
+	  floodOpacity: !0,
+	  stopOpacity: !0,
+	  strokeDasharray: !0,
+	  strokeDashoffset: !0,
+	  strokeMiterlimit: !0,
+	  strokeOpacity: !0,
+	  strokeWidth: !0
+	},
+	    qb = ["Webkit", "ms", "Moz", "O"];
+	Object.keys(pb).forEach(function (a) {
+	  qb.forEach(function (b) {
+	    b = b + a.charAt(0).toUpperCase() + a.substring(1);
+	    pb[b] = pb[a];
+	  });
+	});
+
+	A({
+	  menuitem: !0
+	}, {
+	  area: !0,
+	  base: !0,
+	  br: !0,
+	  col: !0,
+	  embed: !0,
+	  hr: !0,
+	  img: !0,
+	  input: !0,
+	  keygen: !0,
+	  link: !0,
+	  meta: !0,
+	  param: !0,
+	  source: !0,
+	  track: !0,
+	  wbr: !0
+	});
+
+	var Lb = !1;
+	if (ia) try {
+	  var Mb = {};
+	  Object.defineProperty(Mb, "passive", {
+	    get: function () {
+	      Lb = !0;
+	    }
+	  });
+	  window.addEventListener("test", Mb, Mb);
+	  window.removeEventListener("test", Mb, Mb);
+	} catch (a) {
+	  Lb = !1;
+	}
+
+	function Vb(a) {
+	  var b = a,
+	      c = a;
+	  if (a.alternate) for (; b.return;) b = b.return;else {
+	    a = b;
+
+	    do b = a, 0 !== (b.flags & 4098) && (c = b.return), a = b.return; while (a);
+	  }
+	  return 3 === b.tag ? c : null;
+	}
+
+	function Xb(a) {
+	  if (Vb(a) !== a) throw Error(p(188));
+	}
+
+	function Yb(a) {
+	  var b = a.alternate;
+
+	  if (!b) {
+	    b = Vb(a);
+	    if (null === b) throw Error(p(188));
+	    return b !== a ? null : a;
+	  }
+
+	  for (var c = a, d = b;;) {
+	    var e = c.return;
+	    if (null === e) break;
+	    var f = e.alternate;
+
+	    if (null === f) {
+	      d = e.return;
+
+	      if (null !== d) {
+	        c = d;
+	        continue;
+	      }
+
+	      break;
+	    }
+
+	    if (e.child === f.child) {
+	      for (f = e.child; f;) {
+	        if (f === c) return Xb(e), a;
+	        if (f === d) return Xb(e), b;
+	        f = f.sibling;
+	      }
+
+	      throw Error(p(188));
+	    }
+
+	    if (c.return !== d.return) c = e, d = f;else {
+	      for (var g = !1, h = e.child; h;) {
+	        if (h === c) {
+	          g = !0;
+	          c = e;
+	          d = f;
+	          break;
+	        }
+
+	        if (h === d) {
+	          g = !0;
+	          d = e;
+	          c = f;
+	          break;
+	        }
+
+	        h = h.sibling;
+	      }
+
+	      if (!g) {
+	        for (h = f.child; h;) {
+	          if (h === c) {
+	            g = !0;
+	            c = f;
+	            d = e;
+	            break;
+	          }
+
+	          if (h === d) {
+	            g = !0;
+	            d = f;
+	            c = e;
+	            break;
+	          }
+
+	          h = h.sibling;
+	        }
+
+	        if (!g) throw Error(p(189));
+	      }
+	    }
+	    if (c.alternate !== d) throw Error(p(190));
+	  }
+
+	  if (3 !== c.tag) throw Error(p(188));
+	  return c.stateNode.current === c ? a : b;
+	}
+
+	function Zb(a) {
+	  a = Yb(a);
+	  return null !== a ? $b(a) : null;
+	}
+
+	function $b(a) {
+	  if (5 === a.tag || 6 === a.tag) return a;
+
+	  for (a = a.child; null !== a;) {
+	    var b = $b(a);
+	    if (null !== b) return b;
+	    a = a.sibling;
+	  }
+
+	  return null;
+	}
+
+	scheduler.unstable_scheduleCallback;
+	    scheduler.unstable_cancelCallback;
+	    scheduler.unstable_shouldYield;
+	    scheduler.unstable_requestPaint;
+	    scheduler.unstable_now;
+	    scheduler.unstable_getCurrentPriorityLevel;
+	    scheduler.unstable_ImmediatePriority;
+	    scheduler.unstable_UserBlockingPriority;
+	    scheduler.unstable_NormalPriority;
+	    scheduler.unstable_LowPriority;
+	    scheduler.unstable_IdlePriority;
+	    var kc = null,
+	    lc = null;
+
+	ua.ReactCurrentBatchConfig;
+
+	function od(a) {
+	  var b = a.keyCode;
+	  "charCode" in a ? (a = a.charCode, 0 === a && 13 === b && (a = 13)) : a = b;
+	  10 === a && (a = 13);
+	  return 32 <= a || 13 === a ? a : 0;
+	}
+
+	function pd() {
+	  return !0;
+	}
+
+	function qd() {
+	  return !1;
+	}
+
+	function rd(a) {
+	  function b(b, d, e, f, g) {
+	    this._reactName = b;
+	    this._targetInst = e;
+	    this.type = d;
+	    this.nativeEvent = f;
+	    this.target = g;
+	    this.currentTarget = null;
+
+	    for (var c in a) a.hasOwnProperty(c) && (b = a[c], this[c] = b ? b(f) : f[c]);
+
+	    this.isDefaultPrevented = (null != f.defaultPrevented ? f.defaultPrevented : !1 === f.returnValue) ? pd : qd;
+	    this.isPropagationStopped = qd;
+	    return this;
+	  }
+
+	  A(b.prototype, {
+	    preventDefault: function () {
+	      this.defaultPrevented = !0;
+	      var a = this.nativeEvent;
+	      a && (a.preventDefault ? a.preventDefault() : "unknown" !== typeof a.returnValue && (a.returnValue = !1), this.isDefaultPrevented = pd);
+	    },
+	    stopPropagation: function () {
+	      var a = this.nativeEvent;
+	      a && (a.stopPropagation ? a.stopPropagation() : "unknown" !== typeof a.cancelBubble && (a.cancelBubble = !0), this.isPropagationStopped = pd);
+	    },
+	    persist: function () {},
+	    isPersistent: pd
+	  });
+	  return b;
+	}
+
+	var sd = {
+	  eventPhase: 0,
+	  bubbles: 0,
+	  cancelable: 0,
+	  timeStamp: function (a) {
+	    return a.timeStamp || Date.now();
+	  },
+	  defaultPrevented: 0,
+	  isTrusted: 0
+	};
+	    rd(sd);
+	    var ud = A({}, sd, {
+	  view: 0,
+	  detail: 0
+	});
+	    rd(ud);
+	    var wd,
+	    xd,
+	    yd,
+	    Ad = A({}, ud, {
+	  screenX: 0,
+	  screenY: 0,
+	  clientX: 0,
+	  clientY: 0,
+	  pageX: 0,
+	  pageY: 0,
+	  ctrlKey: 0,
+	  shiftKey: 0,
+	  altKey: 0,
+	  metaKey: 0,
+	  getModifierState: zd,
+	  button: 0,
+	  buttons: 0,
+	  relatedTarget: function (a) {
+	    return void 0 === a.relatedTarget ? a.fromElement === a.srcElement ? a.toElement : a.fromElement : a.relatedTarget;
+	  },
+	  movementX: function (a) {
+	    if ("movementX" in a) return a.movementX;
+	    a !== yd && (yd && "mousemove" === a.type ? (wd = a.screenX - yd.screenX, xd = a.screenY - yd.screenY) : xd = wd = 0, yd = a);
+	    return wd;
+	  },
+	  movementY: function (a) {
+	    return "movementY" in a ? a.movementY : xd;
+	  }
+	});
+	    rd(Ad);
+	    var Cd = A({}, Ad, {
+	  dataTransfer: 0
+	});
+	    rd(Cd);
+	    var Ed = A({}, ud, {
+	  relatedTarget: 0
+	});
+	    rd(Ed);
+	    var Gd = A({}, sd, {
+	  animationName: 0,
+	  elapsedTime: 0,
+	  pseudoElement: 0
+	});
+	    rd(Gd);
+	    var Id = A({}, sd, {
+	  clipboardData: function (a) {
+	    return "clipboardData" in a ? a.clipboardData : window.clipboardData;
+	  }
+	});
+	    rd(Id);
+	    var Kd = A({}, sd, {
+	  data: 0
+	});
+	    rd(Kd);
+	    var Md = {
+	  Esc: "Escape",
+	  Spacebar: " ",
+	  Left: "ArrowLeft",
+	  Up: "ArrowUp",
+	  Right: "ArrowRight",
+	  Down: "ArrowDown",
+	  Del: "Delete",
+	  Win: "OS",
+	  Menu: "ContextMenu",
+	  Apps: "ContextMenu",
+	  Scroll: "ScrollLock",
+	  MozPrintableKey: "Unidentified"
+	},
+	    Nd = {
+	  8: "Backspace",
+	  9: "Tab",
+	  12: "Clear",
+	  13: "Enter",
+	  16: "Shift",
+	  17: "Control",
+	  18: "Alt",
+	  19: "Pause",
+	  20: "CapsLock",
+	  27: "Escape",
+	  32: " ",
+	  33: "PageUp",
+	  34: "PageDown",
+	  35: "End",
+	  36: "Home",
+	  37: "ArrowLeft",
+	  38: "ArrowUp",
+	  39: "ArrowRight",
+	  40: "ArrowDown",
+	  45: "Insert",
+	  46: "Delete",
+	  112: "F1",
+	  113: "F2",
+	  114: "F3",
+	  115: "F4",
+	  116: "F5",
+	  117: "F6",
+	  118: "F7",
+	  119: "F8",
+	  120: "F9",
+	  121: "F10",
+	  122: "F11",
+	  123: "F12",
+	  144: "NumLock",
+	  145: "ScrollLock",
+	  224: "Meta"
+	},
+	    Od = {
+	  Alt: "altKey",
+	  Control: "ctrlKey",
+	  Meta: "metaKey",
+	  Shift: "shiftKey"
+	};
+
+	function Pd(a) {
+	  var b = this.nativeEvent;
+	  return b.getModifierState ? b.getModifierState(a) : (a = Od[a]) ? !!b[a] : !1;
+	}
+
+	function zd() {
+	  return Pd;
+	}
+
+	var Qd = A({}, ud, {
+	  key: function (a) {
+	    if (a.key) {
+	      var b = Md[a.key] || a.key;
+	      if ("Unidentified" !== b) return b;
+	    }
+
+	    return "keypress" === a.type ? (a = od(a), 13 === a ? "Enter" : String.fromCharCode(a)) : "keydown" === a.type || "keyup" === a.type ? Nd[a.keyCode] || "Unidentified" : "";
+	  },
+	  code: 0,
+	  location: 0,
+	  ctrlKey: 0,
+	  shiftKey: 0,
+	  altKey: 0,
+	  metaKey: 0,
+	  repeat: 0,
+	  locale: 0,
+	  getModifierState: zd,
+	  charCode: function (a) {
+	    return "keypress" === a.type ? od(a) : 0;
+	  },
+	  keyCode: function (a) {
+	    return "keydown" === a.type || "keyup" === a.type ? a.keyCode : 0;
+	  },
+	  which: function (a) {
+	    return "keypress" === a.type ? od(a) : "keydown" === a.type || "keyup" === a.type ? a.keyCode : 0;
+	  }
+	});
+	    rd(Qd);
+	    var Sd = A({}, Ad, {
+	  pointerId: 0,
+	  width: 0,
+	  height: 0,
+	  pressure: 0,
+	  tangentialPressure: 0,
+	  tiltX: 0,
+	  tiltY: 0,
+	  twist: 0,
+	  pointerType: 0,
+	  isPrimary: 0
+	});
+	    rd(Sd);
+	    var Ud = A({}, ud, {
+	  touches: 0,
+	  targetTouches: 0,
+	  changedTouches: 0,
+	  altKey: 0,
+	  metaKey: 0,
+	  ctrlKey: 0,
+	  shiftKey: 0,
+	  getModifierState: zd
+	});
+	    rd(Ud);
+	    var Wd = A({}, sd, {
+	  propertyName: 0,
+	  elapsedTime: 0,
+	  pseudoElement: 0
+	});
+	    rd(Wd);
+	    var Yd = A({}, Ad, {
+	  deltaX: function (a) {
+	    return "deltaX" in a ? a.deltaX : "wheelDeltaX" in a ? -a.wheelDeltaX : 0;
+	  },
+	  deltaY: function (a) {
+	    return "deltaY" in a ? a.deltaY : "wheelDeltaY" in a ? -a.wheelDeltaY : "wheelDelta" in a ? -a.wheelDelta : 0;
+	  },
+	  deltaZ: 0,
+	  deltaMode: 0
+	});
+	    rd(Yd);
+
+	if (ia) {
+
+	  if (ia) {
+	    var ye = ("oninput" in document);
+
+	    if (!ye) {
+	      var ze = document.createElement("div");
+	      ze.setAttribute("oninput", "return;");
+	      ye = "function" === typeof ze.oninput;
+	    }
+	  }
+	}
+
+	function Ve(a, b) {
+	  var c = {};
+	  c[a.toLowerCase()] = b.toLowerCase();
+	  c["Webkit" + a] = "webkit" + b;
+	  c["Moz" + a] = "moz" + b;
+	  return c;
+	}
+
+	var We = {
+	  animationend: Ve("Animation", "AnimationEnd"),
+	  animationiteration: Ve("Animation", "AnimationIteration"),
+	  animationstart: Ve("Animation", "AnimationStart"),
+	  transitionend: Ve("Transition", "TransitionEnd")
+	},
+	    Xe = {},
+	    Ye = {};
+	ia && (Ye = document.createElement("div").style, "AnimationEvent" in window || (delete We.animationend.animation, delete We.animationiteration.animation, delete We.animationstart.animation), "TransitionEvent" in window || delete We.transitionend.transition);
+
+	function Ze(a) {
+	  if (Xe[a]) return Xe[a];
+	  if (!We[a]) return a;
+	  var b = We[a],
+	      c;
+
+	  for (c in b) if (b.hasOwnProperty(c) && c in Ye) return Xe[a] = b[c];
+
+	  return a;
+	}
+
+	var $e = Ze("animationend"),
+	    af = Ze("animationiteration"),
+	    bf = Ze("animationstart"),
+	    cf = Ze("transitionend"),
+	    df = new Map(),
+	    ef = "abort auxClick cancel canPlay canPlayThrough click close contextMenu copy cut drag dragEnd dragEnter dragExit dragLeave dragOver dragStart drop durationChange emptied encrypted ended error gotPointerCapture input invalid keyDown keyPress keyUp load loadedData loadedMetadata loadStart lostPointerCapture mouseDown mouseMove mouseOut mouseOver mouseUp paste pause play playing pointerCancel pointerDown pointerMove pointerOut pointerOver pointerUp progress rateChange reset resize seeked seeking stalled submit suspend timeUpdate touchCancel touchEnd touchStart volumeChange scroll toggle touchMove waiting wheel".split(" ");
+
+	function ff(a, b) {
+	  df.set(a, b);
+	  fa(b, [a]);
+	}
+
+	for (var gf = 0; gf < ef.length; gf++) {
+	  var hf = ef[gf],
+	      jf = hf.toLowerCase(),
+	      kf = hf[0].toUpperCase() + hf.slice(1);
+	  ff(jf, "on" + kf);
+	}
+
+	ff($e, "onAnimationEnd");
+	ff(af, "onAnimationIteration");
+	ff(bf, "onAnimationStart");
+	ff("dblclick", "onDoubleClick");
+	ff("focusin", "onFocus");
+	ff("focusout", "onBlur");
+	ff(cf, "onTransitionEnd");
+	ha("onMouseEnter", ["mouseout", "mouseover"]);
+	ha("onMouseLeave", ["mouseout", "mouseover"]);
+	ha("onPointerEnter", ["pointerout", "pointerover"]);
+	ha("onPointerLeave", ["pointerout", "pointerover"]);
+	fa("onChange", "change click focusin focusout input keydown keyup selectionchange".split(" "));
+	fa("onSelect", "focusout contextmenu dragend focusin keydown keyup mousedown mouseup selectionchange".split(" "));
+	fa("onBeforeInput", ["compositionend", "keypress", "textInput", "paste"]);
+	fa("onCompositionEnd", "compositionend focusout keydown keypress keyup mousedown".split(" "));
+	fa("onCompositionStart", "compositionstart focusout keydown keypress keyup mousedown".split(" "));
+	fa("onCompositionUpdate", "compositionupdate focusout keydown keypress keyup mousedown".split(" "));
+	var lf = "abort canplay canplaythrough durationchange emptied encrypted ended error loadeddata loadedmetadata loadstart pause play playing progress ratechange resize seeked seeking stalled suspend timeupdate volumechange waiting".split(" ");
+	    new Set("cancel close invalid load scroll toggle".split(" ").concat(lf));
+
+	"_reactListening" + Math.random().toString(36).slice(2);
+
+	function Mf(a) {
+	  a = a.previousSibling;
+
+	  for (var b = 0; a;) {
+	    if (8 === a.nodeType) {
+	      var c = a.data;
+
+	      if ("$" === c || "$!" === c || "$?" === c) {
+	        if (0 === b) return a;
+	        b--;
+	      } else "/$" === c && b++;
+	    }
+
+	    a = a.previousSibling;
+	  }
+
+	  return null;
+	}
+
+	var Nf = Math.random().toString(36).slice(2),
+	    Of = "__reactFiber$" + Nf,
+	    uf = "__reactContainer$" + Nf;
+
+	function Wc(a) {
+	  var b = a[Of];
+	  if (b) return b;
+
+	  for (var c = a.parentNode; c;) {
+	    if (b = c[uf] || c[Of]) {
+	      c = b.alternate;
+	      if (null !== b.child || null !== c && null !== c.child) for (a = Mf(a); null !== a;) {
+	        if (c = a[Of]) return c;
+	        a = Mf(a);
+	      }
+	      return b;
+	    }
+
+	    a = c;
+	    c = a.parentNode;
+	  }
+
+	  return null;
+	}
+
+	ua.ReactCurrentBatchConfig;
+
+	new react.Component().refs;
+
+	ua.ReactCurrentDispatcher;
+	    ua.ReactCurrentBatchConfig;
+
+	ua.ReactCurrentOwner;
+
+	ua.ReactCurrentDispatcher;
+	    ua.ReactCurrentOwner;
+	    ua.ReactCurrentBatchConfig;
+
+	function kl() {
+	  return null;
+	}
+
+	"function" === typeof reportError ? reportError : function (a) {
+	  console.error(a);
+	};
+	var ul = {
+	  findFiberByHostInstance: Wc,
+	  bundleType: 0,
+	  version: "18.2.0",
+	  rendererPackageName: "react-dom"
+	};
+	var vl = {
+	  bundleType: ul.bundleType,
+	  version: ul.version,
+	  rendererPackageName: ul.rendererPackageName,
+	  rendererConfig: ul.rendererConfig,
+	  overrideHookState: null,
+	  overrideHookStateDeletePath: null,
+	  overrideHookStateRenamePath: null,
+	  overrideProps: null,
+	  overridePropsDeletePath: null,
+	  overridePropsRenamePath: null,
+	  setErrorHandler: null,
+	  setSuspenseHandler: null,
+	  scheduleUpdate: null,
+	  currentDispatcherRef: ua.ReactCurrentDispatcher,
+	  findHostInstanceByFiber: function (a) {
+	    a = Zb(a);
+	    return null === a ? null : a.stateNode;
+	  },
+	  findFiberByHostInstance: ul.findFiberByHostInstance || kl,
+	  findHostInstancesForRefresh: null,
+	  scheduleRefresh: null,
+	  scheduleRoot: null,
+	  setRefreshHandler: null,
+	  getCurrentFiber: null,
+	  reconcilerVersion: "18.2.0-next-9e3b772b8-20220608"
+	};
+
+	if ("undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__) {
+	  var wl = __REACT_DEVTOOLS_GLOBAL_HOOK__;
+	  if (!wl.isDisabled && wl.supportsFiber) try {
+	    kc = wl.inject(vl), lc = wl;
+	  } catch (a) {}
+	}
 
 	var reactDom_development = createCommonjsModule(function (module, exports) {
 	{(function(){/* global __REACT_DEVTOOLS_GLOBAL_HOOK__ */if(typeof __REACT_DEVTOOLS_GLOBAL_HOOK__!=='undefined'&&typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart==='function'){__REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(new Error());}var React=react;var Scheduler=scheduler;var ReactSharedInternals=React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;var suppressWarning=false;function setSuppressWarning(newSuppressWarning){{suppressWarning=newSuppressWarning;}}// In DEV, calls to console.warn and console.error get replaced
@@ -8373,2021 +13549,42 @@
 	var client_1 = client.createRoot;
 	client.hydrateRoot;
 
-	var bind = function bind(fn, thisArg) {
-	  return function wrap() {
-	    var args = new Array(arguments.length);
-
-	    for (var i = 0; i < args.length; i++) {
-	      args[i] = arguments[i];
-	    }
-
-	    return fn.apply(thisArg, args);
-	  };
-	};
-
-	// utils is a library of generic helper functions non-specific to axios
-
-
-	var toString = Object.prototype.toString; // eslint-disable-next-line func-names
-
-	var kindOf = function (cache) {
-	  // eslint-disable-next-line func-names
-	  return function (thing) {
-	    var str = toString.call(thing);
-	    return cache[str] || (cache[str] = str.slice(8, -1).toLowerCase());
-	  };
-	}(Object.create(null));
-
-	function kindOfTest(type) {
-	  type = type.toLowerCase();
-	  return function isKindOf(thing) {
-	    return kindOf(thing) === type;
-	  };
-	}
 	/**
-	 * Determine if a value is an Array
-	 *
-	 * @param {Object} val The value to test
-	 * @returns {boolean} True if value is an Array, otherwise false
+	 * Render a given React app plus the styled component styles inside a shadow dom
+	 * to prevent any styles bleeding into our component.
+	 * 
+	 * Idea from https://www.wpeform.io/blog/render-react-app-shadow-dom-styled-components/
+	 * Thank you ✨
+	 * 
+	 * I wrapped the approach in a convenient function to easily render any root wrapped by a shadow dom.
 	 */
 
-
-	function isArray(val) {
-	  return Array.isArray(val);
-	}
-	/**
-	 * Determine if a value is undefined
-	 *
-	 * @param {Object} val The value to test
-	 * @returns {boolean} True if the value is undefined, otherwise false
-	 */
-
-
-	function isUndefined(val) {
-	  return typeof val === 'undefined';
-	}
-	/**
-	 * Determine if a value is a Buffer
-	 *
-	 * @param {Object} val The value to test
-	 * @returns {boolean} True if value is a Buffer, otherwise false
-	 */
-
-
-	function isBuffer(val) {
-	  return val !== null && !isUndefined(val) && val.constructor !== null && !isUndefined(val.constructor) && typeof val.constructor.isBuffer === 'function' && val.constructor.isBuffer(val);
-	}
-	/**
-	 * Determine if a value is an ArrayBuffer
-	 *
-	 * @function
-	 * @param {Object} val The value to test
-	 * @returns {boolean} True if value is an ArrayBuffer, otherwise false
-	 */
-
-
-	var isArrayBuffer = kindOfTest('ArrayBuffer');
-	/**
-	 * Determine if a value is a view on an ArrayBuffer
-	 *
-	 * @param {Object} val The value to test
-	 * @returns {boolean} True if value is a view on an ArrayBuffer, otherwise false
-	 */
-
-	function isArrayBufferView(val) {
-	  var result;
-
-	  if (typeof ArrayBuffer !== 'undefined' && ArrayBuffer.isView) {
-	    result = ArrayBuffer.isView(val);
-	  } else {
-	    result = val && val.buffer && isArrayBuffer(val.buffer);
-	  }
-
-	  return result;
-	}
-	/**
-	 * Determine if a value is a String
-	 *
-	 * @param {Object} val The value to test
-	 * @returns {boolean} True if value is a String, otherwise false
-	 */
-
-
-	function isString(val) {
-	  return typeof val === 'string';
-	}
-	/**
-	 * Determine if a value is a Number
-	 *
-	 * @param {Object} val The value to test
-	 * @returns {boolean} True if value is a Number, otherwise false
-	 */
-
-
-	function isNumber(val) {
-	  return typeof val === 'number';
-	}
-	/**
-	 * Determine if a value is an Object
-	 *
-	 * @param {Object} val The value to test
-	 * @returns {boolean} True if value is an Object, otherwise false
-	 */
-
-
-	function isObject(val) {
-	  return val !== null && typeof val === 'object';
-	}
-	/**
-	 * Determine if a value is a plain Object
-	 *
-	 * @param {Object} val The value to test
-	 * @return {boolean} True if value is a plain Object, otherwise false
-	 */
-
-
-	function isPlainObject(val) {
-	  if (kindOf(val) !== 'object') {
-	    return false;
-	  }
-
-	  var prototype = Object.getPrototypeOf(val);
-	  return prototype === null || prototype === Object.prototype;
-	}
-	/**
-	 * Determine if a value is a Date
-	 *
-	 * @function
-	 * @param {Object} val The value to test
-	 * @returns {boolean} True if value is a Date, otherwise false
-	 */
-
-
-	var isDate = kindOfTest('Date');
-	/**
-	 * Determine if a value is a File
-	 *
-	 * @function
-	 * @param {Object} val The value to test
-	 * @returns {boolean} True if value is a File, otherwise false
-	 */
-
-	var isFile = kindOfTest('File');
-	/**
-	 * Determine if a value is a Blob
-	 *
-	 * @function
-	 * @param {Object} val The value to test
-	 * @returns {boolean} True if value is a Blob, otherwise false
-	 */
-
-	var isBlob = kindOfTest('Blob');
-	/**
-	 * Determine if a value is a FileList
-	 *
-	 * @function
-	 * @param {Object} val The value to test
-	 * @returns {boolean} True if value is a File, otherwise false
-	 */
-
-	var isFileList = kindOfTest('FileList');
-	/**
-	 * Determine if a value is a Function
-	 *
-	 * @param {Object} val The value to test
-	 * @returns {boolean} True if value is a Function, otherwise false
-	 */
-
-	function isFunction(val) {
-	  return toString.call(val) === '[object Function]';
-	}
-	/**
-	 * Determine if a value is a Stream
-	 *
-	 * @param {Object} val The value to test
-	 * @returns {boolean} True if value is a Stream, otherwise false
-	 */
-
-
-	function isStream(val) {
-	  return isObject(val) && isFunction(val.pipe);
-	}
-	/**
-	 * Determine if a value is a FormData
-	 *
-	 * @param {Object} thing The value to test
-	 * @returns {boolean} True if value is an FormData, otherwise false
-	 */
-
-
-	function isFormData(thing) {
-	  var pattern = '[object FormData]';
-	  return thing && (typeof FormData === 'function' && thing instanceof FormData || toString.call(thing) === pattern || isFunction(thing.toString) && thing.toString() === pattern);
-	}
-	/**
-	 * Determine if a value is a URLSearchParams object
-	 * @function
-	 * @param {Object} val The value to test
-	 * @returns {boolean} True if value is a URLSearchParams object, otherwise false
-	 */
-
-
-	var isURLSearchParams = kindOfTest('URLSearchParams');
-	/**
-	 * Trim excess whitespace off the beginning and end of a string
-	 *
-	 * @param {String} str The String to trim
-	 * @returns {String} The String freed of excess whitespace
-	 */
-
-	function trim(str) {
-	  return str.trim ? str.trim() : str.replace(/^\s+|\s+$/g, '');
-	}
-	/**
-	 * Determine if we're running in a standard browser environment
-	 *
-	 * This allows axios to run in a web worker, and react-native.
-	 * Both environments support XMLHttpRequest, but not fully standard globals.
-	 *
-	 * web workers:
-	 *  typeof window -> undefined
-	 *  typeof document -> undefined
-	 *
-	 * react-native:
-	 *  navigator.product -> 'ReactNative'
-	 * nativescript
-	 *  navigator.product -> 'NativeScript' or 'NS'
-	 */
-
-
-	function isStandardBrowserEnv() {
-	  if (typeof navigator !== 'undefined' && (navigator.product === 'ReactNative' || navigator.product === 'NativeScript' || navigator.product === 'NS')) {
-	    return false;
-	  }
-
-	  return typeof window !== 'undefined' && typeof document !== 'undefined';
-	}
-	/**
-	 * Iterate over an Array or an Object invoking a function for each item.
-	 *
-	 * If `obj` is an Array callback will be called passing
-	 * the value, index, and complete array for each item.
-	 *
-	 * If 'obj' is an Object callback will be called passing
-	 * the value, key, and complete object for each property.
-	 *
-	 * @param {Object|Array} obj The object to iterate
-	 * @param {Function} fn The callback to invoke for each item
-	 */
-
-
-	function forEach(obj, fn) {
-	  // Don't bother if no value provided
-	  if (obj === null || typeof obj === 'undefined') {
-	    return;
-	  } // Force an array if not already something iterable
-
-
-	  if (typeof obj !== 'object') {
-	    /*eslint no-param-reassign:0*/
-	    obj = [obj];
-	  }
-
-	  if (isArray(obj)) {
-	    // Iterate over array values
-	    for (var i = 0, l = obj.length; i < l; i++) {
-	      fn.call(null, obj[i], i, obj);
-	    }
-	  } else {
-	    // Iterate over object keys
-	    for (var key in obj) {
-	      if (Object.prototype.hasOwnProperty.call(obj, key)) {
-	        fn.call(null, obj[key], key, obj);
-	      }
-	    }
-	  }
-	}
-	/**
-	 * Accepts varargs expecting each argument to be an object, then
-	 * immutably merges the properties of each object and returns result.
-	 *
-	 * When multiple objects contain the same key the later object in
-	 * the arguments list will take precedence.
-	 *
-	 * Example:
-	 *
-	 * ```js
-	 * var result = merge({foo: 123}, {foo: 456});
-	 * console.log(result.foo); // outputs 456
-	 * ```
-	 *
-	 * @param {Object} obj1 Object to merge
-	 * @returns {Object} Result of all merge properties
-	 */
-
-
-	function
-	  /* obj1, obj2, obj3, ... */
-	merge() {
-	  var result = {};
-
-	  function assignValue(val, key) {
-	    if (isPlainObject(result[key]) && isPlainObject(val)) {
-	      result[key] = merge(result[key], val);
-	    } else if (isPlainObject(val)) {
-	      result[key] = merge({}, val);
-	    } else if (isArray(val)) {
-	      result[key] = val.slice();
-	    } else {
-	      result[key] = val;
-	    }
-	  }
-
-	  for (var i = 0, l = arguments.length; i < l; i++) {
-	    forEach(arguments[i], assignValue);
-	  }
-
-	  return result;
-	}
-	/**
-	 * Extends object a by mutably adding to it the properties of object b.
-	 *
-	 * @param {Object} a The object to be extended
-	 * @param {Object} b The object to copy properties from
-	 * @param {Object} thisArg The object to bind function to
-	 * @return {Object} The resulting value of object a
-	 */
-
-
-	function extend(a, b, thisArg) {
-	  forEach(b, function assignValue(val, key) {
-	    if (thisArg && typeof val === 'function') {
-	      a[key] = bind(val, thisArg);
-	    } else {
-	      a[key] = val;
-	    }
+	const createRootWithShadowDom = element => {
+	  const shadow = element.attachShadow({
+	    mode: 'open'
 	  });
-	  return a;
-	}
-	/**
-	 * Remove byte order marker. This catches EF BB BF (the UTF-8 BOM)
-	 *
-	 * @param {string} content with BOM
-	 * @return {string} content value without BOM
-	 */
-
-
-	function stripBOM(content) {
-	  if (content.charCodeAt(0) === 0xFEFF) {
-	    content = content.slice(1);
-	  }
-
-	  return content;
-	}
-	/**
-	 * Inherit the prototype methods from one constructor into another
-	 * @param {function} constructor
-	 * @param {function} superConstructor
-	 * @param {object} [props]
-	 * @param {object} [descriptors]
-	 */
-
-
-	function inherits(constructor, superConstructor, props, descriptors) {
-	  constructor.prototype = Object.create(superConstructor.prototype, descriptors);
-	  constructor.prototype.constructor = constructor;
-	  props && Object.assign(constructor.prototype, props);
-	}
-	/**
-	 * Resolve object with deep prototype chain to a flat object
-	 * @param {Object} sourceObj source object
-	 * @param {Object} [destObj]
-	 * @param {Function} [filter]
-	 * @returns {Object}
-	 */
-
-
-	function toFlatObject(sourceObj, destObj, filter) {
-	  var props;
-	  var i;
-	  var prop;
-	  var merged = {};
-	  destObj = destObj || {};
-
-	  do {
-	    props = Object.getOwnPropertyNames(sourceObj);
-	    i = props.length;
-
-	    while (i-- > 0) {
-	      prop = props[i];
-
-	      if (!merged[prop]) {
-	        destObj[prop] = sourceObj[prop];
-	        merged[prop] = true;
-	      }
-	    }
-
-	    sourceObj = Object.getPrototypeOf(sourceObj);
-	  } while (sourceObj && (!filter || filter(sourceObj, destObj)) && sourceObj !== Object.prototype);
-
-	  return destObj;
-	}
-	/*
-	 * determines whether a string ends with the characters of a specified string
-	 * @param {String} str
-	 * @param {String} searchString
-	 * @param {Number} [position= 0]
-	 * @returns {boolean}
-	 */
-
-
-	function endsWith(str, searchString, position) {
-	  str = String(str);
-
-	  if (position === undefined || position > str.length) {
-	    position = str.length;
-	  }
-
-	  position -= searchString.length;
-	  var lastIndex = str.indexOf(searchString, position);
-	  return lastIndex !== -1 && lastIndex === position;
-	}
-	/**
-	 * Returns new array from array like object
-	 * @param {*} [thing]
-	 * @returns {Array}
-	 */
-
-
-	function toArray(thing) {
-	  if (!thing) return null;
-	  var i = thing.length;
-	  if (isUndefined(i)) return null;
-	  var arr = new Array(i);
-
-	  while (i-- > 0) {
-	    arr[i] = thing[i];
-	  }
-
-	  return arr;
-	} // eslint-disable-next-line func-names
-
-
-	var isTypedArray = function (TypedArray) {
-	  // eslint-disable-next-line func-names
-	  return function (thing) {
-	    return TypedArray && thing instanceof TypedArray;
-	  };
-	}(typeof Uint8Array !== 'undefined' && Object.getPrototypeOf(Uint8Array));
-
-	var utils = {
-	  isArray: isArray,
-	  isArrayBuffer: isArrayBuffer,
-	  isBuffer: isBuffer,
-	  isFormData: isFormData,
-	  isArrayBufferView: isArrayBufferView,
-	  isString: isString,
-	  isNumber: isNumber,
-	  isObject: isObject,
-	  isPlainObject: isPlainObject,
-	  isUndefined: isUndefined,
-	  isDate: isDate,
-	  isFile: isFile,
-	  isBlob: isBlob,
-	  isFunction: isFunction,
-	  isStream: isStream,
-	  isURLSearchParams: isURLSearchParams,
-	  isStandardBrowserEnv: isStandardBrowserEnv,
-	  forEach: forEach,
-	  merge: merge,
-	  extend: extend,
-	  trim: trim,
-	  stripBOM: stripBOM,
-	  inherits: inherits,
-	  toFlatObject: toFlatObject,
-	  kindOf: kindOf,
-	  kindOfTest: kindOfTest,
-	  endsWith: endsWith,
-	  toArray: toArray,
-	  isTypedArray: isTypedArray,
-	  isFileList: isFileList
-	};
-
-	function encode(val) {
-	  return encodeURIComponent(val).replace(/%3A/gi, ':').replace(/%24/g, '$').replace(/%2C/gi, ',').replace(/%20/g, '+').replace(/%5B/gi, '[').replace(/%5D/gi, ']');
-	}
-	/**
-	 * Build a URL by appending params to the end
-	 *
-	 * @param {string} url The base of the url (e.g., http://www.google.com)
-	 * @param {object} [params] The params to be appended
-	 * @returns {string} The formatted url
-	 */
-
-
-	var buildURL = function buildURL(url, params, paramsSerializer) {
-	  /*eslint no-param-reassign:0*/
-	  if (!params) {
-	    return url;
-	  }
-
-	  var serializedParams;
-
-	  if (paramsSerializer) {
-	    serializedParams = paramsSerializer(params);
-	  } else if (utils.isURLSearchParams(params)) {
-	    serializedParams = params.toString();
-	  } else {
-	    var parts = [];
-	    utils.forEach(params, function serialize(val, key) {
-	      if (val === null || typeof val === 'undefined') {
-	        return;
-	      }
-
-	      if (utils.isArray(val)) {
-	        key = key + '[]';
-	      } else {
-	        val = [val];
-	      }
-
-	      utils.forEach(val, function parseValue(v) {
-	        if (utils.isDate(v)) {
-	          v = v.toISOString();
-	        } else if (utils.isObject(v)) {
-	          v = JSON.stringify(v);
-	        }
-
-	        parts.push(encode(key) + '=' + encode(v));
-	      });
-	    });
-	    serializedParams = parts.join('&');
-	  }
-
-	  if (serializedParams) {
-	    var hashmarkIndex = url.indexOf('#');
-
-	    if (hashmarkIndex !== -1) {
-	      url = url.slice(0, hashmarkIndex);
-	    }
-
-	    url += (url.indexOf('?') === -1 ? '?' : '&') + serializedParams;
-	  }
-
-	  return url;
-	};
-
-	function InterceptorManager() {
-	  this.handlers = [];
-	}
-	/**
-	 * Add a new interceptor to the stack
-	 *
-	 * @param {Function} fulfilled The function to handle `then` for a `Promise`
-	 * @param {Function} rejected The function to handle `reject` for a `Promise`
-	 *
-	 * @return {Number} An ID used to remove interceptor later
-	 */
-
-
-	InterceptorManager.prototype.use = function use(fulfilled, rejected, options) {
-	  this.handlers.push({
-	    fulfilled: fulfilled,
-	    rejected: rejected,
-	    synchronous: options ? options.synchronous : false,
-	    runWhen: options ? options.runWhen : null
-	  });
-	  return this.handlers.length - 1;
-	};
-	/**
-	 * Remove an interceptor from the stack
-	 *
-	 * @param {Number} id The ID that was returned by `use`
-	 */
-
-
-	InterceptorManager.prototype.eject = function eject(id) {
-	  if (this.handlers[id]) {
-	    this.handlers[id] = null;
-	  }
-	};
-	/**
-	 * Iterate over all the registered interceptors
-	 *
-	 * This method is particularly useful for skipping over any
-	 * interceptors that may have become `null` calling `eject`.
-	 *
-	 * @param {Function} fn The function to call for each interceptor
-	 */
-
-
-	InterceptorManager.prototype.forEach = function forEach(fn) {
-	  utils.forEach(this.handlers, function forEachHandler(h) {
-	    if (h !== null) {
-	      fn(h);
-	    }
-	  });
-	};
-
-	var InterceptorManager_1 = InterceptorManager;
-
-	var normalizeHeaderName = function normalizeHeaderName(headers, normalizedName) {
-	  utils.forEach(headers, function processHeader(value, name) {
-	    if (name !== normalizedName && name.toUpperCase() === normalizedName.toUpperCase()) {
-	      headers[normalizedName] = value;
-	      delete headers[name];
-	    }
-	  });
-	};
-
-	/**
-	 * Create an Error with the specified message, config, error code, request and response.
-	 *
-	 * @param {string} message The error message.
-	 * @param {string} [code] The error code (for example, 'ECONNABORTED').
-	 * @param {Object} [config] The config.
-	 * @param {Object} [request] The request.
-	 * @param {Object} [response] The response.
-	 * @returns {Error} The created error.
-	 */
-
-
-	function AxiosError(message, code, config, request, response) {
-	  Error.call(this);
-	  this.message = message;
-	  this.name = 'AxiosError';
-	  code && (this.code = code);
-	  config && (this.config = config);
-	  request && (this.request = request);
-	  response && (this.response = response);
-	}
-
-	utils.inherits(AxiosError, Error, {
-	  toJSON: function toJSON() {
-	    return {
-	      // Standard
-	      message: this.message,
-	      name: this.name,
-	      // Microsoft
-	      description: this.description,
-	      number: this.number,
-	      // Mozilla
-	      fileName: this.fileName,
-	      lineNumber: this.lineNumber,
-	      columnNumber: this.columnNumber,
-	      stack: this.stack,
-	      // Axios
-	      config: this.config,
-	      code: this.code,
-	      status: this.response && this.response.status ? this.response.status : null
-	    };
-	  }
-	});
-	var prototype = AxiosError.prototype;
-	var descriptors = {};
-	['ERR_BAD_OPTION_VALUE', 'ERR_BAD_OPTION', 'ECONNABORTED', 'ETIMEDOUT', 'ERR_NETWORK', 'ERR_FR_TOO_MANY_REDIRECTS', 'ERR_DEPRECATED', 'ERR_BAD_RESPONSE', 'ERR_BAD_REQUEST', 'ERR_CANCELED' // eslint-disable-next-line func-names
-	].forEach(function (code) {
-	  descriptors[code] = {
-	    value: code
-	  };
-	});
-	Object.defineProperties(AxiosError, descriptors);
-	Object.defineProperty(prototype, 'isAxiosError', {
-	  value: true
-	}); // eslint-disable-next-line func-names
-
-	AxiosError.from = function (error, code, config, request, response, customProps) {
-	  var axiosError = Object.create(prototype);
-	  utils.toFlatObject(error, axiosError, function filter(obj) {
-	    return obj !== Error.prototype;
-	  });
-	  AxiosError.call(axiosError, error.message, code, config, request, response);
-	  axiosError.name = error.name;
-	  customProps && Object.assign(axiosError, customProps);
-	  return axiosError;
-	};
-
-	var AxiosError_1 = AxiosError;
-
-	var transitional = {
-	  silentJSONParsing: true,
-	  forcedJSONParsing: true,
-	  clarifyTimeoutError: false
-	};
-	transitional.silentJSONParsing;
-	transitional.forcedJSONParsing;
-	transitional.clarifyTimeoutError;
-
-	/**
-	 * Convert a data object to FormData
-	 * @param {Object} obj
-	 * @param {?Object} [formData]
-	 * @returns {Object}
-	 **/
-
-
-	function toFormData(obj, formData) {
-	  // eslint-disable-next-line no-param-reassign
-	  formData = formData || new FormData();
-	  var stack = [];
-
-	  function convertValue(value) {
-	    if (value === null) return '';
-
-	    if (utils.isDate(value)) {
-	      return value.toISOString();
-	    }
-
-	    if (utils.isArrayBuffer(value) || utils.isTypedArray(value)) {
-	      return typeof Blob === 'function' ? new Blob([value]) : Buffer.from(value);
-	    }
-
-	    return value;
-	  }
-
-	  function build(data, parentKey) {
-	    if (utils.isPlainObject(data) || utils.isArray(data)) {
-	      if (stack.indexOf(data) !== -1) {
-	        throw Error('Circular reference detected in ' + parentKey);
-	      }
-
-	      stack.push(data);
-	      utils.forEach(data, function each(value, key) {
-	        if (utils.isUndefined(value)) return;
-	        var fullKey = parentKey ? parentKey + '.' + key : key;
-	        var arr;
-
-	        if (value && !parentKey && typeof value === 'object') {
-	          if (utils.endsWith(key, '{}')) {
-	            // eslint-disable-next-line no-param-reassign
-	            value = JSON.stringify(value);
-	          } else if (utils.endsWith(key, '[]') && (arr = utils.toArray(value))) {
-	            // eslint-disable-next-line func-names
-	            arr.forEach(function (el) {
-	              !utils.isUndefined(el) && formData.append(fullKey, convertValue(el));
-	            });
-	            return;
-	          }
-	        }
-
-	        build(value, fullKey);
-	      });
-	      stack.pop();
-	    } else {
-	      formData.append(parentKey, convertValue(data));
-	    }
-	  }
-
-	  build(obj);
-	  return formData;
-	}
-
-	var toFormData_1 = toFormData;
-
-	/**
-	 * Resolve or reject a Promise based on response status.
-	 *
-	 * @param {Function} resolve A function that resolves the promise.
-	 * @param {Function} reject A function that rejects the promise.
-	 * @param {object} response The response.
-	 */
-
-
-	var settle = function settle(resolve, reject, response) {
-	  var validateStatus = response.config.validateStatus;
-
-	  if (!response.status || !validateStatus || validateStatus(response.status)) {
-	    resolve(response);
-	  } else {
-	    reject(new AxiosError_1('Request failed with status code ' + response.status, [AxiosError_1.ERR_BAD_REQUEST, AxiosError_1.ERR_BAD_RESPONSE][Math.floor(response.status / 100) - 4], response.config, response.request, response));
-	  }
-	};
-
-	var cookies = utils.isStandardBrowserEnv() ? // Standard browser envs support document.cookie
-	function standardBrowserEnv() {
+	  const styleSlot = document.createElement('section');
+	  const renderIn = document.createElement('div');
+	  shadow.appendChild(styleSlot);
+	  styleSlot.appendChild(renderIn);
+	  const root = client_1(shadow);
 	  return {
-	    write: function write(name, value, expires, path, domain, secure) {
-	      var cookie = [];
-	      cookie.push(name + '=' + encodeURIComponent(value));
-
-	      if (utils.isNumber(expires)) {
-	        cookie.push('expires=' + new Date(expires).toGMTString());
-	      }
-
-	      if (utils.isString(path)) {
-	        cookie.push('path=' + path);
-	      }
-
-	      if (utils.isString(domain)) {
-	        cookie.push('domain=' + domain);
-	      }
-
-	      if (secure === true) {
-	        cookie.push('secure');
-	      }
-
-	      document.cookie = cookie.join('; ');
-	    },
-	    read: function read(name) {
-	      var match = document.cookie.match(new RegExp('(^|;\\s*)(' + name + ')=([^;]*)'));
-	      return match ? decodeURIComponent(match[3]) : null;
-	    },
-	    remove: function remove(name) {
-	      this.write(name, '', Date.now() - 86400000);
+	    render: children => {
+	      root.render( /*#__PURE__*/react.createElement(ye$1, {
+	        target: styleSlot
+	      }, children));
 	    }
 	  };
-	}() : // Non standard browser env (web workers, react-native) lack needed support.
-	function nonStandardBrowserEnv() {
-	  return {
-	    write: function write() {},
-	    read: function read() {
-	      return null;
-	    },
-	    remove: function remove() {}
-	  };
-	}();
-
-	/**
-	 * Determines whether the specified URL is absolute
-	 *
-	 * @param {string} url The URL to test
-	 * @returns {boolean} True if the specified URL is absolute, otherwise false
-	 */
-
-	var isAbsoluteURL = function isAbsoluteURL(url) {
-	  // A URL is considered absolute if it begins with "<scheme>://" or "//" (protocol-relative URL).
-	  // RFC 3986 defines scheme name as a sequence of characters beginning with a letter and followed
-	  // by any combination of letters, digits, plus, period, or hyphen.
-	  return /^([a-z][a-z\d+\-.]*:)?\/\//i.test(url);
 	};
-
-	/**
-	 * Creates a new URL by combining the specified URLs
-	 *
-	 * @param {string} baseURL The base URL
-	 * @param {string} relativeURL The relative URL
-	 * @returns {string} The combined URL
-	 */
-
-	var combineURLs = function combineURLs(baseURL, relativeURL) {
-	  return relativeURL ? baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '') : baseURL;
-	};
-
-	/**
-	 * Creates a new URL by combining the baseURL with the requestedURL,
-	 * only when the requestedURL is not already an absolute URL.
-	 * If the requestURL is absolute, this function returns the requestedURL untouched.
-	 *
-	 * @param {string} baseURL The base URL
-	 * @param {string} requestedURL Absolute or relative URL to combine
-	 * @returns {string} The combined full path
-	 */
-
-
-	var buildFullPath = function buildFullPath(baseURL, requestedURL) {
-	  if (baseURL && !isAbsoluteURL(requestedURL)) {
-	    return combineURLs(baseURL, requestedURL);
-	  }
-
-	  return requestedURL;
-	};
-
-	// Headers whose duplicates are ignored by node
-	// c.f. https://nodejs.org/api/http.html#http_message_headers
-
-
-	var ignoreDuplicateOf = ['age', 'authorization', 'content-length', 'content-type', 'etag', 'expires', 'from', 'host', 'if-modified-since', 'if-unmodified-since', 'last-modified', 'location', 'max-forwards', 'proxy-authorization', 'referer', 'retry-after', 'user-agent'];
-	/**
-	 * Parse headers into an object
-	 *
-	 * ```
-	 * Date: Wed, 27 Aug 2014 08:58:49 GMT
-	 * Content-Type: application/json
-	 * Connection: keep-alive
-	 * Transfer-Encoding: chunked
-	 * ```
-	 *
-	 * @param {String} headers Headers needing to be parsed
-	 * @returns {Object} Headers parsed into an object
-	 */
-
-	var parseHeaders = function parseHeaders(headers) {
-	  var parsed = {};
-	  var key;
-	  var val;
-	  var i;
-
-	  if (!headers) {
-	    return parsed;
-	  }
-
-	  utils.forEach(headers.split('\n'), function parser(line) {
-	    i = line.indexOf(':');
-	    key = utils.trim(line.substr(0, i)).toLowerCase();
-	    val = utils.trim(line.substr(i + 1));
-
-	    if (key) {
-	      if (parsed[key] && ignoreDuplicateOf.indexOf(key) >= 0) {
-	        return;
-	      }
-
-	      if (key === 'set-cookie') {
-	        parsed[key] = (parsed[key] ? parsed[key] : []).concat([val]);
-	      } else {
-	        parsed[key] = parsed[key] ? parsed[key] + ', ' + val : val;
-	      }
-	    }
-	  });
-	  return parsed;
-	};
-
-	var isURLSameOrigin = utils.isStandardBrowserEnv() ? // Standard browser envs have full support of the APIs needed to test
-	// whether the request URL is of the same origin as current location.
-	function standardBrowserEnv() {
-	  var msie = /(msie|trident)/i.test(navigator.userAgent);
-	  var urlParsingNode = document.createElement('a');
-	  var originURL;
-	  /**
-	  * Parse a URL to discover it's components
-	  *
-	  * @param {String} url The URL to be parsed
-	  * @returns {Object}
-	  */
-
-	  function resolveURL(url) {
-	    var href = url;
-
-	    if (msie) {
-	      // IE needs attribute set twice to normalize properties
-	      urlParsingNode.setAttribute('href', href);
-	      href = urlParsingNode.href;
-	    }
-
-	    urlParsingNode.setAttribute('href', href); // urlParsingNode provides the UrlUtils interface - http://url.spec.whatwg.org/#urlutils
-
-	    return {
-	      href: urlParsingNode.href,
-	      protocol: urlParsingNode.protocol ? urlParsingNode.protocol.replace(/:$/, '') : '',
-	      host: urlParsingNode.host,
-	      search: urlParsingNode.search ? urlParsingNode.search.replace(/^\?/, '') : '',
-	      hash: urlParsingNode.hash ? urlParsingNode.hash.replace(/^#/, '') : '',
-	      hostname: urlParsingNode.hostname,
-	      port: urlParsingNode.port,
-	      pathname: urlParsingNode.pathname.charAt(0) === '/' ? urlParsingNode.pathname : '/' + urlParsingNode.pathname
-	    };
-	  }
-
-	  originURL = resolveURL(window.location.href);
-	  /**
-	  * Determine if a URL shares the same origin as the current location
-	  *
-	  * @param {String} requestURL The URL to test
-	  * @returns {boolean} True if URL shares the same origin, otherwise false
-	  */
-
-	  return function isURLSameOrigin(requestURL) {
-	    var parsed = utils.isString(requestURL) ? resolveURL(requestURL) : requestURL;
-	    return parsed.protocol === originURL.protocol && parsed.host === originURL.host;
-	  };
-	}() : // Non standard browser envs (web workers, react-native) lack needed support.
-	function nonStandardBrowserEnv() {
-	  return function isURLSameOrigin() {
-	    return true;
-	  };
-	}();
-
-	/**
-	 * A `CanceledError` is an object that is thrown when an operation is canceled.
-	 *
-	 * @class
-	 * @param {string=} message The message.
-	 */
-
-
-	function CanceledError(message) {
-	  // eslint-disable-next-line no-eq-null,eqeqeq
-	  AxiosError_1.call(this, message == null ? 'canceled' : message, AxiosError_1.ERR_CANCELED);
-	  this.name = 'CanceledError';
-	}
-
-	utils.inherits(CanceledError, AxiosError_1, {
-	  __CANCEL__: true
-	});
-	var CanceledError_1 = CanceledError;
-
-	var parseProtocol = function parseProtocol(url) {
-	  var match = /^([-+\w]{1,25})(:?\/\/|:)/.exec(url);
-	  return match && match[1] || '';
-	};
-
-	var xhr = function xhrAdapter(config) {
-	  return new Promise(function dispatchXhrRequest(resolve, reject) {
-	    var requestData = config.data;
-	    var requestHeaders = config.headers;
-	    var responseType = config.responseType;
-	    var onCanceled;
-
-	    function done() {
-	      if (config.cancelToken) {
-	        config.cancelToken.unsubscribe(onCanceled);
-	      }
-
-	      if (config.signal) {
-	        config.signal.removeEventListener('abort', onCanceled);
-	      }
-	    }
-
-	    if (utils.isFormData(requestData) && utils.isStandardBrowserEnv()) {
-	      delete requestHeaders['Content-Type']; // Let the browser set it
-	    }
-
-	    var request = new XMLHttpRequest(); // HTTP basic authentication
-
-	    if (config.auth) {
-	      var username = config.auth.username || '';
-	      var password = config.auth.password ? unescape(encodeURIComponent(config.auth.password)) : '';
-	      requestHeaders.Authorization = 'Basic ' + btoa(username + ':' + password);
-	    }
-
-	    var fullPath = buildFullPath(config.baseURL, config.url);
-	    request.open(config.method.toUpperCase(), buildURL(fullPath, config.params, config.paramsSerializer), true); // Set the request timeout in MS
-
-	    request.timeout = config.timeout;
-
-	    function onloadend() {
-	      if (!request) {
-	        return;
-	      } // Prepare the response
-
-
-	      var responseHeaders = 'getAllResponseHeaders' in request ? parseHeaders(request.getAllResponseHeaders()) : null;
-	      var responseData = !responseType || responseType === 'text' || responseType === 'json' ? request.responseText : request.response;
-	      var response = {
-	        data: responseData,
-	        status: request.status,
-	        statusText: request.statusText,
-	        headers: responseHeaders,
-	        config: config,
-	        request: request
-	      };
-	      settle(function _resolve(value) {
-	        resolve(value);
-	        done();
-	      }, function _reject(err) {
-	        reject(err);
-	        done();
-	      }, response); // Clean up request
-
-	      request = null;
-	    }
-
-	    if ('onloadend' in request) {
-	      // Use onloadend if available
-	      request.onloadend = onloadend;
-	    } else {
-	      // Listen for ready state to emulate onloadend
-	      request.onreadystatechange = function handleLoad() {
-	        if (!request || request.readyState !== 4) {
-	          return;
-	        } // The request errored out and we didn't get a response, this will be
-	        // handled by onerror instead
-	        // With one exception: request that using file: protocol, most browsers
-	        // will return status as 0 even though it's a successful request
-
-
-	        if (request.status === 0 && !(request.responseURL && request.responseURL.indexOf('file:') === 0)) {
-	          return;
-	        } // readystate handler is calling before onerror or ontimeout handlers,
-	        // so we should call onloadend on the next 'tick'
-
-
-	        setTimeout(onloadend);
-	      };
-	    } // Handle browser request cancellation (as opposed to a manual cancellation)
-
-
-	    request.onabort = function handleAbort() {
-	      if (!request) {
-	        return;
-	      }
-
-	      reject(new AxiosError_1('Request aborted', AxiosError_1.ECONNABORTED, config, request)); // Clean up request
-
-	      request = null;
-	    }; // Handle low level network errors
-
-
-	    request.onerror = function handleError() {
-	      // Real errors are hidden from us by the browser
-	      // onerror should only fire if it's a network error
-	      reject(new AxiosError_1('Network Error', AxiosError_1.ERR_NETWORK, config, request, request)); // Clean up request
-
-	      request = null;
-	    }; // Handle timeout
-
-
-	    request.ontimeout = function handleTimeout() {
-	      var timeoutErrorMessage = config.timeout ? 'timeout of ' + config.timeout + 'ms exceeded' : 'timeout exceeded';
-	      var transitional$1 = config.transitional || transitional;
-
-	      if (config.timeoutErrorMessage) {
-	        timeoutErrorMessage = config.timeoutErrorMessage;
-	      }
-
-	      reject(new AxiosError_1(timeoutErrorMessage, transitional$1.clarifyTimeoutError ? AxiosError_1.ETIMEDOUT : AxiosError_1.ECONNABORTED, config, request)); // Clean up request
-
-	      request = null;
-	    }; // Add xsrf header
-	    // This is only done if running in a standard browser environment.
-	    // Specifically not if we're in a web worker, or react-native.
-
-
-	    if (utils.isStandardBrowserEnv()) {
-	      // Add xsrf header
-	      var xsrfValue = (config.withCredentials || isURLSameOrigin(fullPath)) && config.xsrfCookieName ? cookies.read(config.xsrfCookieName) : undefined;
-
-	      if (xsrfValue) {
-	        requestHeaders[config.xsrfHeaderName] = xsrfValue;
-	      }
-	    } // Add headers to the request
-
-
-	    if ('setRequestHeader' in request) {
-	      utils.forEach(requestHeaders, function setRequestHeader(val, key) {
-	        if (typeof requestData === 'undefined' && key.toLowerCase() === 'content-type') {
-	          // Remove Content-Type if data is undefined
-	          delete requestHeaders[key];
-	        } else {
-	          // Otherwise add header to the request
-	          request.setRequestHeader(key, val);
-	        }
-	      });
-	    } // Add withCredentials to request if needed
-
-
-	    if (!utils.isUndefined(config.withCredentials)) {
-	      request.withCredentials = !!config.withCredentials;
-	    } // Add responseType to request if needed
-
-
-	    if (responseType && responseType !== 'json') {
-	      request.responseType = config.responseType;
-	    } // Handle progress if needed
-
-
-	    if (typeof config.onDownloadProgress === 'function') {
-	      request.addEventListener('progress', config.onDownloadProgress);
-	    } // Not all browsers support upload events
-
-
-	    if (typeof config.onUploadProgress === 'function' && request.upload) {
-	      request.upload.addEventListener('progress', config.onUploadProgress);
-	    }
-
-	    if (config.cancelToken || config.signal) {
-	      // Handle cancellation
-	      // eslint-disable-next-line func-names
-	      onCanceled = function (cancel) {
-	        if (!request) {
-	          return;
-	        }
-
-	        reject(!cancel || cancel && cancel.type ? new CanceledError_1() : cancel);
-	        request.abort();
-	        request = null;
-	      };
-
-	      config.cancelToken && config.cancelToken.subscribe(onCanceled);
-
-	      if (config.signal) {
-	        config.signal.aborted ? onCanceled() : config.signal.addEventListener('abort', onCanceled);
-	      }
-	    }
-
-	    if (!requestData) {
-	      requestData = null;
-	    }
-
-	    var protocol = parseProtocol(fullPath);
-
-	    if (protocol && ['http', 'https', 'file'].indexOf(protocol) === -1) {
-	      reject(new AxiosError_1('Unsupported protocol ' + protocol + ':', AxiosError_1.ERR_BAD_REQUEST, config));
-	      return;
-	    } // Send the request
-
-
-	    request.send(requestData);
-	  });
-	};
-
-	// eslint-disable-next-line strict
-	var _null = null;
-
-	var DEFAULT_CONTENT_TYPE = {
-	  'Content-Type': 'application/x-www-form-urlencoded'
-	};
-
-	function setContentTypeIfUnset(headers, value) {
-	  if (!utils.isUndefined(headers) && utils.isUndefined(headers['Content-Type'])) {
-	    headers['Content-Type'] = value;
-	  }
-	}
-
-	function getDefaultAdapter() {
-	  var adapter;
-
-	  if (typeof XMLHttpRequest !== 'undefined') {
-	    // For browsers use XHR adapter
-	    adapter = xhr;
-	  } else if (typeof process !== 'undefined' && Object.prototype.toString.call(process) === '[object process]') {
-	    // For node use HTTP adapter
-	    adapter = xhr;
-	  }
-
-	  return adapter;
-	}
-
-	function stringifySafely(rawValue, parser, encoder) {
-	  if (utils.isString(rawValue)) {
-	    try {
-	      (parser || JSON.parse)(rawValue);
-	      return utils.trim(rawValue);
-	    } catch (e) {
-	      if (e.name !== 'SyntaxError') {
-	        throw e;
-	      }
-	    }
-	  }
-
-	  return (encoder || JSON.stringify)(rawValue);
-	}
-
-	var defaults = {
-	  transitional: transitional,
-	  adapter: getDefaultAdapter(),
-	  transformRequest: [function transformRequest(data, headers) {
-	    normalizeHeaderName(headers, 'Accept');
-	    normalizeHeaderName(headers, 'Content-Type');
-
-	    if (utils.isFormData(data) || utils.isArrayBuffer(data) || utils.isBuffer(data) || utils.isStream(data) || utils.isFile(data) || utils.isBlob(data)) {
-	      return data;
-	    }
-
-	    if (utils.isArrayBufferView(data)) {
-	      return data.buffer;
-	    }
-
-	    if (utils.isURLSearchParams(data)) {
-	      setContentTypeIfUnset(headers, 'application/x-www-form-urlencoded;charset=utf-8');
-	      return data.toString();
-	    }
-
-	    var isObjectPayload = utils.isObject(data);
-	    var contentType = headers && headers['Content-Type'];
-	    var isFileList;
-
-	    if ((isFileList = utils.isFileList(data)) || isObjectPayload && contentType === 'multipart/form-data') {
-	      var _FormData = this.env && this.env.FormData;
-
-	      return toFormData_1(isFileList ? {
-	        'files[]': data
-	      } : data, _FormData && new _FormData());
-	    } else if (isObjectPayload || contentType === 'application/json') {
-	      setContentTypeIfUnset(headers, 'application/json');
-	      return stringifySafely(data);
-	    }
-
-	    return data;
-	  }],
-	  transformResponse: [function transformResponse(data) {
-	    var transitional = this.transitional || defaults.transitional;
-	    var silentJSONParsing = transitional && transitional.silentJSONParsing;
-	    var forcedJSONParsing = transitional && transitional.forcedJSONParsing;
-	    var strictJSONParsing = !silentJSONParsing && this.responseType === 'json';
-
-	    if (strictJSONParsing || forcedJSONParsing && utils.isString(data) && data.length) {
-	      try {
-	        return JSON.parse(data);
-	      } catch (e) {
-	        if (strictJSONParsing) {
-	          if (e.name === 'SyntaxError') {
-	            throw AxiosError_1.from(e, AxiosError_1.ERR_BAD_RESPONSE, this, null, this.response);
-	          }
-
-	          throw e;
-	        }
-	      }
-	    }
-
-	    return data;
-	  }],
-
-	  /**
-	   * A timeout in milliseconds to abort a request. If set to 0 (default) a
-	   * timeout is not created.
-	   */
-	  timeout: 0,
-	  xsrfCookieName: 'XSRF-TOKEN',
-	  xsrfHeaderName: 'X-XSRF-TOKEN',
-	  maxContentLength: -1,
-	  maxBodyLength: -1,
-	  env: {
-	    FormData: _null
-	  },
-	  validateStatus: function validateStatus(status) {
-	    return status >= 200 && status < 300;
-	  },
-	  headers: {
-	    common: {
-	      'Accept': 'application/json, text/plain, */*'
-	    }
-	  }
-	};
-	utils.forEach(['delete', 'get', 'head'], function forEachMethodNoData(method) {
-	  defaults.headers[method] = {};
-	});
-	utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
-	  defaults.headers[method] = utils.merge(DEFAULT_CONTENT_TYPE);
-	});
-	var defaults_1 = defaults;
-
-	/**
-	 * Transform the data for a request or a response
-	 *
-	 * @param {Object|String} data The data to be transformed
-	 * @param {Array} headers The headers for the request or response
-	 * @param {Array|Function} fns A single function or Array of functions
-	 * @returns {*} The resulting transformed data
-	 */
-
-
-	var transformData = function transformData(data, headers, fns) {
-	  var context = this || defaults_1;
-	  /*eslint no-param-reassign:0*/
-
-	  utils.forEach(fns, function transform(fn) {
-	    data = fn.call(context, data, headers);
-	  });
-	  return data;
-	};
-
-	var isCancel = function isCancel(value) {
-	  return !!(value && value.__CANCEL__);
-	};
-
-	/**
-	 * Throws a `CanceledError` if cancellation has been requested.
-	 */
-
-
-	function throwIfCancellationRequested(config) {
-	  if (config.cancelToken) {
-	    config.cancelToken.throwIfRequested();
-	  }
-
-	  if (config.signal && config.signal.aborted) {
-	    throw new CanceledError_1();
-	  }
-	}
-	/**
-	 * Dispatch a request to the server using the configured adapter.
-	 *
-	 * @param {object} config The config that is to be used for the request
-	 * @returns {Promise} The Promise to be fulfilled
-	 */
-
-
-	var dispatchRequest = function dispatchRequest(config) {
-	  throwIfCancellationRequested(config); // Ensure headers exist
-
-	  config.headers = config.headers || {}; // Transform request data
-
-	  config.data = transformData.call(config, config.data, config.headers, config.transformRequest); // Flatten headers
-
-	  config.headers = utils.merge(config.headers.common || {}, config.headers[config.method] || {}, config.headers);
-	  utils.forEach(['delete', 'get', 'head', 'post', 'put', 'patch', 'common'], function cleanHeaderConfig(method) {
-	    delete config.headers[method];
-	  });
-	  var adapter = config.adapter || defaults_1.adapter;
-	  return adapter(config).then(function onAdapterResolution(response) {
-	    throwIfCancellationRequested(config); // Transform response data
-
-	    response.data = transformData.call(config, response.data, response.headers, config.transformResponse);
-	    return response;
-	  }, function onAdapterRejection(reason) {
-	    if (!isCancel(reason)) {
-	      throwIfCancellationRequested(config); // Transform response data
-
-	      if (reason && reason.response) {
-	        reason.response.data = transformData.call(config, reason.response.data, reason.response.headers, config.transformResponse);
-	      }
-	    }
-
-	    return Promise.reject(reason);
-	  });
-	};
-
-	/**
-	 * Config-specific merge-function which creates a new config-object
-	 * by merging two configuration objects together.
-	 *
-	 * @param {Object} config1
-	 * @param {Object} config2
-	 * @returns {Object} New object resulting from merging config2 to config1
-	 */
-
-
-	var mergeConfig = function mergeConfig(config1, config2) {
-	  // eslint-disable-next-line no-param-reassign
-	  config2 = config2 || {};
-	  var config = {};
-
-	  function getMergedValue(target, source) {
-	    if (utils.isPlainObject(target) && utils.isPlainObject(source)) {
-	      return utils.merge(target, source);
-	    } else if (utils.isPlainObject(source)) {
-	      return utils.merge({}, source);
-	    } else if (utils.isArray(source)) {
-	      return source.slice();
-	    }
-
-	    return source;
-	  } // eslint-disable-next-line consistent-return
-
-
-	  function mergeDeepProperties(prop) {
-	    if (!utils.isUndefined(config2[prop])) {
-	      return getMergedValue(config1[prop], config2[prop]);
-	    } else if (!utils.isUndefined(config1[prop])) {
-	      return getMergedValue(undefined, config1[prop]);
-	    }
-	  } // eslint-disable-next-line consistent-return
-
-
-	  function valueFromConfig2(prop) {
-	    if (!utils.isUndefined(config2[prop])) {
-	      return getMergedValue(undefined, config2[prop]);
-	    }
-	  } // eslint-disable-next-line consistent-return
-
-
-	  function defaultToConfig2(prop) {
-	    if (!utils.isUndefined(config2[prop])) {
-	      return getMergedValue(undefined, config2[prop]);
-	    } else if (!utils.isUndefined(config1[prop])) {
-	      return getMergedValue(undefined, config1[prop]);
-	    }
-	  } // eslint-disable-next-line consistent-return
-
-
-	  function mergeDirectKeys(prop) {
-	    if (prop in config2) {
-	      return getMergedValue(config1[prop], config2[prop]);
-	    } else if (prop in config1) {
-	      return getMergedValue(undefined, config1[prop]);
-	    }
-	  }
-
-	  var mergeMap = {
-	    'url': valueFromConfig2,
-	    'method': valueFromConfig2,
-	    'data': valueFromConfig2,
-	    'baseURL': defaultToConfig2,
-	    'transformRequest': defaultToConfig2,
-	    'transformResponse': defaultToConfig2,
-	    'paramsSerializer': defaultToConfig2,
-	    'timeout': defaultToConfig2,
-	    'timeoutMessage': defaultToConfig2,
-	    'withCredentials': defaultToConfig2,
-	    'adapter': defaultToConfig2,
-	    'responseType': defaultToConfig2,
-	    'xsrfCookieName': defaultToConfig2,
-	    'xsrfHeaderName': defaultToConfig2,
-	    'onUploadProgress': defaultToConfig2,
-	    'onDownloadProgress': defaultToConfig2,
-	    'decompress': defaultToConfig2,
-	    'maxContentLength': defaultToConfig2,
-	    'maxBodyLength': defaultToConfig2,
-	    'beforeRedirect': defaultToConfig2,
-	    'transport': defaultToConfig2,
-	    'httpAgent': defaultToConfig2,
-	    'httpsAgent': defaultToConfig2,
-	    'cancelToken': defaultToConfig2,
-	    'socketPath': defaultToConfig2,
-	    'responseEncoding': defaultToConfig2,
-	    'validateStatus': mergeDirectKeys
-	  };
-	  utils.forEach(Object.keys(config1).concat(Object.keys(config2)), function computeConfigValue(prop) {
-	    var merge = mergeMap[prop] || mergeDeepProperties;
-	    var configValue = merge(prop);
-	    utils.isUndefined(configValue) && merge !== mergeDirectKeys || (config[prop] = configValue);
-	  });
-	  return config;
-	};
-
-	var data = {
-	  "version": "0.27.2"
-	};
-
-	var VERSION = data.version;
-
-
-
-	var validators$1 = {}; // eslint-disable-next-line func-names
-
-	['object', 'boolean', 'number', 'function', 'string', 'symbol'].forEach(function (type, i) {
-	  validators$1[type] = function validator(thing) {
-	    return typeof thing === type || 'a' + (i < 1 ? 'n ' : ' ') + type;
-	  };
-	});
-	var deprecatedWarnings = {};
-	/**
-	 * Transitional option validator
-	 * @param {function|boolean?} validator - set to false if the transitional option has been removed
-	 * @param {string?} version - deprecated version / removed since version
-	 * @param {string?} message - some message with additional info
-	 * @returns {function}
-	 */
-
-	validators$1.transitional = function transitional(validator, version, message) {
-	  function formatMessage(opt, desc) {
-	    return '[Axios v' + VERSION + '] Transitional option \'' + opt + '\'' + desc + (message ? '. ' + message : '');
-	  } // eslint-disable-next-line func-names
-
-
-	  return function (value, opt, opts) {
-	    if (validator === false) {
-	      throw new AxiosError_1(formatMessage(opt, ' has been removed' + (version ? ' in ' + version : '')), AxiosError_1.ERR_DEPRECATED);
-	    }
-
-	    if (version && !deprecatedWarnings[opt]) {
-	      deprecatedWarnings[opt] = true; // eslint-disable-next-line no-console
-
-	      console.warn(formatMessage(opt, ' has been deprecated since v' + version + ' and will be removed in the near future'));
-	    }
-
-	    return validator ? validator(value, opt, opts) : true;
-	  };
-	};
-	/**
-	 * Assert object's properties type
-	 * @param {object} options
-	 * @param {object} schema
-	 * @param {boolean?} allowUnknown
-	 */
-
-
-	function assertOptions(options, schema, allowUnknown) {
-	  if (typeof options !== 'object') {
-	    throw new AxiosError_1('options must be an object', AxiosError_1.ERR_BAD_OPTION_VALUE);
-	  }
-
-	  var keys = Object.keys(options);
-	  var i = keys.length;
-
-	  while (i-- > 0) {
-	    var opt = keys[i];
-	    var validator = schema[opt];
-
-	    if (validator) {
-	      var value = options[opt];
-	      var result = value === undefined || validator(value, opt, options);
-
-	      if (result !== true) {
-	        throw new AxiosError_1('option ' + opt + ' must be ' + result, AxiosError_1.ERR_BAD_OPTION_VALUE);
-	      }
-
-	      continue;
-	    }
-
-	    if (allowUnknown !== true) {
-	      throw new AxiosError_1('Unknown option ' + opt, AxiosError_1.ERR_BAD_OPTION);
-	    }
-	  }
-	}
-
-	var validator = {
-	  assertOptions: assertOptions,
-	  validators: validators$1
-	};
-
-	var validators = validator.validators;
-	/**
-	 * Create a new instance of Axios
-	 *
-	 * @param {Object} instanceConfig The default config for the instance
-	 */
-
-	function Axios(instanceConfig) {
-	  this.defaults = instanceConfig;
-	  this.interceptors = {
-	    request: new InterceptorManager_1(),
-	    response: new InterceptorManager_1()
-	  };
-	}
-	/**
-	 * Dispatch a request
-	 *
-	 * @param {Object} config The config specific for this request (merged with this.defaults)
-	 */
-
-
-	Axios.prototype.request = function request(configOrUrl, config) {
-	  /*eslint no-param-reassign:0*/
-	  // Allow for axios('example/url'[, config]) a la fetch API
-	  if (typeof configOrUrl === 'string') {
-	    config = config || {};
-	    config.url = configOrUrl;
-	  } else {
-	    config = configOrUrl || {};
-	  }
-
-	  config = mergeConfig(this.defaults, config); // Set config.method
-
-	  if (config.method) {
-	    config.method = config.method.toLowerCase();
-	  } else if (this.defaults.method) {
-	    config.method = this.defaults.method.toLowerCase();
-	  } else {
-	    config.method = 'get';
-	  }
-
-	  var transitional = config.transitional;
-
-	  if (transitional !== undefined) {
-	    validator.assertOptions(transitional, {
-	      silentJSONParsing: validators.transitional(validators.boolean),
-	      forcedJSONParsing: validators.transitional(validators.boolean),
-	      clarifyTimeoutError: validators.transitional(validators.boolean)
-	    }, false);
-	  } // filter out skipped interceptors
-
-
-	  var requestInterceptorChain = [];
-	  var synchronousRequestInterceptors = true;
-	  this.interceptors.request.forEach(function unshiftRequestInterceptors(interceptor) {
-	    if (typeof interceptor.runWhen === 'function' && interceptor.runWhen(config) === false) {
-	      return;
-	    }
-
-	    synchronousRequestInterceptors = synchronousRequestInterceptors && interceptor.synchronous;
-	    requestInterceptorChain.unshift(interceptor.fulfilled, interceptor.rejected);
-	  });
-	  var responseInterceptorChain = [];
-	  this.interceptors.response.forEach(function pushResponseInterceptors(interceptor) {
-	    responseInterceptorChain.push(interceptor.fulfilled, interceptor.rejected);
-	  });
-	  var promise;
-
-	  if (!synchronousRequestInterceptors) {
-	    var chain = [dispatchRequest, undefined];
-	    Array.prototype.unshift.apply(chain, requestInterceptorChain);
-	    chain = chain.concat(responseInterceptorChain);
-	    promise = Promise.resolve(config);
-
-	    while (chain.length) {
-	      promise = promise.then(chain.shift(), chain.shift());
-	    }
-
-	    return promise;
-	  }
-
-	  var newConfig = config;
-
-	  while (requestInterceptorChain.length) {
-	    var onFulfilled = requestInterceptorChain.shift();
-	    var onRejected = requestInterceptorChain.shift();
-
-	    try {
-	      newConfig = onFulfilled(newConfig);
-	    } catch (error) {
-	      onRejected(error);
-	      break;
-	    }
-	  }
-
-	  try {
-	    promise = dispatchRequest(newConfig);
-	  } catch (error) {
-	    return Promise.reject(error);
-	  }
-
-	  while (responseInterceptorChain.length) {
-	    promise = promise.then(responseInterceptorChain.shift(), responseInterceptorChain.shift());
-	  }
-
-	  return promise;
-	};
-
-	Axios.prototype.getUri = function getUri(config) {
-	  config = mergeConfig(this.defaults, config);
-	  var fullPath = buildFullPath(config.baseURL, config.url);
-	  return buildURL(fullPath, config.params, config.paramsSerializer);
-	}; // Provide aliases for supported request methods
-
-
-	utils.forEach(['delete', 'get', 'head', 'options'], function forEachMethodNoData(method) {
-	  /*eslint func-names:0*/
-	  Axios.prototype[method] = function (url, config) {
-	    return this.request(mergeConfig(config || {}, {
-	      method: method,
-	      url: url,
-	      data: (config || {}).data
-	    }));
-	  };
-	});
-	utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
-	  /*eslint func-names:0*/
-	  function generateHTTPMethod(isForm) {
-	    return function httpMethod(url, data, config) {
-	      return this.request(mergeConfig(config || {}, {
-	        method: method,
-	        headers: isForm ? {
-	          'Content-Type': 'multipart/form-data'
-	        } : {},
-	        url: url,
-	        data: data
-	      }));
-	    };
-	  }
-
-	  Axios.prototype[method] = generateHTTPMethod();
-	  Axios.prototype[method + 'Form'] = generateHTTPMethod(true);
-	});
-	var Axios_1 = Axios;
-
-	/**
-	 * A `CancelToken` is an object that can be used to request cancellation of an operation.
-	 *
-	 * @class
-	 * @param {Function} executor The executor function.
-	 */
-
-
-	function CancelToken(executor) {
-	  if (typeof executor !== 'function') {
-	    throw new TypeError('executor must be a function.');
-	  }
-
-	  var resolvePromise;
-	  this.promise = new Promise(function promiseExecutor(resolve) {
-	    resolvePromise = resolve;
-	  });
-	  var token = this; // eslint-disable-next-line func-names
-
-	  this.promise.then(function (cancel) {
-	    if (!token._listeners) return;
-	    var i;
-	    var l = token._listeners.length;
-
-	    for (i = 0; i < l; i++) {
-	      token._listeners[i](cancel);
-	    }
-
-	    token._listeners = null;
-	  }); // eslint-disable-next-line func-names
-
-	  this.promise.then = function (onfulfilled) {
-	    var _resolve; // eslint-disable-next-line func-names
-
-
-	    var promise = new Promise(function (resolve) {
-	      token.subscribe(resolve);
-	      _resolve = resolve;
-	    }).then(onfulfilled);
-
-	    promise.cancel = function reject() {
-	      token.unsubscribe(_resolve);
-	    };
-
-	    return promise;
-	  };
-
-	  executor(function cancel(message) {
-	    if (token.reason) {
-	      // Cancellation has already been requested
-	      return;
-	    }
-
-	    token.reason = new CanceledError_1(message);
-	    resolvePromise(token.reason);
-	  });
-	}
-	/**
-	 * Throws a `CanceledError` if cancellation has been requested.
-	 */
-
-
-	CancelToken.prototype.throwIfRequested = function throwIfRequested() {
-	  if (this.reason) {
-	    throw this.reason;
-	  }
-	};
-	/**
-	 * Subscribe to the cancel signal
-	 */
-
-
-	CancelToken.prototype.subscribe = function subscribe(listener) {
-	  if (this.reason) {
-	    listener(this.reason);
-	    return;
-	  }
-
-	  if (this._listeners) {
-	    this._listeners.push(listener);
-	  } else {
-	    this._listeners = [listener];
-	  }
-	};
-	/**
-	 * Unsubscribe from the cancel signal
-	 */
-
-
-	CancelToken.prototype.unsubscribe = function unsubscribe(listener) {
-	  if (!this._listeners) {
-	    return;
-	  }
-
-	  var index = this._listeners.indexOf(listener);
-
-	  if (index !== -1) {
-	    this._listeners.splice(index, 1);
-	  }
-	};
-	/**
-	 * Returns an object that contains a new `CancelToken` and a function that, when called,
-	 * cancels the `CancelToken`.
-	 */
-
-
-	CancelToken.source = function source() {
-	  var cancel;
-	  var token = new CancelToken(function executor(c) {
-	    cancel = c;
-	  });
-	  return {
-	    token: token,
-	    cancel: cancel
-	  };
-	};
-
-	var CancelToken_1 = CancelToken;
-
-	/**
-	 * Syntactic sugar for invoking a function and expanding an array for arguments.
-	 *
-	 * Common use case would be to use `Function.prototype.apply`.
-	 *
-	 *  ```js
-	 *  function f(x, y, z) {}
-	 *  var args = [1, 2, 3];
-	 *  f.apply(null, args);
-	 *  ```
-	 *
-	 * With `spread` this example can be re-written.
-	 *
-	 *  ```js
-	 *  spread(function(x, y, z) {})([1, 2, 3]);
-	 *  ```
-	 *
-	 * @param {Function} callback
-	 * @returns {Function}
-	 */
-
-	var spread = function spread(callback) {
-	  return function wrap(arr) {
-	    return callback.apply(null, arr);
-	  };
-	};
-
-	/**
-	 * Determines whether the payload is an error thrown by Axios
-	 *
-	 * @param {*} payload The value to test
-	 * @returns {boolean} True if the payload is an error thrown by Axios, otherwise false
-	 */
-
-
-	var isAxiosError = function isAxiosError(payload) {
-	  return utils.isObject(payload) && payload.isAxiosError === true;
-	};
-
-	/**
-	 * Create an instance of Axios
-	 *
-	 * @param {Object} defaultConfig The default config for the instance
-	 * @return {Axios} A new instance of Axios
-	 */
-
-
-	function createInstance(defaultConfig) {
-	  var context = new Axios_1(defaultConfig);
-	  var instance = bind(Axios_1.prototype.request, context); // Copy axios.prototype to instance
-
-	  utils.extend(instance, Axios_1.prototype, context); // Copy context to instance
-
-	  utils.extend(instance, context); // Factory for creating new instances
-
-	  instance.create = function create(instanceConfig) {
-	    return createInstance(mergeConfig(defaultConfig, instanceConfig));
-	  };
-
-	  return instance;
-	} // Create the default instance to be exported
-
-
-	var axios$1 = createInstance(defaults_1); // Expose Axios class to allow class inheritance
-
-	axios$1.Axios = Axios_1; // Expose Cancel & CancelToken
-
-	axios$1.CanceledError = CanceledError_1;
-	axios$1.CancelToken = CancelToken_1;
-	axios$1.isCancel = isCancel;
-	axios$1.VERSION = data.version;
-	axios$1.toFormData = toFormData_1; // Expose AxiosError class
-
-	axios$1.AxiosError = AxiosError_1; // alias for CanceledError for backward compatibility
-
-	axios$1.Cancel = axios$1.CanceledError; // Expose all/spread
-
-	axios$1.all = function all(promises) {
-	  return Promise.all(promises);
-	};
-
-	axios$1.spread = spread; // Expose isAxiosError
-
-	axios$1.isAxiosError = isAxiosError;
-	var axios_1 = axios$1; // Allow use of default import syntax in TypeScript
-
-	var default_1 = axios$1;
-	axios_1.default = default_1;
-
-	var axios = axios_1;
-
-	const createApiClient = ({
-	  base,
-	  token
-	}) => axios.create({
-	  baseURL: base,
-	  timeout: 1000,
-	  headers: {
-	    'Authorization': 'Bearer ' + token
-	  }
-	});
-
-	function App({
-	  config: {
-	    API_BASE,
-	    diffId,
-	    token
-	  }
-	}) {
-	  const [diffData, setDiffData] = react_32(null);
-	  const [error, setError] = react_32(null);
-	  const apiClient = createApiClient({
-	    base: API_BASE,
-	    token
-	  });
-	  const API = `/diffs/${diffId}`;
-	  react_24(() => {
-	    const fetchData = async () => {
-	      try {
-	        const response = await apiClient.get(API);
-	        setDiffData(response.data);
-	      } catch (apiError) {
-	        console.log();
-	        setError(apiError.response.data.error);
-	      }
-	    };
-
-	    fetchData();
-	  }, []);
-
-	  if (diffData) {
-	    return /*#__PURE__*/react.createElement("code", null, diffData.source);
-	  } else {
-	    if (error) {
-	      return /*#__PURE__*/react.createElement("div", {
-	        style: {
-	          color: 'red'
-	        }
-	      }, "\u26A0\uFE0F error loading the given diff, reasons: ", /*#__PURE__*/react.createElement("br", null), " ", error);
-	    } else {
-	      return /*#__PURE__*/react.createElement("div", null, "loading diff daya");
-	    }
-	  }
-	}
 
 	let DiffConfig = {};
-	console.log('DiffViewer starting up');
 	var main = {
 	  config: function (config) {
 	    DiffConfig = config;
 	  },
 	  attach: element => {
 	    const config = DiffConfig;
-	    const root = client_1(element); // createRoot(container!) if you use TypeScript
+	    const root = createRootWithShadowDom(element); // createRoot(container!) if you use TypeScript
 
 	    root.render( /*#__PURE__*/react.createElement(App, {
 	      config: config

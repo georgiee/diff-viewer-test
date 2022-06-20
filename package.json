@@ -3,9 +3,8 @@
    "version": "1.0.0",
    "main": "dist/bundle.js",
    "scripts": {
-      "build": "BUILD=production rollup -c",
-      "build:watch": "rollup -c -w",
-      "serve": "live-server"
+      "build": "NODE_ENV=production rollup -c",
+      "build:watch": "rollup -c -w"
    },
    "repository": "git@github.com:georgiee/diff-viewer-test.git",
    "author": "Georgios Kaleadis <georgios@kaleadis.de>",
@@ -18,6 +17,7 @@
       "@babel/preset-typescript": "^7.17.12",
       "@rollup/plugin-replace": "^4.0.0",
       "@rollup/plugin-typescript": "^8.3.3",
+      "babel-plugin-styled-components": "^2.0.7",
       "rollup": "^2.75.6",
       "rollup-plugin-babel": "^4.4.0",
       "rollup-plugin-commonjs": "^10.1.0",
@@ -32,6 +32,7 @@
       "axios": "^0.27.2",
       "lodash": "^4.17.21",
       "react": "^18.2.0",
-      "react-dom": "^18.2.0"
+      "react-dom": "^18.2.0",
+      "styled-components": "^5.3.5"
    }
 }
