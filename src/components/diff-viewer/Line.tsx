@@ -51,7 +51,7 @@ export const Line = ({ line }: LineProps) => {
         <div>{line.original_line_number}</div>
         <div>{line.new_line_number}</div>
         
-        <ActionContainer onClick={() => {}}>
+        <ActionContainer>
           {hoverActive && "+"}
         </ActionContainer>
         

@@ -1,11 +1,8 @@
-import axios from 'axios';
-import { useEffect, useRef, useState } from 'react';
+import { ApiClientConfig } from './types';
 
-interface ApiClientConfig {
-  token: string,
-  apiBaseUrl: string,
-  diffId: string
-}
+import { useEffect, useRef, useState } from 'react';
+import axios from 'axios';
+
 const createApiClient = ({base, token}) => axios.create({
   baseURL: base,
   timeout: 1000,
@@ -14,22 +11,21 @@ const createApiClient = ({base, token}) => axios.create({
 
 export function createDiffApi({token, diffId, apiBaseUrl}: ApiClientConfig) {
   const apiClient = createApiClient({base: apiBaseUrl, token });
-  
+
   const fetchDiff = async () => {
     const response = await apiClient.get(`/diffs/${diffId}`)
     return response.data;
   }
-  
+
   return {
     fetchDiff
   }
-  
-}
 
+}
 
 export const useDiffApi = (config: ApiClientConfig) => {
   const diffyApi = createDiffApi(config)
-  
+
   const cache = useRef({});
   const [status, setStatus] = useState('idle');
   const [data, setData] = useState([]);
@@ -39,7 +35,7 @@ export const useDiffApi = (config: ApiClientConfig) => {
       setStatus('fetching');
       const data = await diffyApi.fetchDiff();
       cache.current[config.diffId] = data;
-      
+
       setData(data);
       setStatus('fetched');
     };
@@ -49,3 +45,4 @@ export const useDiffApi = (config: ApiClientConfig) => {
 
   return { status, data };
 }
+

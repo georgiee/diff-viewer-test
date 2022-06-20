@@ -24,14 +24,6 @@ export default {
            preventAssignment: true,
           'process.env.NODE_ENV': JSON.stringify( process.env.NODE_ENV )
         }),
-        babel({
-            extensions: [".js",".ts", ".tsx"],
-            plugins: ["babel-plugin-styled-components"],
-            presets: [
-              "@babel/preset-typescript",
-              "@babel/preset-react"
-          ]
-        }),
         commonjs({
             extensions: [".js",".ts", ".tsx"],
             include: /\/node_modules\//,
@@ -41,6 +33,14 @@ export default {
                 'react-dom': Object.keys(reactDom),
                 'react-is': Object.keys(require('react-is')),
             }
+        }),
+        babel({
+            extensions: [".js",".ts", ".tsx"],
+            plugins: ["babel-plugin-styled-components"],
+            presets: [
+                "@babel/preset-typescript",
+                "@babel/preset-react"
+            ]
         }),
         isDev && serve(),
         isDev && livereload()

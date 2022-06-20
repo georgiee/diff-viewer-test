@@ -1,17 +1,20 @@
 import React from "react";
-import { Diff } from './types';
 import { File } from './File';
+import { useDiff } from './DiffContext';
 
-interface DiffViewerProps {
-  data: Diff;
-}
+export const DiffViewer = () => {
+  const { diffData, diffStatus } = useDiff();
+  const files = diffData.files;
 
-export const DiffViewer = ({ data }: DiffViewerProps) => {
-  const files = data.files;
+  if(diffStatus === 'error'){
+    return <div style={{color: 'red'}}>⚠️ error loading the given diff</div>;
+  }else if (diffStatus !== 'fetched') {
+    return <div>loading diff daya</div>;
+  }
   
   return (
     <div>
-      <h1>{data.title}1</h1>
+      <h1>{diffData.title} ({diffData.id })</h1>
       {
         files.map(file => <File file={file} key={file.index} />)
       }

@@ -1,4 +1,5 @@
 export interface Diff {
+  id: string;
   title: string;
   files: any[]
 }
@@ -27,3 +28,9 @@ export interface Line {
 }
 
 export type Locator = [number?, number?, number?, number?];
+
+export interface ApiClientConfig {
+  token: string,
+  apiBaseUrl: string,
+  diffId: string
+}
