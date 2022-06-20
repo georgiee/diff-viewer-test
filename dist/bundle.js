@@ -414,50 +414,49 @@
 	};
 
 	var version$1 = "18.2.0";
-
 	var react_production_min = {
-		Children: Children,
-		Component: Component,
-		Fragment: Fragment$1,
-		Profiler: Profiler$1,
-		PureComponent: PureComponent,
-		StrictMode: StrictMode$1,
-		Suspense: Suspense$1,
-		__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED: __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED$1,
-		cloneElement: cloneElement,
-		createContext: createContext,
-		createElement: createElement,
-		createFactory: createFactory,
-		createRef: createRef,
-		forwardRef: forwardRef,
-		isValidElement: isValidElement,
-		lazy: lazy,
-		memo: memo,
-		startTransition: startTransition,
-		unstable_act: unstable_act,
-		useCallback: useCallback,
-		useContext: useContext,
-		useDebugValue: useDebugValue,
-		useDeferredValue: useDeferredValue,
-		useEffect: useEffect,
-		useId: useId,
-		useImperativeHandle: useImperativeHandle,
-		useInsertionEffect: useInsertionEffect,
-		useLayoutEffect: useLayoutEffect,
-		useMemo: useMemo,
-		useReducer: useReducer,
-		useRef: useRef,
-		useState: useState,
-		useSyncExternalStore: useSyncExternalStore,
-		useTransition: useTransition,
-		version: version$1
+	  Children: Children,
+	  Component: Component,
+	  Fragment: Fragment$1,
+	  Profiler: Profiler$1,
+	  PureComponent: PureComponent,
+	  StrictMode: StrictMode$1,
+	  Suspense: Suspense$1,
+	  __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED: __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED$1,
+	  cloneElement: cloneElement,
+	  createContext: createContext,
+	  createElement: createElement,
+	  createFactory: createFactory,
+	  createRef: createRef,
+	  forwardRef: forwardRef,
+	  isValidElement: isValidElement,
+	  lazy: lazy,
+	  memo: memo,
+	  startTransition: startTransition,
+	  unstable_act: unstable_act,
+	  useCallback: useCallback,
+	  useContext: useContext,
+	  useDebugValue: useDebugValue,
+	  useDeferredValue: useDeferredValue,
+	  useEffect: useEffect,
+	  useId: useId,
+	  useImperativeHandle: useImperativeHandle,
+	  useInsertionEffect: useInsertionEffect,
+	  useLayoutEffect: useLayoutEffect,
+	  useMemo: useMemo,
+	  useReducer: useReducer,
+	  useRef: useRef,
+	  useState: useState,
+	  useSyncExternalStore: useSyncExternalStore,
+	  useTransition: useTransition,
+	  version: version$1
 	};
 
 	var react = createCommonjsModule(function (module) {
 
-	{
-	  module.exports = react_production_min;
-	}
+	  {
+	    module.exports = react_production_min;
+	  }
 	});
 	react.Children;
 	react.Component;
@@ -468,7 +467,7 @@
 	react.Suspense;
 	react.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
 	react.cloneElement;
-	react.createContext;
+	var react_10 = react.createContext;
 	var react_11 = react.createElement;
 	react.createFactory;
 	react.createRef;
@@ -633,43 +632,42 @@
 	};
 
 	var typeOf = z$2;
-
 	var reactIs_production_min = {
-		AsyncMode: AsyncMode,
-		ConcurrentMode: ConcurrentMode,
-		ContextConsumer: ContextConsumer,
-		ContextProvider: ContextProvider,
-		Element: Element,
-		ForwardRef: ForwardRef,
-		Fragment: Fragment,
-		Lazy: Lazy,
-		Memo: Memo,
-		Portal: Portal,
-		Profiler: Profiler,
-		StrictMode: StrictMode,
-		Suspense: Suspense,
-		isAsyncMode: isAsyncMode,
-		isConcurrentMode: isConcurrentMode,
-		isContextConsumer: isContextConsumer,
-		isContextProvider: isContextProvider,
-		isElement: isElement,
-		isForwardRef: isForwardRef,
-		isFragment: isFragment,
-		isLazy: isLazy,
-		isMemo: isMemo,
-		isPortal: isPortal,
-		isProfiler: isProfiler,
-		isStrictMode: isStrictMode,
-		isSuspense: isSuspense,
-		isValidElementType: isValidElementType,
-		typeOf: typeOf
+	  AsyncMode: AsyncMode,
+	  ConcurrentMode: ConcurrentMode,
+	  ContextConsumer: ContextConsumer,
+	  ContextProvider: ContextProvider,
+	  Element: Element,
+	  ForwardRef: ForwardRef,
+	  Fragment: Fragment,
+	  Lazy: Lazy,
+	  Memo: Memo,
+	  Portal: Portal,
+	  Profiler: Profiler,
+	  StrictMode: StrictMode,
+	  Suspense: Suspense,
+	  isAsyncMode: isAsyncMode,
+	  isConcurrentMode: isConcurrentMode,
+	  isContextConsumer: isContextConsumer,
+	  isContextProvider: isContextProvider,
+	  isElement: isElement,
+	  isForwardRef: isForwardRef,
+	  isFragment: isFragment,
+	  isLazy: isLazy,
+	  isMemo: isMemo,
+	  isPortal: isPortal,
+	  isProfiler: isProfiler,
+	  isStrictMode: isStrictMode,
+	  isSuspense: isSuspense,
+	  isValidElementType: isValidElementType,
+	  typeOf: typeOf
 	};
 
 	var reactIs = createCommonjsModule(function (module) {
 
-	{
-	  module.exports = reactIs_production_min;
-	}
+	  {
+	    module.exports = reactIs_production_min;
+	  }
 	});
 	reactIs.AsyncMode;
 	reactIs.ConcurrentMode;
@@ -2327,52 +2325,7 @@
 	    type: line.type,
 	    onMouseEnter: () => setHoverActive(true),
 	    onMouseLeave: () => setHoverActive(false)
-	  }, /*#__PURE__*/react.createElement("div", null, line.original_line_number), /*#__PURE__*/react.createElement("div", null, line.new_line_number), /*#__PURE__*/react.createElement(ActionContainer, {
-	    onClick: () => {}
-	  }, hoverActive && "+"), /*#__PURE__*/react.createElement("div", null, getLineGutter(line.type)), /*#__PURE__*/react.createElement("div", null, line.content)));
-	};
-
-	const HunkContainer = styled.div.withConfig({
-	  displayName: "Hunk__HunkContainer",
-	  componentId: "sc-1gul13o-0"
-	})(["overflow-x:scroll;"]);
-	const Header = styled.p.withConfig({
-	  displayName: "Hunk__Header",
-	  componentId: "sc-1gul13o-1"
-	})(["background-color:#ddf4ff;"]);
-	const Hunk = ({
-	  hunk
-	}) => {
-	  return /*#__PURE__*/react.createElement(HunkContainer, null, /*#__PURE__*/react.createElement(Header, null, hunk.header), hunk.lines.map(line => /*#__PURE__*/react.createElement(Line, {
-	    line: line,
-	    key: line.locator.join()
-	  })));
-	};
-
-	const FileContainer = styled.div.withConfig({
-	  displayName: "File__FileContainer",
-	  componentId: "sc-3yb3qd-0"
-	})(["padding:0 8px;margin-bottom:48px;border:1px solid #2c3e50;border-radius:8px;"]);
-	const NameContainer = styled.p.withConfig({
-	  displayName: "File__NameContainer",
-	  componentId: "sc-3yb3qd-1"
-	})(["font-size:24px;font-weight:700;margin:8px 0;"]);
-	const File = ({
-	  file
-	}) => {
-	  return /*#__PURE__*/react.createElement(FileContainer, null, /*#__PURE__*/react.createElement(NameContainer, null, file.new_path ?? file.old_path), file.hunks.map(hunk => /*#__PURE__*/react.createElement(Hunk, {
-	    hunk: hunk,
-	    key: hunk.index
-	  })));
-	};
-
-	const DiffViewer = ({
-	  data
-	}) => {
-	  return /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement("h1", null, data.title, "1"), data?.files.map(file => /*#__PURE__*/react.createElement(File, {
-	    file: file,
-	    key: file.index
-	  })));
+	  }, /*#__PURE__*/react.createElement("div", null, line.original_line_number), /*#__PURE__*/react.createElement("div", null, line.new_line_number), /*#__PURE__*/react.createElement(ActionContainer, null, hoverActive && "+"), /*#__PURE__*/react.createElement("div", null, getLineGutter(line.type)), /*#__PURE__*/react.createElement("div", null, line.content)));
 	};
 
 	var bind = function bind(fn, thisArg) {
@@ -2386,9 +2339,6 @@
 	    return fn.apply(thisArg, args);
 	  };
 	};
-
-	// utils is a library of generic helper functions non-specific to axios
-
 
 	var toString = Object.prototype.toString; // eslint-disable-next-line func-names
 
@@ -3253,7 +3203,6 @@
 	  return requestedURL;
 	};
 
-	// Headers whose duplicates are ignored by node
 	// c.f. https://nodejs.org/api/http.html#http_message_headers
 
 
@@ -3891,9 +3840,6 @@
 	};
 
 	var VERSION = data.version;
-
-
-
 	var validators$1 = {}; // eslint-disable-next-line func-names
 
 	['object', 'boolean', 'number', 'function', 'string', 'symbol'].forEach(function (type, i) {
@@ -4327,7 +4273,7 @@
 
 	var axios = axios_1;
 
-	const createApiClient = ({
+	const createApiClient$1 = ({
 	  base,
 	  token
 	}) => axios.create({
@@ -4343,7 +4289,7 @@
 	  diffId,
 	  apiBaseUrl
 	}) {
-	  const apiClient = createApiClient({
+	  const apiClient = createApiClient$1({
 	    base: apiBaseUrl,
 	    token
 	  });
@@ -4379,6 +4325,134 @@
 	  };
 	};
 
+	const BasicNote = ({
+	  locator
+	}) => {
+	  return null;
+	};
+
+	const DiffContext = /*#__PURE__*/react_10('Default Value');
+	const useDiff = () => react_21(DiffContext);
+
+	const createApiClient = ({
+	  base,
+	  token
+	}) => axios.create({
+	  baseURL: base,
+	  timeout: 1000,
+	  headers: {
+	    'Authorization': 'Bearer ' + token
+	  }
+	});
+
+	const createDiffClient = config => {
+	  return createApiClient({
+	    base: config.apiBaseUrl,
+	    token: config.token
+	  });
+	};
+	const DiffProvider = ({
+	  children,
+	  config
+	}) => {
+	  const {
+	    data,
+	    status
+	  } = useDiffApi(config);
+	  const contextValue = {
+	    apiConfig: config,
+	    NoteRenderer: BasicNote,
+	    diffId: config.diffId,
+	    diffData: data,
+	    diffStatus: status
+	  };
+	  return /*#__PURE__*/react.createElement(DiffContext.Provider, {
+	    value: contextValue
+	  }, children);
+	};
+
+	const HunkContainer = styled.div.withConfig({
+	  displayName: "Hunk__HunkContainer",
+	  componentId: "sc-1gul13o-0"
+	})(["overflow-x:scroll;"]);
+	const Header = styled.div.withConfig({
+	  displayName: "Hunk__Header",
+	  componentId: "sc-1gul13o-1"
+	})(["background-color:#ddf4ff;"]);
+	const Hunk = ({
+	  hunk
+	}) => {
+	  const {
+	    NoteRenderer,
+	    apiConfig,
+	    diffId
+	  } = useDiff();
+	  const apiClient = createDiffClient(apiConfig);
+	  const [annotations, setAnnotations] = react_32([]);
+	  react_24(() => {
+	    const fetchData = async () => {
+	      const response = await apiClient.get(`/diffs/${diffId}/annotations`);
+	      setAnnotations(response.data);
+	    };
+
+	    fetchData();
+	  }, [diffId]);
+	  const lines = hunk.lines;
+	  console.log({
+	    annotations
+	  });
+	  return /*#__PURE__*/react.createElement(HunkContainer, null, /*#__PURE__*/react.createElement(Header, null, hunk.header), lines.map(line => /*#__PURE__*/react.createElement(react.Fragment, {
+	    key: line.locator.join()
+	  }, /*#__PURE__*/react.createElement(Line, {
+	    line: line
+	  }), /*#__PURE__*/react.createElement(NoteRenderer, {
+	    locator: line.locator
+	  }))));
+	};
+
+	const FileToggle = styled.details.withConfig({
+	  displayName: "File__FileToggle",
+	  componentId: "sc-3yb3qd-0"
+	})(["padding:0 8px;margin-bottom:48px;border:1px solid #2c3e50;border-radius:8px;"]);
+	const Title = styled.span.withConfig({
+	  displayName: "File__Title",
+	  componentId: "sc-3yb3qd-1"
+	})(["cursor:pointer;font-size:24px;font-weight:700;"]);
+	const File = ({
+	  file
+	}) => {
+	  const hunks = file.hunks;
+	  return /*#__PURE__*/react.createElement(FileToggle, {
+	    open: true
+	  }, /*#__PURE__*/react.createElement("summary", null, /*#__PURE__*/react.createElement(Title, null, file.new_path ?? file.old_path)), hunks.map(hunk => /*#__PURE__*/react.createElement(Hunk, {
+	    hunk: hunk,
+	    key: hunk.index
+	  })));
+	};
+
+	const DiffViewer = () => {
+	  const {
+	    diffData,
+	    diffStatus
+	  } = useDiff();
+	  const files = diffData.files;
+
+	  if (diffStatus === 'error') {
+	    return /*#__PURE__*/react.createElement("div", {
+	      style: {
+	        color: 'red'
+	      }
+	    }, "\u26A0\uFE0F error loading the given diff");
+	  } else if (diffStatus !== 'fetched') {
+	    return /*#__PURE__*/react.createElement("div", null, "loading diff daya");
+	  }
+
+	  return /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement("h1", null, diffData.title, " (", diffData.id, ")"), files.map(file => /*#__PURE__*/react.createElement(File, {
+	    file: file,
+	    key: file.index
+	  })));
+	};
+
 	// globalStyles.js
 	const GlobalStyle = We$1([":host{@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap');font-family:'Roboto Mono',monospace;}"]);
 
@@ -4389,336 +4463,315 @@
 	    token
 	  }
 	}) {
-	  const {
-	    data,
-	    status
-	  } = useDiffApi({
-	    apiBaseUrl: API_BASE,
-	    diffId,
-	    token
-	  });
-
-	  const renderDiff = () => {
-	    if (status === 'error') {
-	      return /*#__PURE__*/react.createElement("div", {
-	        style: {
-	          color: 'red'
-	        }
-	      }, "\u26A0\uFE0F error loading the given diff");
-	    } else {
-	      if (status === 'fetched') {
-	        return /*#__PURE__*/react.createElement(DiffViewer, {
-	          data: data
-	        });
-	      } else {
-	        return /*#__PURE__*/react.createElement("div", null, "loading diff daya");
-	      }
+	  return /*#__PURE__*/react.createElement(DiffProvider, {
+	    config: {
+	      apiBaseUrl: API_BASE,
+	      diffId,
+	      token
 	    }
-	  };
-
-	  return /*#__PURE__*/react.createElement(react.Fragment, null, /*#__PURE__*/react.createElement(GlobalStyle, null), renderDiff());
+	  }, /*#__PURE__*/react.createElement(GlobalStyle, null), /*#__PURE__*/react.createElement(DiffViewer, null));
 	}
 
 	var scheduler_production_min = createCommonjsModule(function (module, exports) {
 
-	function f(a, b) {
-	  var c = a.length;
-	  a.push(b);
+	  function f(a, b) {
+	    var c = a.length;
+	    a.push(b);
 
-	  a: for (; 0 < c;) {
-	    var d = c - 1 >>> 1,
-	        e = a[d];
-	    if (0 < g(e, b)) a[d] = b, a[c] = e, c = d;else break a;
-	  }
-	}
-
-	function h(a) {
-	  return 0 === a.length ? null : a[0];
-	}
-
-	function k(a) {
-	  if (0 === a.length) return null;
-	  var b = a[0],
-	      c = a.pop();
-
-	  if (c !== b) {
-	    a[0] = c;
-
-	    a: for (var d = 0, e = a.length, w = e >>> 1; d < w;) {
-	      var m = 2 * (d + 1) - 1,
-	          C = a[m],
-	          n = m + 1,
-	          x = a[n];
-	      if (0 > g(C, c)) n < e && 0 > g(x, C) ? (a[d] = x, a[n] = c, d = n) : (a[d] = C, a[m] = c, d = m);else if (n < e && 0 > g(x, c)) a[d] = x, a[n] = c, d = n;else break a;
+	    a: for (; 0 < c;) {
+	      var d = c - 1 >>> 1,
+	          e = a[d];
+	      if (0 < g(e, b)) a[d] = b, a[c] = e, c = d;else break a;
 	    }
 	  }
 
-	  return b;
-	}
-
-	function g(a, b) {
-	  var c = a.sortIndex - b.sortIndex;
-	  return 0 !== c ? c : a.id - b.id;
-	}
-
-	if ("object" === typeof performance && "function" === typeof performance.now) {
-	  var l = performance;
-
-	  exports.unstable_now = function () {
-	    return l.now();
-	  };
-	} else {
-	  var p = Date,
-	      q = p.now();
-
-	  exports.unstable_now = function () {
-	    return p.now() - q;
-	  };
-	}
-
-	var r = [],
-	    t = [],
-	    u = 1,
-	    v = null,
-	    y = 3,
-	    z = !1,
-	    A = !1,
-	    B = !1,
-	    D = "function" === typeof setTimeout ? setTimeout : null,
-	    E = "function" === typeof clearTimeout ? clearTimeout : null,
-	    F = "undefined" !== typeof setImmediate ? setImmediate : null;
-	"undefined" !== typeof navigator && void 0 !== navigator.scheduling && void 0 !== navigator.scheduling.isInputPending && navigator.scheduling.isInputPending.bind(navigator.scheduling);
-
-	function G(a) {
-	  for (var b = h(t); null !== b;) {
-	    if (null === b.callback) k(t);else if (b.startTime <= a) k(t), b.sortIndex = b.expirationTime, f(r, b);else break;
-	    b = h(t);
+	  function h(a) {
+	    return 0 === a.length ? null : a[0];
 	  }
-	}
 
-	function H(a) {
-	  B = !1;
-	  G(a);
-	  if (!A) if (null !== h(r)) A = !0, I(J);else {
-	    var b = h(t);
-	    null !== b && K(H, b.startTime - a);
-	  }
-	}
+	  function k(a) {
+	    if (0 === a.length) return null;
+	    var b = a[0],
+	        c = a.pop();
 
-	function J(a, b) {
-	  A = !1;
-	  B && (B = !1, E(L), L = -1);
-	  z = !0;
-	  var c = y;
+	    if (c !== b) {
+	      a[0] = c;
 
-	  try {
-	    G(b);
-
-	    for (v = h(r); null !== v && (!(v.expirationTime > b) || a && !M());) {
-	      var d = v.callback;
-
-	      if ("function" === typeof d) {
-	        v.callback = null;
-	        y = v.priorityLevel;
-	        var e = d(v.expirationTime <= b);
-	        b = exports.unstable_now();
-	        "function" === typeof e ? v.callback = e : v === h(r) && k(r);
-	        G(b);
-	      } else k(r);
-
-	      v = h(r);
+	      a: for (var d = 0, e = a.length, w = e >>> 1; d < w;) {
+	        var m = 2 * (d + 1) - 1,
+	            C = a[m],
+	            n = m + 1,
+	            x = a[n];
+	        if (0 > g(C, c)) n < e && 0 > g(x, C) ? (a[d] = x, a[n] = c, d = n) : (a[d] = C, a[m] = c, d = m);else if (n < e && 0 > g(x, c)) a[d] = x, a[n] = c, d = n;else break a;
+	      }
 	    }
 
-	    if (null !== v) var w = !0;else {
-	      var m = h(t);
-	      null !== m && K(H, m.startTime - b);
-	      w = !1;
-	    }
-	    return w;
-	  } finally {
-	    v = null, y = c, z = !1;
+	    return b;
 	  }
-	}
 
-	var N = !1,
-	    O = null,
-	    L = -1,
-	    P = 5,
-	    Q = -1;
+	  function g(a, b) {
+	    var c = a.sortIndex - b.sortIndex;
+	    return 0 !== c ? c : a.id - b.id;
+	  }
 
-	function M() {
-	  return exports.unstable_now() - Q < P ? !1 : !0;
-	}
+	  if ("object" === typeof performance && "function" === typeof performance.now) {
+	    var l = performance;
 
-	function R() {
-	  if (null !== O) {
-	    var a = exports.unstable_now();
-	    Q = a;
-	    var b = !0;
+	    exports.unstable_now = function () {
+	      return l.now();
+	    };
+	  } else {
+	    var p = Date,
+	        q = p.now();
+
+	    exports.unstable_now = function () {
+	      return p.now() - q;
+	    };
+	  }
+
+	  var r = [],
+	      t = [],
+	      u = 1,
+	      v = null,
+	      y = 3,
+	      z = !1,
+	      A = !1,
+	      B = !1,
+	      D = "function" === typeof setTimeout ? setTimeout : null,
+	      E = "function" === typeof clearTimeout ? clearTimeout : null,
+	      F = "undefined" !== typeof setImmediate ? setImmediate : null;
+	  "undefined" !== typeof navigator && void 0 !== navigator.scheduling && void 0 !== navigator.scheduling.isInputPending && navigator.scheduling.isInputPending.bind(navigator.scheduling);
+
+	  function G(a) {
+	    for (var b = h(t); null !== b;) {
+	      if (null === b.callback) k(t);else if (b.startTime <= a) k(t), b.sortIndex = b.expirationTime, f(r, b);else break;
+	      b = h(t);
+	    }
+	  }
+
+	  function H(a) {
+	    B = !1;
+	    G(a);
+	    if (!A) if (null !== h(r)) A = !0, I(J);else {
+	      var b = h(t);
+	      null !== b && K(H, b.startTime - a);
+	    }
+	  }
+
+	  function J(a, b) {
+	    A = !1;
+	    B && (B = !1, E(L), L = -1);
+	    z = !0;
+	    var c = y;
 
 	    try {
-	      b = O(!0, a);
+	      G(b);
+
+	      for (v = h(r); null !== v && (!(v.expirationTime > b) || a && !M());) {
+	        var d = v.callback;
+
+	        if ("function" === typeof d) {
+	          v.callback = null;
+	          y = v.priorityLevel;
+	          var e = d(v.expirationTime <= b);
+	          b = exports.unstable_now();
+	          "function" === typeof e ? v.callback = e : v === h(r) && k(r);
+	          G(b);
+	        } else k(r);
+
+	        v = h(r);
+	      }
+
+	      if (null !== v) var w = !0;else {
+	        var m = h(t);
+	        null !== m && K(H, m.startTime - b);
+	        w = !1;
+	      }
+	      return w;
 	    } finally {
-	      b ? S() : (N = !1, O = null);
+	      v = null, y = c, z = !1;
 	    }
-	  } else N = !1;
-	}
+	  }
 
-	var S;
-	if ("function" === typeof F) S = function () {
-	  F(R);
-	};else if ("undefined" !== typeof MessageChannel) {
-	  var T = new MessageChannel(),
-	      U = T.port2;
-	  T.port1.onmessage = R;
+	  var N = !1,
+	      O = null,
+	      L = -1,
+	      P = 5,
+	      Q = -1;
 
-	  S = function () {
-	    U.postMessage(null);
+	  function M() {
+	    return exports.unstable_now() - Q < P ? !1 : !0;
+	  }
+
+	  function R() {
+	    if (null !== O) {
+	      var a = exports.unstable_now();
+	      Q = a;
+	      var b = !0;
+
+	      try {
+	        b = O(!0, a);
+	      } finally {
+	        b ? S() : (N = !1, O = null);
+	      }
+	    } else N = !1;
+	  }
+
+	  var S;
+	  if ("function" === typeof F) S = function () {
+	    F(R);
+	  };else if ("undefined" !== typeof MessageChannel) {
+	    var T = new MessageChannel(),
+	        U = T.port2;
+	    T.port1.onmessage = R;
+
+	    S = function () {
+	      U.postMessage(null);
+	    };
+	  } else S = function () {
+	    D(R, 0);
 	  };
-	} else S = function () {
-	  D(R, 0);
-	};
 
-	function I(a) {
-	  O = a;
-	  N || (N = !0, S());
-	}
-
-	function K(a, b) {
-	  L = D(function () {
-	    a(exports.unstable_now());
-	  }, b);
-	}
-
-	exports.unstable_IdlePriority = 5;
-	exports.unstable_ImmediatePriority = 1;
-	exports.unstable_LowPriority = 4;
-	exports.unstable_NormalPriority = 3;
-	exports.unstable_Profiling = null;
-	exports.unstable_UserBlockingPriority = 2;
-
-	exports.unstable_cancelCallback = function (a) {
-	  a.callback = null;
-	};
-
-	exports.unstable_continueExecution = function () {
-	  A || z || (A = !0, I(J));
-	};
-
-	exports.unstable_forceFrameRate = function (a) {
-	  0 > a || 125 < a ? console.error("forceFrameRate takes a positive int between 0 and 125, forcing frame rates higher than 125 fps is not supported") : P = 0 < a ? Math.floor(1E3 / a) : 5;
-	};
-
-	exports.unstable_getCurrentPriorityLevel = function () {
-	  return y;
-	};
-
-	exports.unstable_getFirstCallbackNode = function () {
-	  return h(r);
-	};
-
-	exports.unstable_next = function (a) {
-	  switch (y) {
-	    case 1:
-	    case 2:
-	    case 3:
-	      var b = 3;
-	      break;
-
-	    default:
-	      b = y;
+	  function I(a) {
+	    O = a;
+	    N || (N = !0, S());
 	  }
 
-	  var c = y;
-	  y = b;
-
-	  try {
-	    return a();
-	  } finally {
-	    y = c;
-	  }
-	};
-
-	exports.unstable_pauseExecution = function () {};
-
-	exports.unstable_requestPaint = function () {};
-
-	exports.unstable_runWithPriority = function (a, b) {
-	  switch (a) {
-	    case 1:
-	    case 2:
-	    case 3:
-	    case 4:
-	    case 5:
-	      break;
-
-	    default:
-	      a = 3;
+	  function K(a, b) {
+	    L = D(function () {
+	      a(exports.unstable_now());
+	    }, b);
 	  }
 
-	  var c = y;
-	  y = a;
+	  exports.unstable_IdlePriority = 5;
+	  exports.unstable_ImmediatePriority = 1;
+	  exports.unstable_LowPriority = 4;
+	  exports.unstable_NormalPriority = 3;
+	  exports.unstable_Profiling = null;
+	  exports.unstable_UserBlockingPriority = 2;
 
-	  try {
-	    return b();
-	  } finally {
-	    y = c;
-	  }
-	};
-
-	exports.unstable_scheduleCallback = function (a, b, c) {
-	  var d = exports.unstable_now();
-	  "object" === typeof c && null !== c ? (c = c.delay, c = "number" === typeof c && 0 < c ? d + c : d) : c = d;
-
-	  switch (a) {
-	    case 1:
-	      var e = -1;
-	      break;
-
-	    case 2:
-	      e = 250;
-	      break;
-
-	    case 5:
-	      e = 1073741823;
-	      break;
-
-	    case 4:
-	      e = 1E4;
-	      break;
-
-	    default:
-	      e = 5E3;
-	  }
-
-	  e = c + e;
-	  a = {
-	    id: u++,
-	    callback: b,
-	    priorityLevel: a,
-	    startTime: c,
-	    expirationTime: e,
-	    sortIndex: -1
+	  exports.unstable_cancelCallback = function (a) {
+	    a.callback = null;
 	  };
-	  c > d ? (a.sortIndex = c, f(t, a), null === h(r) && a === h(t) && (B ? (E(L), L = -1) : B = !0, K(H, c - d))) : (a.sortIndex = e, f(r, a), A || z || (A = !0, I(J)));
-	  return a;
-	};
 
-	exports.unstable_shouldYield = M;
+	  exports.unstable_continueExecution = function () {
+	    A || z || (A = !0, I(J));
+	  };
 
-	exports.unstable_wrapCallback = function (a) {
-	  var b = y;
-	  return function () {
+	  exports.unstable_forceFrameRate = function (a) {
+	    0 > a || 125 < a ? console.error("forceFrameRate takes a positive int between 0 and 125, forcing frame rates higher than 125 fps is not supported") : P = 0 < a ? Math.floor(1E3 / a) : 5;
+	  };
+
+	  exports.unstable_getCurrentPriorityLevel = function () {
+	    return y;
+	  };
+
+	  exports.unstable_getFirstCallbackNode = function () {
+	    return h(r);
+	  };
+
+	  exports.unstable_next = function (a) {
+	    switch (y) {
+	      case 1:
+	      case 2:
+	      case 3:
+	        var b = 3;
+	        break;
+
+	      default:
+	        b = y;
+	    }
+
 	    var c = y;
 	    y = b;
 
 	    try {
-	      return a.apply(this, arguments);
+	      return a();
 	    } finally {
 	      y = c;
 	    }
 	  };
-	};
+
+	  exports.unstable_pauseExecution = function () {};
+
+	  exports.unstable_requestPaint = function () {};
+
+	  exports.unstable_runWithPriority = function (a, b) {
+	    switch (a) {
+	      case 1:
+	      case 2:
+	      case 3:
+	      case 4:
+	      case 5:
+	        break;
+
+	      default:
+	        a = 3;
+	    }
+
+	    var c = y;
+	    y = a;
+
+	    try {
+	      return b();
+	    } finally {
+	      y = c;
+	    }
+	  };
+
+	  exports.unstable_scheduleCallback = function (a, b, c) {
+	    var d = exports.unstable_now();
+	    "object" === typeof c && null !== c ? (c = c.delay, c = "number" === typeof c && 0 < c ? d + c : d) : c = d;
+
+	    switch (a) {
+	      case 1:
+	        var e = -1;
+	        break;
+
+	      case 2:
+	        e = 250;
+	        break;
+
+	      case 5:
+	        e = 1073741823;
+	        break;
+
+	      case 4:
+	        e = 1E4;
+	        break;
+
+	      default:
+	        e = 5E3;
+	    }
+
+	    e = c + e;
+	    a = {
+	      id: u++,
+	      callback: b,
+	      priorityLevel: a,
+	      startTime: c,
+	      expirationTime: e,
+	      sortIndex: -1
+	    };
+	    c > d ? (a.sortIndex = c, f(t, a), null === h(r) && a === h(t) && (B ? (E(L), L = -1) : B = !0, K(H, c - d))) : (a.sortIndex = e, f(r, a), A || z || (A = !0, I(J)));
+	    return a;
+	  };
+
+	  exports.unstable_shouldYield = M;
+
+	  exports.unstable_wrapCallback = function (a) {
+	    var b = y;
+	    return function () {
+	      var c = y;
+	      y = b;
+
+	      try {
+	        return a.apply(this, arguments);
+	      } finally {
+	        y = c;
+	      }
+	    };
+	  };
 	});
 	scheduler_production_min.unstable_now;
 	scheduler_production_min.unstable_IdlePriority;
@@ -4742,9 +4795,9 @@
 
 	var scheduler = createCommonjsModule(function (module) {
 
-	{
-	  module.exports = scheduler_production_min;
-	}
+	  {
+	    module.exports = scheduler_production_min;
+	  }
 	});
 
 	function p(a) {
@@ -13272,46 +13325,45 @@
 	};
 
 	var version = "18.2.0-next-9e3b772b8-20220608";
-
 	var reactDom_production_min = {
-		__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED: __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED,
-		createPortal: createPortal,
-		createRoot: createRoot,
-		findDOMNode: findDOMNode,
-		flushSync: flushSync,
-		hydrate: hydrate,
-		hydrateRoot: hydrateRoot,
-		render: render,
-		unmountComponentAtNode: unmountComponentAtNode,
-		unstable_batchedUpdates: unstable_batchedUpdates,
-		unstable_renderSubtreeIntoContainer: unstable_renderSubtreeIntoContainer,
-		version: version
+	  __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED: __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED,
+	  createPortal: createPortal,
+	  createRoot: createRoot,
+	  findDOMNode: findDOMNode,
+	  flushSync: flushSync,
+	  hydrate: hydrate,
+	  hydrateRoot: hydrateRoot,
+	  render: render,
+	  unmountComponentAtNode: unmountComponentAtNode,
+	  unstable_batchedUpdates: unstable_batchedUpdates,
+	  unstable_renderSubtreeIntoContainer: unstable_renderSubtreeIntoContainer,
+	  version: version
 	};
 
 	var reactDom = createCommonjsModule(function (module) {
 
-	function checkDCE() {
-	  /* global __REACT_DEVTOOLS_GLOBAL_HOOK__ */
-	  if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ === 'undefined' || typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.checkDCE !== 'function') {
-	    return;
+	  function checkDCE() {
+	    /* global __REACT_DEVTOOLS_GLOBAL_HOOK__ */
+	    if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ === 'undefined' || typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.checkDCE !== 'function') {
+	      return;
+	    }
+
+	    try {
+	      // Verify that the code above has been dead code eliminated (DCE'd).
+	      __REACT_DEVTOOLS_GLOBAL_HOOK__.checkDCE(checkDCE);
+	    } catch (err) {
+	      // DevTools shouldn't crash React, no matter what.
+	      // We should still report in case we break this code.
+	      console.error(err);
+	    }
 	  }
 
-	  try {
-	    // Verify that the code above has been dead code eliminated (DCE'd).
-	    __REACT_DEVTOOLS_GLOBAL_HOOK__.checkDCE(checkDCE);
-	  } catch (err) {
-	    // DevTools shouldn't crash React, no matter what.
-	    // We should still report in case we break this code.
-	    console.error(err);
+	  {
+	    // DCE check should happen before ReactDOM bundle executes so that
+	    // DevTools can report bad minification during injection.
+	    checkDCE();
+	    module.exports = reactDom_production_min;
 	  }
-	}
-
-	{
-	  // DCE check should happen before ReactDOM bundle executes so that
-	  // DevTools can report bad minification during injection.
-	  checkDCE();
-	  module.exports = reactDom_production_min;
-	}
 	});
 	reactDom.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
 	reactDom.createPortal;
@@ -13328,12 +13380,10 @@
 
 	var client = createCommonjsModule(function (module, exports) {
 
-
-
-	{
-	  exports.createRoot = reactDom.createRoot;
-	  exports.hydrateRoot = reactDom.hydrateRoot;
-	}
+	  {
+	    exports.createRoot = reactDom.createRoot;
+	    exports.hydrateRoot = reactDom.hydrateRoot;
+	  }
 	});
 	var client_1 = client.createRoot;
 	client.hydrateRoot;
