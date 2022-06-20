@@ -7,7 +7,7 @@ interface FileProps {
   file: diffTypes.File;
 }
 
-const FileContainer = styled.div`
+const FileToggle = styled.details`
   padding: 0 8px;
   margin-bottom: 48px;
 
@@ -15,21 +15,23 @@ const FileContainer = styled.div`
   border-radius: 8px;
 `;
 
-const NameContainer = styled.p`
+const Title = styled.span`
+  cursor: pointer;
   font-size: 24px;
   font-weight: 700;
-
-  margin: 8px 0;
 `;
 
 
 export const File = ({ file }: FileProps) => {
+  const hunks = file.hunks;
+  
   return (
-    <FileContainer>
-      <NameContainer>{file.new_path ?? file.old_path}</NameContainer>
-      {file.hunks.map((hunk) => (
-        <Hunk hunk={hunk} key={hunk.index} />
-      ))}
-    </FileContainer>
+    <FileToggle open>
+      <summary>
+        <Title>{file.new_path ?? file.old_path}</Title>  
+      </summary>
+      
+      {hunks.map(hunk =>  <Hunk hunk={hunk} key={hunk.index} />)}
+    </FileToggle>
   );
 };

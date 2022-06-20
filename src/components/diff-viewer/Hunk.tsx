@@ -12,17 +12,16 @@ const HunkContainer = styled.div`
   overflow-x: scroll;
 `;
 
-const Header = styled.p`
+const Header = styled.div`
   background-color: #ddf4ff;
 `;
 
 export const Hunk = ({ hunk }: HunkProps) => {
+  const lines = hunk.lines
   return (
     <HunkContainer>
       <Header>{hunk.header}</Header>
-      {hunk.lines.map((line) => (
-        <Line line={line} key={line.locator.join()} />
-      ))}
+      {lines.map(line =>  <Line line={line} key={line.locator.join()} />)}
     </HunkContainer>
   );
 };

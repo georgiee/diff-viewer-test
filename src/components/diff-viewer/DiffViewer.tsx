@@ -7,12 +7,14 @@ interface DiffViewerProps {
 }
 
 export const DiffViewer = ({ data }: DiffViewerProps) => {
+  const files = data.files;
+  
   return (
     <div>
       <h1>{data.title}1</h1>
-        {data?.files.map((file) => (
-          <File file={file} key={file.index} />
-        ))}
+      {
+        files.map(file => <File file={file} key={file.index} />)
+      }
     </div>
   );
 };
