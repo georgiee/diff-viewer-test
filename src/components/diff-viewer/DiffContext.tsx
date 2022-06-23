@@ -1,11 +1,12 @@
 import React, { createContext, useContext, useEffect, useReducer } from 'react';
-import { useDiffApi } from './use-diff-api';
-import { Annotation } from '../notes/BasicNote';
-import { Annotation } from '../../types';
+import { createDiffApi, useDiffApi } from './use-diff-api';
+import { Annotation as AnnotationComponent } from '../notes/Annotation';
+import { annotationReducer, initialState } from './reducer';
 
 const DiffContext = createContext('Default Value');
 
 interface DiffContextData {
+  api: any
   apiConfig: any
   NoteRenderer: any
   diffId: string
@@ -16,35 +17,10 @@ interface DiffContextData {
 }
 export const useDiff = () => useContext<DiffContextData>(DiffContext) as DiffContextData;
 
-let DRAFT_COUNTER = 0
-
-const createDraftAnnotation = (locator): Annotation => ({
-  draft: true, id: `draft-${DRAFT_COUNTER++}`, locator: locator, body: "", type: "annotation"
-})
-
-const annotationReducer = (state, action) => {
-  switch (action.type) {
-
-    case "FETCH_SUCCESS":
-      return {
-        ...state,
-        annotations: action.annotations
-      };
-
-    case "ADD_DRAFT":
-      return {
-        ...state,
-        annotations: state.annotations.concat(createDraftAnnotation(action.locator))
-      };
-    default:
-      throw new Error();
-  }
-}
 
 export const DiffProvider = ({ children, config }) => {
-  const initialState = {
-    annotations: [],
-  };
+  const api = createDiffApi(config)
+  
 
   const [annotationState, dispatchAnnotations] = useReducer(annotationReducer, initialState);
 
@@ -57,15 +33,15 @@ export const DiffProvider = ({ children, config }) => {
   }, [status]);
   
   const contextValue: DiffContextData = {
+    api,
     apiConfig: config, 
-    NoteRenderer: Annotation,
+    NoteRenderer: AnnotationComponent,
     diffId: config.diffId,
     diffData: data.markup,
-    annotations: annotationState.annotations,
+    annotations: annotationState,
     dispatchAnnotations,
     diffStatus: status
   }
-  console.log(annotationState.annotations)
   
   return (
     <DiffContext.Provider value={contextValue}>

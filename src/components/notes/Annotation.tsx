@@ -1,6 +1,7 @@
-import React, { useReducer } from 'react';
-import { Annotation } from '../../types';
+import React, { useCallback } from 'react';
+import { Annotation as AnnotationType } from '../../types';
 import { Note } from './Note';
+import { useDiff } from '../diff-viewer/DiffContext';
 
 const locatorEqual = (a, b) => {
   if(!a || !b) return false;
@@ -11,25 +12,47 @@ const locatorEqual = (a, b) => {
     a[3] === b[3]
 }
 
-const getAnnotationKey = (commentLike: Annotation) => {
+const getAnnotationKey = (commentLike: AnnotationType) => {
   return commentLike.id;
 }
 
-const getAnnotationsFor = (annotations, locator): Annotation[] => {
+const getAnnotationsFor = (annotations, locator): AnnotationType[] => {
   return annotations.filter(note => locatorEqual(note.locator, locator))
 }
 
 export const Annotation = ({locator, annotations}) => {
   const myAnnotations = getAnnotationsFor(annotations, locator);
+  const { api, dispatchAnnotations } = useDiff();
+
+  const onSaveDraft = async (note) => {
+    const newNote = await api.createAnnotation(note)
+    dispatchAnnotations({type: "DELETE_DRAFT", id: note.id});
+    dispatchAnnotations({type: "ADD_ANNOTATION", annotation: newNote});
+  }
+
+  const onDeleteDraft = async (note) => {
+    dispatchAnnotations({type: "DELETE_DRAFT", id: note.id});
+  }
+  const onDeleteAnnotation = async (note) => {
+    await api.deleteAnnotation(note)
+    dispatchAnnotations({type: "DELETE_ANNOTATION", id: note.id});
+  }
+
+  const onSaveAnnotation = async (note) => {
+    const newNote = await api.updateAnnotation(note)
+    dispatchAnnotations({type: "UPDATE_ANNOTATION", annotation: newNote});
+  }
   
   if(myAnnotations.length === 0) {
     return null;
   }
-  console.log('myAnnotations', myAnnotations)
+
   return myAnnotations.map(annotation => <Note
     note={annotation}
-    onSaveDraft={(note) => console.log('go save draft')}
-    onCancelDraft={(note) => console.log('go cancel draft')}
+    onSaveAnnotation={(note) => onSaveAnnotation(note) }
+    onDeleteAnnotation={(note) => onDeleteAnnotation(note) }
+    onSaveDraft={(note) => onSaveDraft(note) }
+    onCancelDraft={(note) => onDeleteDraft(note)}
     key={getAnnotationKey(annotation)}/>)    
   
 }

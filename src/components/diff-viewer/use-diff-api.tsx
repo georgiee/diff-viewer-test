@@ -2,6 +2,7 @@ import { ApiClientConfig } from './types';
 
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
+import { Annotation } from '../../types';
 
 const createApiClient = ({base, token}) => axios.create({
   baseURL: base,
@@ -21,10 +22,28 @@ export function createDiffApi({token, diffId, apiBaseUrl}: ApiClientConfig) {
     const response = await apiClient.get(`/diffs/${diffId}/annotations`)
     return response.data;
   }
- 
+
+  const createAnnotation = async (note: Annotation) => {
+    const data = {diff: diffId, body: note.body, locator: note.locator.join(',')}
+    const response = await apiClient.post(`/annotations`, data)
+    return response.data;
+  }
+
+  const deleteAnnotation = async (note: Annotation) => {
+    const response = await apiClient.delete(`/annotations/${note.id}`)
+    return response.data;
+  }
+  
+  const updateAnnotation = async (note: Annotation) => {
+    const response = await apiClient.patch(`/annotations/${note.id}`, {
+      body: note.body
+    })
+    return response.data;
+  }
+
 
   return {
-    getDiff, getAnnotations
+    getDiff, getAnnotations, createAnnotation, deleteAnnotation, updateAnnotation
   }
 }
 
