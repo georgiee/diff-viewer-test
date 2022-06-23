@@ -4,7 +4,7 @@
    "main": "dist/bundle.js",
    "scripts": {
       "build": "NODE_ENV=production rollup -c",
-      "build:watch": "rollup -c -w"
+      "build:watch": "rollup -c -w --verbose"
    },
    "repository": "git@github.com:georgiee/diff-viewer-test.git",
    "author": "Georgios Kaleadis <georgios@kaleadis.de>",

@@ -34,3 +34,13 @@ export interface ApiClientConfig {
   apiBaseUrl: string,
   diffId: string
 }
+
+export interface Annotation {
+  id?: string;
+  body: string;
+  admin?: string;
+  locator: Locator;
+  draft?: boolean;
+  created_at?: string;
+  type: string;
+}

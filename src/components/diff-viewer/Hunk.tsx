@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Line } from "./line";
+import React from "react";
 import styled from "styled-components";
 
 import * as diffTypes from './types';
-import { createDiffClient, useDiff } from './DiffContext';
+import { useDiff } from './DiffContext';
+import { Line } from './Line';
 
 interface HunkProps {
   hunk: diffTypes.Hunk;
@@ -18,31 +18,17 @@ const Header = styled.div`
 `;
 
 export const Hunk = ({ hunk }: HunkProps) => {
-  const { NoteRenderer, apiConfig, diffId } = useDiff();
-  const apiClient = createDiffClient(apiConfig);
-  
-  const [annotations, setAnnotations] = useState([]);
-  
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await apiClient.get(`/diffs/${diffId}/annotations`)
-      setAnnotations(response.data);
-    };
-
-    fetchData();
-  }, [diffId])
-  
+  const { NoteRenderer, annotations, dispatchAnnotations } = useDiff();
   const lines = hunk.lines
   
-  console.log({annotations})
   return (
     <HunkContainer>
       <Header>{hunk.header}</Header>
       {
         lines.map(line =>  (
           <React.Fragment key={line.locator.join()} >
-            <Line line={line}/>
-            <NoteRenderer locator={line.locator}/>
+            <Line line={line} addDraft={(locator) => dispatchAnnotations({type: "ADD_DRAFT", locator})} />
+            <NoteRenderer locator={line.locator} annotations={annotations}/>
           </React.Fragment>
         ))
       }

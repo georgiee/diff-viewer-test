@@ -4,14 +4,14 @@ import { useDiff } from './DiffContext';
 
 export const DiffViewer = () => {
   const { diffData, diffStatus } = useDiff();
-  const files = diffData.files;
 
   if(diffStatus === 'error'){
     return <div style={{color: 'red'}}>⚠️ error loading the given diff</div>;
   }else if (diffStatus !== 'fetched') {
     return <div>loading diff daya</div>;
   }
-  
+  const files = diffData.files;
+
   return (
     <div>
       <h1>{diffData.title} ({diffData.id })</h1>

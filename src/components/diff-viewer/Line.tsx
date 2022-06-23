@@ -4,6 +4,7 @@ import * as diffTypes from './types';
 
 interface LineProps {
   line: diffTypes.Line;
+  addDraft: Function
 }
 
 const LineContainer = styled.div<{ type: "context" | "add" | "remove" }>`
@@ -38,12 +39,13 @@ const getLineGutter = (type: string) => {
   }
 };
 
-export const Line = ({ line }: LineProps) => {
+export const Line = ({ line, addDraft }: LineProps) => {
   const [hoverActive, setHoverActive] = useState(false);
 
   return (
     <>
       <LineContainer
+        title={line.locator.join(',')}
         type={line.type}
         onMouseEnter={() => setHoverActive(true)}
         onMouseLeave={() => setHoverActive(false)}
@@ -51,7 +53,7 @@ export const Line = ({ line }: LineProps) => {
         <div>{line.original_line_number}</div>
         <div>{line.new_line_number}</div>
         
-        <ActionContainer>
+        <ActionContainer onClick={() => addDraft(line.locator)}>
           {hoverActive && "+"}
         </ActionContainer>
         
