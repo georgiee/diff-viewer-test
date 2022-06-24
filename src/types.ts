@@ -29,6 +29,7 @@ export interface Line {
 
 export type Locator = [number?, number?, number?, number?];
 
+
 export interface ClientConfiguration {
   token: string,
   apiBaseUrl: string,
@@ -47,5 +48,11 @@ export interface Note {
 
 export enum DiffMode {
   ANNOTATION = "annotate",
+  COMMENT = "comment",
+  INTERVIEW = "interview"
+}
+
+export enum NoteType {
+  ANNOTATION = "annotation",
   COMMENT = "comment"
 }

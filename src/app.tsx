@@ -3,16 +3,20 @@ import { DiffViewer } from './components/diff-viewer/DiffViewer';
 
 import { GlobalStyle } from './globalStyles';
 import { DiffProvider } from './components/providers/DiffContext';
-
+import { NotesProvider } from './components/providers/NotesContext';
+import { createApiClient } from './api';
 
 export function App({config: {API_BASE, diffId, token, mode, reviewId}}){
-  console.log("mode", mode, reviewId)
-  
+  const apiClient = createApiClient({base: API_BASE, token: token });
+
   return (
-   <DiffProvider reviewId={reviewId} config={{apiBaseUrl: API_BASE, diffId, token, mode}}>
-     <GlobalStyle />
-     <DiffViewer/>
-   </DiffProvider>
+    <NotesProvider apiClient={apiClient} reviewId={reviewId} diffId={diffId} mode={mode}>
+      <DiffProvider apiClient={apiClient} diffId={diffId} mode={mode}>
+        <GlobalStyle />
+        <DiffViewer/>
+      </DiffProvider>   
+    </NotesProvider>
+   
  )
 }
 

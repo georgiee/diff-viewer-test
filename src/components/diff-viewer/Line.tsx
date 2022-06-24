@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import styled from "styled-components";
 import * as diffTypes from './types';
+import { locatorEqual } from '../utils';
+import { useStore } from '../providers/NotesContext';
+import { DiffMode, NoteType } from '../../types';
+import { NoteRenderer } from '../notes/NoteRenderer';
 
 interface LineProps {
   line: diffTypes.Line;
-  addDraft: Function
 }
+
 
 const LineContainer = styled.div<{ type: "context" | "add" | "remove" }>`
   display: grid;
@@ -39,9 +43,16 @@ const getLineGutter = (type: string) => {
   }
 };
 
-export const Line = ({ line, addDraft }: LineProps) => {
+
+export const Line = ({ line }: LineProps) => {
   const [hoverActive, setHoverActive] = useState(false);
 
+  const notes = useStore((state) => state.notes)
+  const mode = useStore((state) => state.mode)
+  const addDraft = useStore((state) => state.createDraft)
+  
+  const matchingNotes = useMemo(() => notes.filter(note => locatorEqual(note.locator, line.locator)), [notes]);
+  
   return (
     <>
       <LineContainer
@@ -52,14 +63,20 @@ export const Line = ({ line, addDraft }: LineProps) => {
       >
         <div>{line.original_line_number}</div>
         <div>{line.new_line_number}</div>
-        
-        <ActionContainer onClick={() => addDraft(line.locator)}>
-          {hoverActive && "+"}
-        </ActionContainer>
+
+        {
+          (mode !== DiffMode.INTERVIEW) && (
+            <ActionContainer onClick={() => addDraft && addDraft(line.locator)}>
+              {hoverActive && "+"}
+            </ActionContainer>
+          )
+        }
         
         <div>{getLineGutter(line.type)}</div>
         <div>{line.content}</div>
       </LineContainer>
+      
+      <NoteRenderer notes={matchingNotes}/>
     </>
   );
 };
