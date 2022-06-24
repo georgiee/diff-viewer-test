@@ -4753,6 +4753,13 @@
 	  }, hoverActive && "+"), /*#__PURE__*/react.createElement("div", null, getLineGutter(line.type)), /*#__PURE__*/react.createElement("div", null, line.content)));
 	};
 
+	let DiffMode;
+
+	(function (DiffMode) {
+	  DiffMode["ANNOTATION"] = "annotate";
+	  DiffMode["COMMENT"] = "comment";
+	})(DiffMode || (DiffMode = {}));
+
 	const initialState = [];
 	let DRAFT_COUNTER = 0;
 
@@ -4764,31 +4771,31 @@
 	  type: "annotation"
 	});
 
-	const annotationReducer = (state, action) => {
+	const noteReducer = (state, action) => {
 	  switch (action.type) {
-	    case "ADD_ANNOTATION":
-	      return state.concat(action.annotation);
+	    case "ADD_NOTE":
+	      return state.concat(action.note);
 
-	    case "UPDATE_ANNOTATION":
+	    case "UPDATE_NOTE":
 	      return state.map(item => {
-	        if (item.id === action.annotation.id) {
-	          return { ...action.annotation
+	        if (item.id === action.note.id) {
+	          return { ...action.note
 	          };
 	        }
 
 	        return item;
 	      });
 
-	    case "DELETE_ANNOTATION":
+	    case "DELETE_NOTE":
 	      return state.filter(item => item.id !== action.id);
 
-	    case "DELETE_DRAFT":
+	    case "DELETE_DRAFT_NOTE":
 	      return state.filter(item => item.id !== action.id);
 
 	    case "FETCH_SUCCESS":
-	      return [...action.annotations];
+	      return [...action.notes];
 
-	    case "ADD_DRAFT":
+	    case "ADD_DRAFT_NOTE":
 	      return state.concat(createDraftAnnotation(action.locator));
 
 	    default:
@@ -4863,6 +4870,186 @@
 	    }, "Save"));
 	  }
 	}
+
+	const locatorEqual$1 = (a, b) => {
+	  if (!a || !b) return false;
+	  return a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3];
+	};
+
+	const getAnnotationKey = commentLike => {
+	  return commentLike.id;
+	};
+
+	const getAnnotationsFor = (annotations, locator) => {
+	  return annotations.filter(note => locatorEqual$1(note.locator, locator));
+	};
+
+	const Annotation = ({
+	  locator
+	}) => {
+	  const {
+	    api
+	  } = useDiff();
+	  const {
+	    dispatch,
+	    items
+	  } = useAnnotation();
+	  const myAnnotations = getAnnotationsFor(items, locator);
+
+	  const onSaveDraft = async note => {
+	    const newNote = await api.createAnnotation(note);
+	    dispatch({
+	      type: "DELETE_DRAFT_NOTE",
+	      id: note.id
+	    });
+	    dispatch({
+	      type: "ADD_NOTE",
+	      note: newNote
+	    });
+	  };
+
+	  const onDeleteDraft = async note => {
+	    dispatch({
+	      type: "DELETE_DRAFT_NOTE",
+	      id: note.id
+	    });
+	  };
+
+	  const onDeleteAnnotation = async note => {
+	    await api.deleteAnnotation(note);
+	    dispatch({
+	      type: "DELETE_NOTE",
+	      id: note.id
+	    });
+	  };
+
+	  const onSaveAnnotation = async note => {
+	    const newNote = await api.updateAnnotation(note);
+	    dispatch({
+	      type: "UPDATE_NOTE",
+	      note: newNote
+	    });
+	  };
+
+	  if (myAnnotations.length === 0) {
+	    return null;
+	  }
+
+	  return myAnnotations.map(annotation => /*#__PURE__*/react.createElement(Note, {
+	    note: annotation,
+	    onSaveAnnotation: note => onSaveAnnotation(note),
+	    onDeleteAnnotation: note => onDeleteAnnotation(note),
+	    onSaveDraft: note => onSaveDraft(note),
+	    onCancelDraft: note => onDeleteDraft(note),
+	    key: getAnnotationKey(annotation)
+	  }));
+	};
+
+	const AnnotationContext = /*#__PURE__*/react_10();
+	const useAnnotation = () => react_21(AnnotationContext);
+	const AnnotationProvider = ({
+	  children
+	}) => {
+	  const {
+	    api
+	  } = useDiff();
+	  const [state, dispatch] = react_30(noteReducer, initialState);
+	  react_24(() => {
+	    const fetchData = async () => {
+	      const annotations = await api.getAnnotations();
+	      dispatch({
+	        type: "FETCH_SUCCESS",
+	        notes: annotations
+	      });
+	    };
+
+	    fetchData();
+	  }, []);
+	  const contextValue = {
+	    NoteRenderer: Annotation,
+	    items: state,
+	    dispatch
+	  };
+	  return /*#__PURE__*/react.createElement(AnnotationContext.Provider, {
+	    value: contextValue
+	  }, children);
+	};
+
+	const locatorEqual = (a, b) => {
+	  if (!a || !b) return false;
+	  return a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3];
+	};
+
+	const getKey = commentLike => {
+	  return commentLike.id;
+	};
+
+	const getItemsFor = (items, locator) => {
+	  return items.filter(note => locatorEqual(note.locator, locator));
+	};
+
+	const Comment = ({
+	  locator
+	}) => {
+	  const {
+	    dispatch,
+	    items,
+	    api
+	  } = useComment();
+	  const myItems = getItemsFor(items, locator);
+
+	  if (myItems.length === 0) {
+	    return null;
+	  }
+
+	  const onSaveDraft = async note => {
+	    const newNote = await api.createComment(note);
+	    dispatch({
+	      type: "DELETE_DRAFT_NOTE",
+	      id: note.id
+	    });
+	    dispatch({
+	      type: "ADD_NOTE",
+	      note: newNote
+	    });
+	  };
+
+	  const onDeleteDraft = async note => {
+	    dispatch({
+	      type: "DELETE_DRAFT_NOTE",
+	      id: note.id
+	    });
+	  };
+
+	  const onDeleteAnnotation = async note => {
+	    await api.delete(note);
+	    dispatch({
+	      type: "DELETE_NOTE",
+	      id: note.id
+	    });
+	  };
+
+	  const onSaveAnnotation = async note => {
+	    const newNote = await api.updateComment(note);
+	    dispatch({
+	      type: "UPDATE_NOTE",
+	      note: newNote
+	    });
+	  };
+
+	  if (myItems.length === 0) {
+	    return null;
+	  }
+
+	  return myItems.map(annotation => /*#__PURE__*/react.createElement(Note, {
+	    note: annotation,
+	    onSaveAnnotation: note => onSaveAnnotation(note),
+	    onDeleteAnnotation: note => onDeleteAnnotation(note),
+	    onSaveDraft: note => onSaveDraft(note),
+	    onCancelDraft: note => onDeleteDraft(note),
+	    key: getKey(annotation)
+	  }));
+	};
 
 	var bind = function bind(fn, thisArg) {
 	  return function wrap() {
@@ -6819,24 +7006,18 @@
 	    'Authorization': 'Bearer ' + token
 	  }
 	});
-
-	function createDiffApi({
-	  token,
-	  diffId,
-	  apiBaseUrl
-	}) {
-	  const apiClient = createApiClient({
-	    base: apiBaseUrl,
-	    token
-	  });
-
+	function createDiffApi(client, diffId) {
 	  const getDiff = async () => {
-	    const response = await apiClient.get(`/diffs/${diffId}`);
+	    const response = await client.get(`/diffs/${diffId}`);
 	    return response.data;
 	  };
+	  /**
+	   * annotations
+	   */
+
 
 	  const getAnnotations = async () => {
-	    const response = await apiClient.get(`/diffs/${diffId}/annotations`);
+	    const response = await client.get(`/diffs/${diffId}/annotations`);
 	    return response.data;
 	  };
 
@@ -6846,17 +7027,17 @@
 	      body: note.body,
 	      locator: note.locator.join(',')
 	    };
-	    const response = await apiClient.post(`/annotations`, data);
+	    const response = await client.post(`/annotations`, data);
 	    return response.data;
 	  };
 
 	  const deleteAnnotation = async note => {
-	    const response = await apiClient.delete(`/annotations/${note.id}`);
+	    const response = await client.delete(`/annotations/${note.id}`);
 	    return response.data;
 	  };
 
 	  const updateAnnotation = async note => {
-	    const response = await apiClient.patch(`/annotations/${note.id}`, {
+	    const response = await client.patch(`/annotations/${note.id}`, {
 	      body: note.body
 	    });
 	    return response.data;
@@ -6870,14 +7051,94 @@
 	    updateAnnotation
 	  };
 	}
+	function createReviewApi(client, reviewId) {
+	  /**
+	   * comments
+	   */
+	  const getComments = async () => {
+	    const response = await client.get(`/reviews/${reviewId}/comments`);
+	    return response.data;
+	  };
+
+	  const createComment = async note => {
+	    const data = {
+	      body: note.body,
+	      locator: note.locator.join(',')
+	    };
+	    const response = await client.post(`/reviews/${reviewId}/comments`, data);
+	    return response.data;
+	  };
+
+	  const deleteComment = async note => {
+	    const response = await client.delete(`/reviews/${reviewId}/comments/${note.id}`);
+	    return response.data;
+	  };
+
+	  const updateComment = async note => {
+	    const response = await client.patch(`/reviews/${reviewId}/comments/${note.id}`, {
+	      body: note.body
+	    });
+	    return response.data;
+	  };
+
+	  return {
+	    getComments,
+	    createComment,
+	    delete: deleteComment,
+	    updateComment
+	  };
+	}
+
+	const CommentContext = /*#__PURE__*/react_10();
+	const useComment = () => react_21(CommentContext);
+	const CommentProvider = ({
+	  children,
+	  reviewId
+	}) => {
+	  if (!reviewId) {
+	    return null;
+	  }
+
+	  const {
+	    apiClient
+	  } = useDiff();
+	  const api = createReviewApi(apiClient, reviewId);
+	  const [state, dispatch] = react_30(noteReducer, initialState);
+	  react_24(() => {
+	    const fetchData = async () => {
+	      const comments = await api.getComments();
+	      dispatch({
+	        type: "FETCH_SUCCESS",
+	        notes: comments
+	      });
+	    };
+
+	    fetchData();
+	  }, []);
+	  const contextValue = {
+	    NoteRenderer: Comment,
+	    items: state,
+	    dispatch,
+	    api
+	  };
+	  return /*#__PURE__*/react.createElement(CommentContext.Provider, {
+	    value: contextValue
+	  }, children);
+	};
 
 	const DiffContext = /*#__PURE__*/react_10('Default Value');
 	const useDiff = () => react_21(DiffContext);
 	const DiffProvider = ({
 	  children,
-	  config
+	  config,
+	  reviewId
 	}) => {
-	  const api = createDiffApi(config);
+	  const apiClient = createApiClient({
+	    base: config.apiBaseUrl,
+	    token: config.token
+	  });
+	  const api = createDiffApi(apiClient, config.diffId);
+	  const mode = config.mode;
 	  const [status, setStatus] = react_32('idle');
 	  const [markup, setMarkup] = react_32({});
 	  react_24(() => {
@@ -6890,121 +7151,36 @@
 
 	    fetchData();
 	  }, [config.diffId]);
+	  let useNote = null;
+
+	  if (mode == DiffMode.ANNOTATION) {
+	    useNote = useAnnotation;
+	  } else {
+	    useNote = useComment;
+	  }
+
 	  const contextValue = {
 	    api,
+	    apiClient,
 	    mode: config.mode,
 	    token: config.token,
 	    diffId: config.diffId,
 	    diffData: markup,
+	    useNote,
 	    status
 	  };
-	  return /*#__PURE__*/react.createElement(DiffContext.Provider, {
-	    value: contextValue
-	  }, children);
-	};
 
-	const locatorEqual = (a, b) => {
-	  if (!a || !b) return false;
-	  return a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3];
-	};
-
-	const getAnnotationKey = commentLike => {
-	  return commentLike.id;
-	};
-
-	const getAnnotationsFor = (annotations, locator) => {
-	  return annotations.filter(note => locatorEqual(note.locator, locator));
-	};
-
-	const Annotation = ({
-	  locator,
-	  items
-	}) => {
-	  const myAnnotations = getAnnotationsFor(items, locator);
-	  const {
-	    api
-	  } = useDiff();
-	  const {
-	    dispatch
-	  } = useAnnotation();
-
-	  const onSaveDraft = async note => {
-	    const newNote = await api.createAnnotation(note);
-	    dispatch({
-	      type: "DELETE_DRAFT",
-	      id: note.id
-	    });
-	    dispatch({
-	      type: "ADD_ANNOTATION",
-	      annotation: newNote
-	    });
-	  };
-
-	  const onDeleteDraft = async note => {
-	    dispatch({
-	      type: "DELETE_DRAFT",
-	      id: note.id
-	    });
-	  };
-
-	  const onDeleteAnnotation = async note => {
-	    await api.deleteAnnotation(note);
-	    dispatch({
-	      type: "DELETE_ANNOTATION",
-	      id: note.id
-	    });
-	  };
-
-	  const onSaveAnnotation = async note => {
-	    const newNote = await api.updateAnnotation(note);
-	    dispatch({
-	      type: "UPDATE_ANNOTATION",
-	      annotation: newNote
-	    });
-	  };
-
-	  if (myAnnotations.length === 0) {
-	    return null;
+	  if (mode == DiffMode.ANNOTATION) {
+	    return /*#__PURE__*/react.createElement(DiffContext.Provider, {
+	      value: contextValue
+	    }, /*#__PURE__*/react.createElement(AnnotationProvider, null, children));
+	  } else {
+	    return /*#__PURE__*/react.createElement(DiffContext.Provider, {
+	      value: contextValue
+	    }, /*#__PURE__*/react.createElement(CommentProvider, {
+	      reviewId: reviewId
+	    }, children));
 	  }
-
-	  return myAnnotations.map(annotation => /*#__PURE__*/react.createElement(Note, {
-	    note: annotation,
-	    onSaveAnnotation: note => onSaveAnnotation(note),
-	    onDeleteAnnotation: note => onDeleteAnnotation(note),
-	    onSaveDraft: note => onSaveDraft(note),
-	    onCancelDraft: note => onDeleteDraft(note),
-	    key: getAnnotationKey(annotation)
-	  }));
-	};
-
-	const AnnotationContext = /*#__PURE__*/react_10();
-	const useAnnotation = () => react_21(AnnotationContext);
-	const AnnotationProvider = ({
-	  children
-	}) => {
-	  const {
-	    api
-	  } = useDiff();
-	  const [state, dispatch] = react_30(annotationReducer, initialState);
-	  react_24(() => {
-	    const fetchData = async () => {
-	      const annotations = await api.getAnnotations();
-	      dispatch({
-	        type: "FETCH_SUCCESS",
-	        annotations: annotations
-	      });
-	    };
-
-	    fetchData();
-	  }, []);
-	  const contextValue = {
-	    NoteRenderer: Annotation,
-	    items: state,
-	    dispatch
-	  };
-	  return /*#__PURE__*/react.createElement(AnnotationContext.Provider, {
-	    value: contextValue
-	  }, children);
 	};
 
 	const HunkContainer = styled.div.withConfig({
@@ -7019,22 +7195,23 @@
 	  hunk
 	}) => {
 	  const {
+	    useNote
+	  } = useDiff();
+	  const {
 	    NoteRenderer,
-	    items,
 	    dispatch
-	  } = useAnnotation();
+	  } = useNote();
 	  const lines = hunk.lines;
 	  return /*#__PURE__*/react.createElement(HunkContainer, null, /*#__PURE__*/react.createElement(Header, null, hunk.header), lines.map(line => /*#__PURE__*/react.createElement(react.Fragment, {
 	    key: line.locator.join()
 	  }, /*#__PURE__*/react.createElement(Line, {
 	    line: line,
 	    addDraft: locator => dispatch({
-	      type: "ADD_DRAFT",
+	      type: "ADD_DRAFT_NOTE",
 	      locator
 	    })
 	  }), /*#__PURE__*/react.createElement(NoteRenderer, {
-	    locator: line.locator,
-	    items: items
+	    locator: line.locator
 	  }))));
 	};
 
@@ -7090,18 +7267,20 @@
 	    API_BASE,
 	    diffId,
 	    token,
-	    mode
+	    mode,
+	    reviewId
 	  }
 	}) {
-	  console.log("mode", mode);
+	  console.log("mode", mode, reviewId);
 	  return /*#__PURE__*/react.createElement(DiffProvider, {
+	    reviewId: reviewId,
 	    config: {
 	      apiBaseUrl: API_BASE,
 	      diffId,
 	      token,
 	      mode
 	    }
-	  }, /*#__PURE__*/react.createElement(AnnotationProvider, null, /*#__PURE__*/react.createElement(GlobalStyle, null), /*#__PURE__*/react.createElement(DiffViewer, null)));
+	  }, /*#__PURE__*/react.createElement(GlobalStyle, null), /*#__PURE__*/react.createElement(DiffViewer, null));
 	}
 
 	var scheduler_production_min = createCommonjsModule(function (module, exports) {

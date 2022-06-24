@@ -8,33 +8,33 @@ const createDraftAnnotation = (locator): Note => ({
   draft: true, id: `draft-${DRAFT_COUNTER++}`, locator: locator, body: "", type: "annotation"
 })
 
-export const annotationReducer = (state, action) => {
+export const noteReducer = (state, action) => {
   switch (action.type) {
  
-    case "ADD_ANNOTATION":
-      return state.concat(action.annotation)
+    case "ADD_NOTE":
+      return state.concat(action.note)
 
-    case "UPDATE_ANNOTATION": 
+    case "UPDATE_NOTE": 
       return state.map((item) => {
-        if (item.id === action.annotation.id) {
+        if (item.id === action.note.id) {
           return {
-            ...action.annotation
+            ...action.note
           };
         }
 
         return item;
       });
     
-      case "DELETE_ANNOTATION":
+      case "DELETE_NOTE":
       return state.filter((item) => item.id !== action.id);
 
-    case "DELETE_DRAFT":
+    case "DELETE_DRAFT_NOTE":
       return state.filter((item) => item.id !== action.id);
 
     case "FETCH_SUCCESS":
-      return [...action.annotations]
+      return [...action.notes]
 
-    case "ADD_DRAFT":
+    case "ADD_DRAFT_NOTE":
       return state.concat(createDraftAnnotation(action.locator))
     
     default:

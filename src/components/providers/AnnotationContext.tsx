@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useReducer } from 'react';
-import { annotationReducer, initialState } from './annotationReducer';
+import { noteReducer, initialState } from './NoteReducer';
 import { Annotation as AnnotationComponent } from '../notes/Annotation';
 import { useDiff } from './DiffContext';
 
@@ -19,12 +19,12 @@ interface AnnotationProviderProps {
 
 export const AnnotationProvider = ({ children }: AnnotationProviderProps) => {
   const { api} = useDiff();
-  const [state, dispatch] = useReducer(annotationReducer, initialState);
+  const [state, dispatch] = useReducer(noteReducer, initialState);
   
   useEffect(() => {
     const fetchData = async () => {
       const annotations = await api.getAnnotations();
-      dispatch({type: "FETCH_SUCCESS", annotations: annotations})
+      dispatch({type: "FETCH_SUCCESS", notes: annotations})
     };
 
     fetchData();

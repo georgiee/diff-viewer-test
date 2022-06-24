@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import * as diffTypes from '../../types';
 import { Line } from './Line';
-import { useAnnotation } from '../providers/AnnotationContext';
+import { useDiff } from '../providers/DiffContext';
 
 interface HunkProps {
   hunk: diffTypes.Hunk;
@@ -18,7 +18,8 @@ const Header = styled.div`
 `;
 
 export const Hunk = ({ hunk }: HunkProps) => {
-  const { NoteRenderer, items, dispatch } = useAnnotation();
+  const { useNote } = useDiff();
+  const { NoteRenderer, dispatch } = useNote();
   
   const lines = hunk.lines
   
@@ -28,8 +29,8 @@ export const Hunk = ({ hunk }: HunkProps) => {
       {
         lines.map(line =>  (
           <React.Fragment key={line.locator.join()} >
-            <Line line={line} addDraft={(locator) => dispatch({type: "ADD_DRAFT", locator})} />
-            <NoteRenderer locator={line.locator} items={items}/>
+            <Line line={line} addDraft={(locator) => dispatch({type: "ADD_DRAFT_NOTE", locator})} />
+            <NoteRenderer locator={line.locator}/>
           </React.Fragment>
         ))
       }

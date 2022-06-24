@@ -2,7 +2,8 @@ import React from 'react';
 import { Note as NoteType } from '../../types';
 import { Note } from './Note';
 import { useDiff } from '../providers/DiffContext';
-import { useAnnotation } from '../providers/AnnotationContext';
+import { useComment } from '../providers/CommentContext';
+import { createReviewApi } from '../../api';
 
 const locatorEqual = (a, b) => {
   if(!a || !b) return false;
@@ -13,22 +14,24 @@ const locatorEqual = (a, b) => {
     a[3] === b[3]
 }
 
-const getAnnotationKey = (commentLike: NoteType) => {
+const getKey = (commentLike: NoteType) => {
   return commentLike.id;
 }
 
-const getAnnotationsFor = (annotations, locator): NoteType[] => {
-  return annotations.filter(note => locatorEqual(note.locator, locator))
+const getItemsFor = (items, locator): NoteType[] => {
+  return items.filter(note => locatorEqual(note.locator, locator))
 }
 
-export const Annotation = ({locator}) => {
+export const Comment = ({locator}) => {
+  const { dispatch, items, api } = useComment();
+  const myItems = getItemsFor(items, locator);
 
-  const { api } = useDiff();
-  const {dispatch, items} = useAnnotation()
-  const myAnnotations = getAnnotationsFor(items, locator);
+  if(myItems.length === 0) {
+    return null;
+  }
 
   const onSaveDraft = async (note) => {
-    const newNote = await api.createAnnotation(note)
+    const newNote = await api.createComment(note)
     dispatch({type: "DELETE_DRAFT_NOTE", id: note.id});
     dispatch({type: "ADD_NOTE", note: newNote});
   }
@@ -36,27 +39,27 @@ export const Annotation = ({locator}) => {
   const onDeleteDraft = async (note) => {
     dispatch({type: "DELETE_DRAFT_NOTE", id: note.id});
   }
-  
+
   const onDeleteAnnotation = async (note) => {
-    await api.deleteAnnotation(note)
+    await api.delete(note)
     dispatch({type: "DELETE_NOTE", id: note.id});
   }
 
   const onSaveAnnotation = async (note) => {
-    const newNote = await api.updateAnnotation(note)
+    const newNote = await api.updateComment(note)
     dispatch({type: "UPDATE_NOTE", note: newNote});
   }
-  
-  if(myAnnotations.length === 0) {
+
+  if(myItems.length === 0) {
     return null;
   }
-
-  return myAnnotations.map(annotation => <Note
+  
+  return myItems.map(annotation => <Note
     note={annotation}
     onSaveAnnotation={(note) => onSaveAnnotation(note) }
     onDeleteAnnotation={(note) => onDeleteAnnotation(note) }
     onSaveDraft={(note) => onSaveDraft(note) }
     onCancelDraft={(note) => onDeleteDraft(note)}
-    key={getAnnotationKey(annotation)}/>)    
-  
+    key={getKey(annotation)}/>)
+
 }

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Annotation } from '../../types';
+import { Note as NoteType } from '../../types';
 
 interface NoteProps {
-  note: Annotation,
+  note: NoteType,
   onCancelDraft: Function,
   onSaveDraft: Function,
   onDeleteAnnotation: Function,
@@ -42,7 +42,7 @@ export function Note({ onlyRead, note, onCancelDraft, onSaveDraft, onDeleteAnnot
   const [isEdit, setEdit] = useState(false)
   
 
-  if(note.draft) {
+  if(note.draft) { 
     return <DraftAnnotation 
               note={note} 
               onCancelDraft={onCancelDraft} 

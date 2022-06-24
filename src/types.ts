@@ -46,6 +46,6 @@ export interface Note {
 }
 
 export enum DiffMode {
-  ANNOTATION = "annotation",
+  ANNOTATION = "annotate",
   COMMENT = "comment"
 }
