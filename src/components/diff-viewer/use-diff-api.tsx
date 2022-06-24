@@ -1,8 +1,6 @@
-import { ApiClientConfig } from './types';
-
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import { Annotation } from '../../types';
+import { Annotation, ClientConfiguration } from '../../types';
 
 const createApiClient = ({base, token}) => axios.create({
   baseURL: base,
@@ -10,7 +8,7 @@ const createApiClient = ({base, token}) => axios.create({
   headers: {'Authorization': 'Bearer '+ token}
 });
 
-export function createDiffApi({token, diffId, apiBaseUrl}: ApiClientConfig) {
+export function createDiffApi({token, diffId, apiBaseUrl}: ClientConfiguration) {
   const apiClient = createApiClient({base: apiBaseUrl, token });
 
   const getDiff = async () => {
@@ -47,7 +45,7 @@ export function createDiffApi({token, diffId, apiBaseUrl}: ApiClientConfig) {
   }
 }
 
-export const useDiffApi = (config: ApiClientConfig) => {
+export const useDiffApi = (config: ClientConfiguration) => {
   const diffyApi = createDiffApi(config)
 
   const cache = useRef({});

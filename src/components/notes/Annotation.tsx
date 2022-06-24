@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { Annotation as AnnotationType } from '../../types';
 import { Note } from './Note';
-import { useDiff } from '../diff-viewer/DiffContext';
+import { useDiff } from '../providers/DiffContext';
 
 const locatorEqual = (a, b) => {
   if(!a || !b) return false;
@@ -20,27 +20,27 @@ const getAnnotationsFor = (annotations, locator): AnnotationType[] => {
   return annotations.filter(note => locatorEqual(note.locator, locator))
 }
 
-export const Annotation = ({locator, annotations}) => {
-  const myAnnotations = getAnnotationsFor(annotations, locator);
-  const { api, dispatchAnnotations } = useDiff();
+export const Annotation = ({locator, items}) => {
+  const myAnnotations = getAnnotationsFor(items, locator);
+  const { api, dispatch } = useDiff();
 
   const onSaveDraft = async (note) => {
     const newNote = await api.createAnnotation(note)
-    dispatchAnnotations({type: "DELETE_DRAFT", id: note.id});
-    dispatchAnnotations({type: "ADD_ANNOTATION", annotation: newNote});
+    dispatch({type: "DELETE_DRAFT", id: note.id});
+    dispatch({type: "ADD_ANNOTATION", annotation: newNote});
   }
 
   const onDeleteDraft = async (note) => {
-    dispatchAnnotations({type: "DELETE_DRAFT", id: note.id});
+    dispatch({type: "DELETE_DRAFT", id: note.id});
   }
   const onDeleteAnnotation = async (note) => {
     await api.deleteAnnotation(note)
-    dispatchAnnotations({type: "DELETE_ANNOTATION", id: note.id});
+    dispatch({type: "DELETE_ANNOTATION", id: note.id});
   }
 
   const onSaveAnnotation = async (note) => {
     const newNote = await api.updateAnnotation(note)
-    dispatchAnnotations({type: "UPDATE_ANNOTATION", annotation: newNote});
+    dispatch({type: "UPDATE_ANNOTATION", annotation: newNote});
   }
   
   if(myAnnotations.length === 0) {

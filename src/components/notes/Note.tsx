@@ -7,6 +7,7 @@ interface NoteProps {
   onSaveDraft: Function,
   onDeleteAnnotation: Function,
   onSaveAnnotation: Function,
+  onlyRead: boolean
 }
 
 const DraftAnnotation = ({note, onSaveDraft, onCancelDraft}) => {
@@ -37,13 +38,10 @@ const DraftAnnotation = ({note, onSaveDraft, onCancelDraft}) => {
   )
 }
 
-export function Note({ note, onCancelDraft, onSaveDraft, onDeleteAnnotation, onSaveAnnotation }: NoteProps) {
+export function Note({ onlyRead, note, onCancelDraft, onSaveDraft, onDeleteAnnotation, onSaveAnnotation }: NoteProps) {
   const [isEdit, setEdit] = useState(false)
   
-  const toggleEdit = () => {
-    setEdit(!isEdit)
-  }
-  
+
   if(note.draft) {
     return <DraftAnnotation 
               note={note} 
@@ -72,7 +70,7 @@ export function Note({ note, onCancelDraft, onSaveDraft, onDeleteAnnotation, onS
           isEdit && <button onClick={() => onDeleteAnnotation(note)}>Delete</button>
         }
         {
-          !isEdit && <button onClick={() => setEdit(true)}>Edit</button>
+          !onlyRead && !isEdit && <button onClick={() => setEdit(true)}>Edit</button>
         }
         {
           isEdit && <button onClick={() => {

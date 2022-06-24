@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 
-import * as diffTypes from './types';
-import { useDiff } from './DiffContext';
+import * as diffTypes from '../../types';
+import { useDiff } from '../providers/DiffContext';
 import { Line } from './Line';
 
 interface HunkProps {
@@ -18,7 +18,7 @@ const Header = styled.div`
 `;
 
 export const Hunk = ({ hunk }: HunkProps) => {
-  const { NoteRenderer, annotations, dispatchAnnotations } = useDiff();
+  const { NoteRenderer, items, dispatch } = useDiff();
   const lines = hunk.lines
   
   return (
@@ -27,8 +27,8 @@ export const Hunk = ({ hunk }: HunkProps) => {
       {
         lines.map(line =>  (
           <React.Fragment key={line.locator.join()} >
-            <Line line={line} addDraft={(locator) => dispatchAnnotations({type: "ADD_DRAFT", locator})} />
-            <NoteRenderer locator={line.locator} annotations={annotations}/>
+            <Line line={line} addDraft={(locator) => dispatch({type: "ADD_DRAFT", locator})} />
+            <NoteRenderer locator={line.locator} items={items}/>
           </React.Fragment>
         ))
       }

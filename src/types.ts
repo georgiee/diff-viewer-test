@@ -29,10 +29,11 @@ export interface Line {
 
 export type Locator = [number?, number?, number?, number?];
 
-export interface ApiClientConfig {
+export interface ClientConfiguration {
   token: string,
   apiBaseUrl: string,
   diffId: string
+  mode: DiffMode;
 }
 
 export interface Annotation {
@@ -43,4 +44,9 @@ export interface Annotation {
   draft?: boolean;
   created_at?: string;
   type: string;
+}
+
+export enum DiffMode {
+  ANNOTATION = "annotation",
+  COMMENT = "comment"
 }
