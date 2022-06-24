@@ -2,8 +2,8 @@ import React from "react";
 import styled from "styled-components";
 
 import * as diffTypes from '../../types';
-import { useDiff } from '../providers/DiffContext';
 import { Line } from './Line';
+import { useAnnotation } from '../providers/AnnotationContext';
 
 interface HunkProps {
   hunk: diffTypes.Hunk;
@@ -18,7 +18,8 @@ const Header = styled.div`
 `;
 
 export const Hunk = ({ hunk }: HunkProps) => {
-  const { NoteRenderer, items, dispatch } = useDiff();
+  const { NoteRenderer, items, dispatch } = useAnnotation();
+  
   const lines = hunk.lines
   
   return (

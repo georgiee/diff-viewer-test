@@ -4707,6 +4707,163 @@
 	"undefined" != typeof navigator && "ReactNative" === navigator.product && console.warn("It looks like you've imported 'styled-components' on React Native.\nPerhaps you're looking to import 'styled-components/native'?\nRead more about this at https://www.styled-components.com/docs/basics#react-native"), "undefined" != typeof window && (window["__styled-components-init__"] = window["__styled-components-init__"] || 0, 1 === window["__styled-components-init__"] && console.warn("It looks like there are several instances of 'styled-components' initialized in this application. This may cause dynamic styles to not render properly, errors during the rehydration process, a missing theme prop, and makes your application bigger without good reason.\n\nSee https://s-c.sh/2BAXzed for more info."), window["__styled-components-init__"] += 1);
 	var styled = He;
 
+	const LineContainer = styled.div.withConfig({
+	  displayName: "Line__LineContainer",
+	  componentId: "sc-idkbo1-0"
+	})(["display:grid;grid-template-columns:50px 50px 30px 30px auto 1fr;white-space:pre;padding-left:16px;background-color:", ";"], ({
+	  type
+	}) => getLineColor(type));
+	const ActionContainer = styled.div.withConfig({
+	  displayName: "Line__ActionContainer",
+	  componentId: "sc-idkbo1-1"
+	})(["color:blue;cursor:pointer;"]);
+
+	const getLineColor = type => {
+	  switch (type) {
+	    case "add":
+	      return "#ecfdf0";
+
+	    case "remove":
+	      return "#fbe9eb";
+	  }
+	};
+
+	const getLineGutter = type => {
+	  switch (type) {
+	    case "add":
+	      return "+";
+
+	    case "remove":
+	      return "-";
+	  }
+	};
+
+	const Line = ({
+	  line,
+	  addDraft
+	}) => {
+	  const [hoverActive, setHoverActive] = react_32(false);
+	  return /*#__PURE__*/react.createElement(react.Fragment, null, /*#__PURE__*/react.createElement(LineContainer, {
+	    title: line.locator.join(','),
+	    type: line.type,
+	    onMouseEnter: () => setHoverActive(true),
+	    onMouseLeave: () => setHoverActive(false)
+	  }, /*#__PURE__*/react.createElement("div", null, line.original_line_number), /*#__PURE__*/react.createElement("div", null, line.new_line_number), /*#__PURE__*/react.createElement(ActionContainer, {
+	    onClick: () => addDraft(line.locator)
+	  }, hoverActive && "+"), /*#__PURE__*/react.createElement("div", null, getLineGutter(line.type)), /*#__PURE__*/react.createElement("div", null, line.content)));
+	};
+
+	const initialState = [];
+	let DRAFT_COUNTER = 0;
+
+	const createDraftAnnotation = locator => ({
+	  draft: true,
+	  id: `draft-${DRAFT_COUNTER++}`,
+	  locator: locator,
+	  body: "",
+	  type: "annotation"
+	});
+
+	const annotationReducer = (state, action) => {
+	  switch (action.type) {
+	    case "ADD_ANNOTATION":
+	      return state.concat(action.annotation);
+
+	    case "UPDATE_ANNOTATION":
+	      return state.map(item => {
+	        if (item.id === action.annotation.id) {
+	          return { ...action.annotation
+	          };
+	        }
+
+	        return item;
+	      });
+
+	    case "DELETE_ANNOTATION":
+	      return state.filter(item => item.id !== action.id);
+
+	    case "DELETE_DRAFT":
+	      return state.filter(item => item.id !== action.id);
+
+	    case "FETCH_SUCCESS":
+	      return [...action.annotations];
+
+	    case "ADD_DRAFT":
+	      return state.concat(createDraftAnnotation(action.locator));
+
+	    default:
+	      throw new Error();
+	  }
+	};
+
+	const DraftAnnotation = ({
+	  note,
+	  onSaveDraft,
+	  onCancelDraft
+	}) => {
+	  const [message, setMessage] = react_32(note.body);
+
+	  const handleChange = event => {
+	    setMessage(event.target.value);
+	  };
+
+	  return /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement("textarea", {
+	    value: message,
+	    onChange: handleChange,
+	    placeholder: "Provide your comment"
+	  }), /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement("small", null, "\uD83D\uDCA1 press ", /*#__PURE__*/react.createElement("code", null, "ctrl + enter"), " to save, ", /*#__PURE__*/react.createElement("code", null, "ESC"), " to cancel")), /*#__PURE__*/react.createElement("hr", null), /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement("button", {
+	    onClick: () => onSaveDraft({ ...note,
+	      body: message
+	    })
+	  }, "Submit"), /*#__PURE__*/react.createElement("button", {
+	    onClick: () => onCancelDraft(note)
+	  }, "Cancel")));
+	};
+
+	function Note({
+	  onlyRead,
+	  note,
+	  onCancelDraft,
+	  onSaveDraft,
+	  onDeleteAnnotation,
+	  onSaveAnnotation
+	}) {
+	  const [isEdit, setEdit] = react_32(false);
+
+	  if (note.draft) {
+	    return /*#__PURE__*/react.createElement(DraftAnnotation, {
+	      note: note,
+	      onCancelDraft: onCancelDraft,
+	      onSaveDraft: onSaveDraft
+	    });
+	  } else {
+	    const [message, setMessage] = react_32(note.body);
+
+	    const handleChange = event => {
+	      setMessage(event.target.value);
+	    };
+
+	    return /*#__PURE__*/react.createElement("div", null, isEdit ? /*#__PURE__*/react.createElement("textarea", {
+	      value: message,
+	      onChange: handleChange,
+	      placeholder: "Provide your comment"
+	    }) : note.body, /*#__PURE__*/react.createElement("hr", null), isEdit && /*#__PURE__*/react.createElement("button", {
+	      onClick: () => setEdit(false)
+	    }, "Cancel"), isEdit && /*#__PURE__*/react.createElement("button", {
+	      onClick: () => onDeleteAnnotation(note)
+	    }, "Delete"), !onlyRead && !isEdit && /*#__PURE__*/react.createElement("button", {
+	      onClick: () => setEdit(true)
+	    }, "Edit"), isEdit && /*#__PURE__*/react.createElement("button", {
+	      onClick: () => {
+	        onSaveAnnotation({ ...note,
+	          body: message
+	        });
+	        setEdit(false);
+	      }
+	    }, "Save"));
+	  }
+	}
+
 	var bind = function bind(fn, thisArg) {
 	  return function wrap() {
 	    var args = new Array(arguments.length);
@@ -6713,145 +6870,38 @@
 	    updateAnnotation
 	  };
 	}
-	const useDiffApi = config => {
-	  const diffyApi = createDiffApi(config);
-	  const cache = react_31({});
+
+	const DiffContext = /*#__PURE__*/react_10('Default Value');
+	const useDiff = () => react_21(DiffContext);
+	const DiffProvider = ({
+	  children,
+	  config
+	}) => {
+	  const api = createDiffApi(config);
 	  const [status, setStatus] = react_32('idle');
-	  const [data, setData] = react_32({});
+	  const [markup, setMarkup] = react_32({});
 	  react_24(() => {
 	    const fetchData = async () => {
 	      setStatus('fetching');
-	      const markup = await diffyApi.getDiff();
-	      const annotations = await diffyApi.getAnnotations();
-	      const data = {
-	        markup,
-	        annotations
-	      };
-	      cache.current[config.diffId] = data;
-	      setData(data);
+	      const markup = await api.getDiff();
+	      setMarkup(markup);
 	      setStatus('fetched');
 	    };
 
 	    fetchData();
 	  }, [config.diffId]);
-	  return {
-	    status,
-	    data
+	  const contextValue = {
+	    api,
+	    mode: config.mode,
+	    token: config.token,
+	    diffId: config.diffId,
+	    diffData: markup,
+	    status
 	  };
+	  return /*#__PURE__*/react.createElement(DiffContext.Provider, {
+	    value: contextValue
+	  }, children);
 	};
-
-	const initialState = [];
-	let DRAFT_COUNTER = 0;
-
-	const createDraftAnnotation = locator => ({
-	  draft: true,
-	  id: `draft-${DRAFT_COUNTER++}`,
-	  locator: locator,
-	  body: "",
-	  type: "annotation"
-	});
-
-	const annotationReducer = (state, action) => {
-	  console.log(action.type);
-
-	  switch (action.type) {
-	    case "ADD_ANNOTATION":
-	      return state.concat(action.annotation);
-
-	    case "UPDATE_ANNOTATION":
-	      return state.map(item => {
-	        if (item.id === action.annotation.id) {
-	          return { ...action.annotation
-	          };
-	        }
-
-	        return item;
-	      });
-
-	    case "DELETE_ANNOTATION":
-	      return state.filter(item => item.id !== action.id);
-
-	    case "DELETE_DRAFT":
-	      return state.filter(item => item.id !== action.id);
-
-	    case "FETCH_SUCCESS":
-	      return [...action.annotations];
-
-	    case "ADD_DRAFT":
-	      return state.concat(createDraftAnnotation(action.locator));
-
-	    default:
-	      throw new Error();
-	  }
-	};
-
-	const DraftAnnotation = ({
-	  note,
-	  onSaveDraft,
-	  onCancelDraft
-	}) => {
-	  const [message, setMessage] = react_32(note.body);
-
-	  const handleChange = event => {
-	    setMessage(event.target.value);
-	  };
-
-	  return /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement("textarea", {
-	    value: message,
-	    onChange: handleChange,
-	    placeholder: "Provide your comment"
-	  }), /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement("small", null, "\uD83D\uDCA1 press ", /*#__PURE__*/react.createElement("code", null, "ctrl + enter"), " to save, ", /*#__PURE__*/react.createElement("code", null, "ESC"), " to cancel")), /*#__PURE__*/react.createElement("hr", null), /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement("button", {
-	    onClick: () => onSaveDraft({ ...note,
-	      body: message
-	    })
-	  }, "Submit"), /*#__PURE__*/react.createElement("button", {
-	    onClick: () => onCancelDraft(note)
-	  }, "Cancel")));
-	};
-
-	function Note({
-	  onlyRead,
-	  note,
-	  onCancelDraft,
-	  onSaveDraft,
-	  onDeleteAnnotation,
-	  onSaveAnnotation
-	}) {
-	  const [isEdit, setEdit] = react_32(false);
-
-	  if (note.draft) {
-	    return /*#__PURE__*/react.createElement(DraftAnnotation, {
-	      note: note,
-	      onCancelDraft: onCancelDraft,
-	      onSaveDraft: onSaveDraft
-	    });
-	  } else {
-	    const [message, setMessage] = react_32(note.body);
-
-	    const handleChange = event => {
-	      setMessage(event.target.value);
-	    };
-
-	    return /*#__PURE__*/react.createElement("div", null, isEdit ? /*#__PURE__*/react.createElement("textarea", {
-	      value: message,
-	      onChange: handleChange,
-	      placeholder: "Provide your comment"
-	    }) : note.body, /*#__PURE__*/react.createElement("hr", null), isEdit && /*#__PURE__*/react.createElement("button", {
-	      onClick: () => setEdit(false)
-	    }, "Cancel"), isEdit && /*#__PURE__*/react.createElement("button", {
-	      onClick: () => onDeleteAnnotation(note)
-	    }, "Delete"), !onlyRead && !isEdit && /*#__PURE__*/react.createElement("button", {
-	      onClick: () => setEdit(true)
-	    }, "Edit"), isEdit && /*#__PURE__*/react.createElement("button", {
-	      onClick: () => {
-	        onSaveAnnotation({ ...note,
-	          body: message
-	        });
-	        setEdit(false);
-	      }
-	    }, "Save"));
-	  }
-	}
 
 	const locatorEqual = (a, b) => {
 	  if (!a || !b) return false;
@@ -6872,9 +6922,11 @@
 	}) => {
 	  const myAnnotations = getAnnotationsFor(items, locator);
 	  const {
-	    api,
-	    dispatch
+	    api
 	  } = useDiff();
+	  const {
+	    dispatch
+	  } = useAnnotation();
 
 	  const onSaveDraft = async note => {
 	    const newNote = await api.createAnnotation(note);
@@ -6925,83 +6977,34 @@
 	  }));
 	};
 
-	const DiffContext = /*#__PURE__*/react_10('Default Value');
-	const useDiff = () => react_21(DiffContext);
-	const DiffProvider = ({
-	  children,
-	  config
+	const AnnotationContext = /*#__PURE__*/react_10();
+	const useAnnotation = () => react_21(AnnotationContext);
+	const AnnotationProvider = ({
+	  children
 	}) => {
-	  const [annotationState, dispatch] = react_30(annotationReducer, initialState);
 	  const {
-	    data,
-	    status
-	  } = useDiffApi(config);
+	    api
+	  } = useDiff();
+	  const [state, dispatch] = react_30(annotationReducer, initialState);
 	  react_24(() => {
-	    if (status === "fetched") {
+	    const fetchData = async () => {
+	      const annotations = await api.getAnnotations();
 	      dispatch({
 	        type: "FETCH_SUCCESS",
-	        annotations: data.annotations
+	        annotations: annotations
 	      });
-	    }
-	  }, [status]);
+	    };
+
+	    fetchData();
+	  }, []);
 	  const contextValue = {
-	    mode: config.mode,
 	    NoteRenderer: Annotation,
-	    diffId: config.diffId,
-	    diffData: data.markup,
-	    items: annotationState,
-	    dispatch,
-	    status
+	    items: state,
+	    dispatch
 	  };
-	  return /*#__PURE__*/react.createElement(DiffContext.Provider, {
+	  return /*#__PURE__*/react.createElement(AnnotationContext.Provider, {
 	    value: contextValue
 	  }, children);
-	};
-
-	const LineContainer = styled.div.withConfig({
-	  displayName: "Line__LineContainer",
-	  componentId: "sc-idkbo1-0"
-	})(["display:grid;grid-template-columns:50px 50px 30px 30px auto 1fr;white-space:pre;padding-left:16px;background-color:", ";"], ({
-	  type
-	}) => getLineColor(type));
-	const ActionContainer = styled.div.withConfig({
-	  displayName: "Line__ActionContainer",
-	  componentId: "sc-idkbo1-1"
-	})(["color:blue;cursor:pointer;"]);
-
-	const getLineColor = type => {
-	  switch (type) {
-	    case "add":
-	      return "#ecfdf0";
-
-	    case "remove":
-	      return "#fbe9eb";
-	  }
-	};
-
-	const getLineGutter = type => {
-	  switch (type) {
-	    case "add":
-	      return "+";
-
-	    case "remove":
-	      return "-";
-	  }
-	};
-
-	const Line = ({
-	  line,
-	  addDraft
-	}) => {
-	  const [hoverActive, setHoverActive] = react_32(false);
-	  return /*#__PURE__*/react.createElement(react.Fragment, null, /*#__PURE__*/react.createElement(LineContainer, {
-	    title: line.locator.join(','),
-	    type: line.type,
-	    onMouseEnter: () => setHoverActive(true),
-	    onMouseLeave: () => setHoverActive(false)
-	  }, /*#__PURE__*/react.createElement("div", null, line.original_line_number), /*#__PURE__*/react.createElement("div", null, line.new_line_number), /*#__PURE__*/react.createElement(ActionContainer, {
-	    onClick: () => addDraft(line.locator)
-	  }, hoverActive && "+"), /*#__PURE__*/react.createElement("div", null, getLineGutter(line.type)), /*#__PURE__*/react.createElement("div", null, line.content)));
 	};
 
 	const HunkContainer = styled.div.withConfig({
@@ -7019,7 +7022,7 @@
 	    NoteRenderer,
 	    items,
 	    dispatch
-	  } = useDiff();
+	  } = useAnnotation();
 	  const lines = hunk.lines;
 	  return /*#__PURE__*/react.createElement(HunkContainer, null, /*#__PURE__*/react.createElement(Header, null, hunk.header), lines.map(line => /*#__PURE__*/react.createElement(react.Fragment, {
 	    key: line.locator.join()
@@ -7098,7 +7101,7 @@
 	      token,
 	      mode
 	    }
-	  }, /*#__PURE__*/react.createElement(GlobalStyle, null), /*#__PURE__*/react.createElement(DiffViewer, null));
+	  }, /*#__PURE__*/react.createElement(AnnotationProvider, null, /*#__PURE__*/react.createElement(GlobalStyle, null), /*#__PURE__*/react.createElement(DiffViewer, null)));
 	}
 
 	var scheduler_production_min = createCommonjsModule(function (module, exports) {

@@ -1,7 +1,8 @@
-import React, { useCallback } from 'react';
-import { Annotation as AnnotationType } from '../../types';
+import React from 'react';
+import { Note as NoteType } from '../../types';
 import { Note } from './Note';
 import { useDiff } from '../providers/DiffContext';
+import { useAnnotation } from '../providers/AnnotationContext';
 
 const locatorEqual = (a, b) => {
   if(!a || !b) return false;
@@ -12,17 +13,19 @@ const locatorEqual = (a, b) => {
     a[3] === b[3]
 }
 
-const getAnnotationKey = (commentLike: AnnotationType) => {
+const getAnnotationKey = (commentLike: NoteType) => {
   return commentLike.id;
 }
 
-const getAnnotationsFor = (annotations, locator): AnnotationType[] => {
+const getAnnotationsFor = (annotations, locator): NoteType[] => {
   return annotations.filter(note => locatorEqual(note.locator, locator))
 }
 
 export const Annotation = ({locator, items}) => {
   const myAnnotations = getAnnotationsFor(items, locator);
-  const { api, dispatch } = useDiff();
+
+  const { api } = useDiff();
+  const {dispatch} = useAnnotation()
 
   const onSaveDraft = async (note) => {
     const newNote = await api.createAnnotation(note)
@@ -33,6 +36,7 @@ export const Annotation = ({locator, items}) => {
   const onDeleteDraft = async (note) => {
     dispatch({type: "DELETE_DRAFT", id: note.id});
   }
+  
   const onDeleteAnnotation = async (note) => {
     await api.deleteAnnotation(note)
     dispatch({type: "DELETE_ANNOTATION", id: note.id});

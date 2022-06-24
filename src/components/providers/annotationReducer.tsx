@@ -1,18 +1,16 @@
-import { Annotation } from '../../types';
+import { Note } from '../../types';
 
-
-export const initialState: Annotation[] = []
+export const initialState: Note[] = []
 
 let DRAFT_COUNTER = 0
 
-const createDraftAnnotation = (locator): Annotation => ({
+const createDraftAnnotation = (locator): Note => ({
   draft: true, id: `draft-${DRAFT_COUNTER++}`, locator: locator, body: "", type: "annotation"
 })
 
 export const annotationReducer = (state, action) => {
-  console.log(action.type)
   switch (action.type) {
-
+ 
     case "ADD_ANNOTATION":
       return state.concat(action.annotation)
 

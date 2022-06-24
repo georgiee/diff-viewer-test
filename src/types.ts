@@ -36,10 +36,9 @@ export interface ClientConfiguration {
   mode: DiffMode;
 }
 
-export interface Annotation {
+export interface Note {
   id?: string;
   body: string;
-  admin?: string;
   locator: Locator;
   draft?: boolean;
   created_at?: string;

@@ -1,45 +1,47 @@
-import React, { createContext, useContext, useEffect, useReducer } from 'react';
-import { createDiffApi, useDiffApi } from '../diff-viewer/use-diff-api';
-import { annotationReducer, initialState } from '../diff-viewer/reducer';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { createDiffApi } from '../diff-viewer/use-diff-api';
 import { ClientConfiguration, DiffMode } from '../../types';
-import { Annotation as AnnotationComponent } from '../notes/Annotation';
 
 const DiffContext = createContext('Default Value');
 
 interface DiffContextData {
   mode: DiffMode;
-  NoteRenderer: any
+  token: string;
   diffId: string
   diffData: any
-  items: any[]
   status: string,
-  dispatch: any;
+  api: any;
 }
 export const useDiff = () => useContext<DiffContextData>(DiffContext) as DiffContextData;
 
 interface DiffProviderProps {
-  children: string | React.ReactNode;
+  children?: string | React.ReactNode;
   config: ClientConfiguration
 }
-
+ 
 export const DiffProvider = ({ children, config }: DiffProviderProps) => {
-  const [annotationState, dispatch] = useReducer(annotationReducer, initialState);
+  const api = createDiffApi(config)
 
-  const {data, status} = useDiffApi(config)
-
+  const [status, setStatus] = useState('idle');
+  const [markup, setMarkup] = useState({});
+  
   useEffect(() => {
-    if(status === "fetched") {
-      dispatch({type: "FETCH_SUCCESS", annotations: data.annotations})
-    }
-  }, [status]);
+    const fetchData = async () => {
+      setStatus('fetching');
+      const markup = await api.getDiff();
+      setMarkup(markup);
+      setStatus('fetched');
+    };
+
+    fetchData();
+  }, [config.diffId]);
   
   const contextValue: DiffContextData = {
+    api,
     mode: config.mode,
-    NoteRenderer: AnnotationComponent,
+    token: config.token,
     diffId: config.diffId,
-    diffData: data.markup,
-    items: annotationState,
-    dispatch,
+    diffData: markup,
     status
   }
   
