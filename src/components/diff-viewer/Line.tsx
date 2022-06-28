@@ -47,11 +47,8 @@ const getLineGutter = (type: string) => {
 export const Line = ({ line }: LineProps) => {
   const [hoverActive, setHoverActive] = useState(false);
 
-  const notes = useStore((state) => state.notes)
   const mode = useStore((state) => state.mode)
   const addDraft = useStore((state) => state.createDraft)
-  
-  const matchingNotes = useMemo(() => notes.filter(note => locatorEqual(note.locator, line.locator)), [notes]);
   
   return (
     <>
@@ -76,7 +73,7 @@ export const Line = ({ line }: LineProps) => {
         <div>{line.content}</div>
       </LineContainer>
       
-      <NoteRenderer notes={matchingNotes}/>
+      <NoteRenderer locator={line.locator}/>
     </>
   );
 };

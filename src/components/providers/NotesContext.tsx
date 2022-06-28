@@ -28,10 +28,30 @@ export const NotesProvider = ({ children, apiClient, diffId, reviewId, mode }) =
   const createStore = () => create((set) => ({
     mode: mode,
     notes: [],
+    editNote: (id) => {
+      console.log('editNote', id)
+
+      set(
+        produce((state) => {
+          const note = state.notes.find(item => item.id === id)
+          console.log('find note', id, note)
+          note.edit = true;
+        })
+      )
+    },
+    updateNote: async (note) => {
+      const updatedNote = await annotationApi.updateAnnotation(note)
+      set(
+        produce((state) => {
+          const index = state.notes.findIndex(item => item.id === note.id)
+          state.notes.splice(index, 1, updatedNote)
+        })
+      )
+    },
     createDraft: (locator) => {
       set(
         produce((state) => {
-          state.notes.push(createDraftNote(locator))
+          state.notes.unshift(createDraftNote(locator))
         })
       )
     },
@@ -41,6 +61,17 @@ export const NotesProvider = ({ children, apiClient, diffId, reviewId, mode }) =
         produce((state) => {
           const index = state.notes.findIndex(item => item.id === note.id)
           state.notes.splice(index, 1, newNote)
+        })
+      )
+    },
+    cancelDraft: async (note) => {
+      if(!note.draft) {
+        return
+      }
+      set(
+        produce((state) => {
+          const index = state.notes.findIndex(item => item.id === note.id)
+          state.notes.splice(index, 1)
         })
       )
     },
@@ -57,7 +88,6 @@ export const NotesProvider = ({ children, apiClient, diffId, reviewId, mode }) =
       
       if(mode === DiffMode.INTERVIEW) {
         const response = await apiClient.get(`/interview/${reviewId}`)
-        console.log('ccc', response.data)
         set({notes: response.data})
       }
     }
