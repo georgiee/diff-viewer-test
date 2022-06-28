@@ -11,7 +11,6 @@ interface DiffContextData {
 }
 export const useDiff = () => useContext<DiffContextData>(DiffContext as any) as DiffContextData;
 
-
 export const DiffProvider = ({ children, mode, apiClient, diffId }) => {
   const api = createDiffApi(apiClient, diffId)
   
