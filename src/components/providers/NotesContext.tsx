@@ -5,7 +5,7 @@ import { createDiffApi, createReviewApi } from '../../api';
 import { DiffMode, Note } from '../../types';
 import produce from "immer"
 
-const NotesContext = createContext();
+const NotesContext = createContext<any>(null);
 
 interface NotesContextData {
   items: any[]
@@ -20,6 +20,9 @@ const createDraftNote = (locator): Note => ({
   draft: true, id: `draft-${DRAFT_COUNTER++}`, locator: locator, body: "", type: "annotation"
 })
 
+interface State {
+  notes: any[]
+}
 export const NotesProvider = ({ children, apiClient, diffId, reviewId, mode }) => {
   const annotationApi = createDiffApi(apiClient, diffId)
   const commentApi = createReviewApi(apiClient, reviewId)
@@ -32,7 +35,7 @@ export const NotesProvider = ({ children, apiClient, diffId, reviewId, mode }) =
       console.log('editNote', id)
 
       set(
-        produce((state) => {
+        produce((state: State) => {
           const note = state.notes.find(item => item.id === id)
           console.log('find note', id, note)
           note.edit = true;
@@ -42,7 +45,7 @@ export const NotesProvider = ({ children, apiClient, diffId, reviewId, mode }) =
     updateNote: async (note) => {
       const updatedNote = await annotationApi.updateAnnotation(note)
       set(
-        produce((state) => {
+        produce((state: State) => {
           const index = state.notes.findIndex(item => item.id === note.id)
           state.notes.splice(index, 1, updatedNote)
         })
@@ -50,7 +53,7 @@ export const NotesProvider = ({ children, apiClient, diffId, reviewId, mode }) =
     },
     createDraft: (locator) => {
       set(
-        produce((state) => {
+        produce((state: State) => {
           state.notes.unshift(createDraftNote(locator))
         })
       )
@@ -58,7 +61,7 @@ export const NotesProvider = ({ children, apiClient, diffId, reviewId, mode }) =
     saveDraft: async (note) => {
       const newNote = await annotationApi.createAnnotation(note)
       set(
-        produce((state) => {
+        produce((state: State) => {
           const index = state.notes.findIndex(item => item.id === note.id)
           state.notes.splice(index, 1, newNote)
         })
@@ -69,7 +72,7 @@ export const NotesProvider = ({ children, apiClient, diffId, reviewId, mode }) =
         return
       }
       set(
-        produce((state) => {
+        produce((state: State) => {
           const index = state.notes.findIndex(item => item.id === note.id)
           state.notes.splice(index, 1)
         })

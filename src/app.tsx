@@ -8,7 +8,6 @@ import { createApiClient } from './api';
 
 export function App({config: {API_BASE, diffId, token, mode, reviewId}}){
   const apiClient = createApiClient({base: API_BASE, token: token });
-
   return (
     <NotesProvider apiClient={apiClient} reviewId={reviewId} diffId={diffId} mode={mode}>
       <DiffProvider apiClient={apiClient} diffId={diffId} mode={mode}>

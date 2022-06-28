@@ -17,6 +17,7 @@ const AuthorContainer = styled.span`
   font-style: italic;
   font-weight: bold;
 `
+
 const Author = ({author}) => {
  return (
    <AuthorContainer>
@@ -36,6 +37,7 @@ export function SimpleNoteViewer({note}) {
     </NoteContainer>
   )
 }
+
 const MetaContainer = styled.div`
   margin-bottom: 10px
 `
@@ -66,6 +68,7 @@ export function NoteBase({note, onSaveDraft, onCancelDraft, onUpdateNote, onEdit
   }
   return (
     <NoteContainer noteType={note.type}>
+      ok
       <Meta note={note}/>
       { editing && <textarea value={message} onChange={handleChange} placeholder="Provide your comment"/>}
       { !editing && note.body}

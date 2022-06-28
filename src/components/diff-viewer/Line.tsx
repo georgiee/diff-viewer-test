@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import styled from "styled-components";
-import * as diffTypes from './types';
+import * as diffTypes from '../../types';
 import { locatorEqual } from '../utils';
 import { useStore } from '../providers/NotesContext';
 import { DiffMode, NoteType } from '../../types';
@@ -47,8 +47,8 @@ const getLineGutter = (type: string) => {
 export const Line = ({ line }: LineProps) => {
   const [hoverActive, setHoverActive] = useState(false);
 
-  const mode = useStore((state) => state.mode)
-  const addDraft = useStore((state) => state.createDraft)
+  const mode = useStore((state: any) => state.mode)
+  const addDraft = useStore((state: any) => state.createDraft)
   
   return (
     <>

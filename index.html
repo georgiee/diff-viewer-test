@@ -1,23 +1,28 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title></title>
-</head>
-<body>
-<div id="root"></div>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/src/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite App</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/demo.tsx"></script>
+    hello
 
-<script src="dist/bundle.js"></script>
-<script>
-  DiffViewer.config({
-    API_BASE: "http://satellytes.lvh.me:3000/api",
-    diffId: "27",
-    token: "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MTMsImV4cCI6MTY1NTg1NjAwMCwidHlwZSI6IlVzZXIifQ.7RIAp3FdFrrO1cWSYPrb81wwSemIteGksq3AnerwDxo",
-    mode: "annotate",
-  })
-  
-  DiffViewer.attach(document.getElementById("root"))
-</script>
-</body>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        console.log('go2')
+        // DiffViewer.config({
+        //   API_BASE: "http://satellytes.lvh.me:3000/api",
+        //   diffId: "27",
+        //   token: "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MTMsImV4cCI6MTY1NTg1NjAwMCwidHlwZSI6IlVzZXIifQ.7RIAp3FdFrrO1cWSYPrb81wwSemIteGksq3AnerwDxo",
+        //   mode: "annotate",
+        // })
+        
+        // DiffViewer.attach(document.getElementById("root"))
+        });
+    </script>
+  </body>
 </html>

@@ -6,9 +6,8 @@ import { useStore } from '../providers/NotesContext';
 export const DiffViewer = () => {
   const { diffData, status, mode } = useDiff();
 
-  const fetch = useStore(state => state.fetch);
+  const fetch = useStore((state: any) => state.fetch);
   fetch()
-  
   if(status === 'error'){
     return <div style={{color: 'red'}}>⚠️ error loading the given diff</div>;
   }else if (status !== 'fetched') {

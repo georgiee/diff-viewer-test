@@ -9,7 +9,7 @@ interface DiffContextData {
   status: string,
   mode: string
 }
-export const useDiff = () => useContext<DiffContextData>(DiffContext) as DiffContextData;
+export const useDiff = () => useContext<DiffContextData>(DiffContext as any) as DiffContextData;
 
 
 export const DiffProvider = ({ children, mode, apiClient, diffId }) => {
@@ -38,7 +38,7 @@ export const DiffProvider = ({ children, mode, apiClient, diffId }) => {
   }
   
   return (
-    <DiffContext.Provider value={contextValue}>
+    <DiffContext.Provider value={contextValue as any}>
       {children}
     </DiffContext.Provider>
   )

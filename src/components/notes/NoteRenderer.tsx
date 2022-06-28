@@ -6,16 +6,16 @@ import { NoteBase, SimpleNoteViewer } from './Blame';
 import { Note } from './Note';
 
 export function NoteRenderer({locator}) {
-  const notes = useStore((state) => state.notes)
-  const mode = useStore((state) => state.mode)
-  const addDraft = useStore((state) => state.createDraft)
+  const notes = useStore((state: any) => state.notes)
+  const mode = useStore((state: any) => state.mode)
+  const addDraft = useStore((state: any) => state.createDraft)
 
   const matchingNotes = useMemo(() => notes.filter(note => locatorEqual(note.locator, locator)), [notes]);
   
-  const saveDraft = useStore((state) => state.saveDraft)
-  const cancelDraft = useStore((state) => state.cancelDraft)
-  const updateNote = useStore((state) => state.updateNote)
-  const editNote = useStore((state) => state.editNote)
+  const saveDraft = useStore((state: any) => state.saveDraft)
+  const cancelDraft = useStore((state: any) => state.cancelDraft)
+  const updateNote = useStore((state: any) => state.updateNote)
+  const editNote = useStore((state: any) => state.editNote)
   
   // only view things
   if(mode == DiffMode.INTERVIEW) {
