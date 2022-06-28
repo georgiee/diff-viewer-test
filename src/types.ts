@@ -44,6 +44,9 @@ export interface Note {
   draft?: boolean;
   created_at?: string;
   type: string;
+  
+  // ui state
+  edit?: boolean;
 }
 
 export enum DiffMode {

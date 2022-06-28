@@ -16,6 +16,8 @@ export function NoteRenderer({locator}) {
   const cancelDraft = useStore((state: any) => state.cancelDraft)
   const updateNote = useStore((state: any) => state.updateNote)
   const editNote = useStore((state: any) => state.editNote)
+  const deleteNote = useStore((state: any) => state.deleteNote)
+  const cancelEdit = useStore((state: any) => state.cancelEdit)
   
   // only view things
   if(mode == DiffMode.INTERVIEW) {
@@ -33,6 +35,8 @@ export function NoteRenderer({locator}) {
           <NoteBase
             note={note} key={note.id}
             onEditNote={() => editNote(note.id) }
+            onCancelEdit={() => cancelEdit(note.id) }
+            onDeleteNote={() => deleteNote(note.id) }
             onUpdateNote={(updatedNote) => updateNote(updatedNote) }
             onSaveDraft={(newNote) => saveDraft(newNote) }
             onCancelDraft={() => cancelDraft(note) }/>

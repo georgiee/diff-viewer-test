@@ -4,6 +4,7 @@ import createZustandContext from 'zustand/context'
 import { createDiffApi, createReviewApi } from '../../api';
 import { DiffMode, Note } from '../../types';
 import produce from "immer"
+import {findIndex, find} from 'lodash';
 
 const NotesContext = createContext<any>(null);
 
@@ -31,21 +32,37 @@ export const NotesProvider = ({ children, apiClient, diffId, reviewId, mode }) =
   const createStore = () => create((set) => ({
     mode: mode,
     notes: [],
-    editNote: (id) => {
-      console.log('editNote', id)
-
+    cancelEdit: (id) => {
       set(
         produce((state: State) => {
-          const note = state.notes.find(item => item.id === id)
-          console.log('find note', id, note)
-          note.edit = true;
+          const note = find(state.notes, {id})
+          note.edit = false
+        })
+      )
+    },
+    deleteNote: async (id) => {
+      await annotationApi.deleteAnnotation(id)
+      set(
+        produce((state: State) => {
+          const index = findIndex(state.notes, { id });
+          state.notes.splice(index, 1)
+        })
+      )
+    },
+    editNote: (id) => {
+      set(
+        produce((state: State) => {
+          const note = find(state.notes, {id})
+          note.edit = true
         })
       )
     },
     updateNote: async (note) => {
       const updatedNote = await annotationApi.updateAnnotation(note)
+      
       set(
         produce((state: State) => {
+          console.log('updateNote', state)
           const index = state.notes.findIndex(item => item.id === note.id)
           state.notes.splice(index, 1, updatedNote)
         })

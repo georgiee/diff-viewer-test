@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { NoteType } from '../../types';
 import { formatDate } from '../utils';
@@ -53,14 +53,18 @@ const Meta = ({note}) => {
   )
 }
 
-export function NoteBase({note, onSaveDraft, onCancelDraft, onUpdateNote, onEditNote}) {
-  const [editing, setEdit] = useState(note.edit)
+export function NoteBase({note, onSaveDraft, onCancelDraft, onUpdateNote, onEditNote, onDeleteNote, onCancelEdit}) {
+  
+  const [editing, setEdit] = useState(false)
   const [message, setMessage] = useState(note.body);
   const handleChange = (event) => {
     setMessage(event.target.value);
   };
-  
-  
+
+  useEffect(() => {
+    setEdit(note.edit || note.draft);
+  }, [note.edit, note.draft])
+
   const createNoteCopy = () => {
     return {
      ...note, body: message
@@ -68,7 +72,6 @@ export function NoteBase({note, onSaveDraft, onCancelDraft, onUpdateNote, onEdit
   }
   return (
     <NoteContainer noteType={note.type}>
-      ok
       <Meta note={note}/>
       { editing && <textarea value={message} onChange={handleChange} placeholder="Provide your comment"/>}
       { !editing && note.body}
@@ -77,7 +80,10 @@ export function NoteBase({note, onSaveDraft, onCancelDraft, onUpdateNote, onEdit
       <div>
         {
           !editing && (
-            <button onClick={() => onEditNote()}>Edit</button>
+            <>
+              <button onClick={() => onEditNote()}>Edit</button>
+              <button onClick={() => onDeleteNote()}>Delete</button>
+            </>
           )
         }
       </div>
@@ -85,8 +91,11 @@ export function NoteBase({note, onSaveDraft, onCancelDraft, onUpdateNote, onEdit
       {/* Actions while edit a note */}
       <div>
         {
-          editing && (
-            <button onClick={() => onUpdateNote(createNoteCopy())}>Save</button>
+          editing && !note.draft && (
+            <>
+              <button onClick={() => onCancelEdit()}>Cancel</button>
+              <button onClick={() => onUpdateNote(createNoteCopy())}>Save</button>
+            </>
           )
         }
       </div>

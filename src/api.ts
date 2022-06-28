@@ -27,8 +27,8 @@ export function createDiffApi(client, diffId) {
     return response.data;
   }
 
-  const deleteAnnotation = async (note: Note) => {
-    const response = await client.delete(`/annotations/${note.id}`)
+  const deleteAnnotation = async (id: string) => {
+    const response = await client.delete(`/annotations/${id}`)
     return response.data;
   }
 
