@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect } from 'react';
 import create from 'zustand'
 import createZustandContext from 'zustand/context'
-import { createDiffApi, createReviewApi } from '../../api';
+import { createDiffApi, createInterviewApi, createReviewApi } from '../../api';
 import { DiffMode, Note } from '../../types';
 import produce from "immer"
 import {findIndex, find} from 'lodash';
@@ -24,93 +24,115 @@ const createDraftNote = (locator): Note => ({
 interface State {
   notes: any[]
 }
+
+const createAnnotationActions = annotationApi => (set, get, api) => ({
+  cancelEdit: (id) => {
+    set(
+      produce((state: State) => {
+        const note = find(state.notes, {id})
+        note.edit = false
+      })
+    )
+  },
+  deleteNote: async (id) => {
+    await annotationApi.deleteAnnotation(id)
+    set(
+      produce((state: State) => {
+        const index = findIndex(state.notes, { id });
+        state.notes.splice(index, 1)
+      })
+    )
+  },
+  editNote: (id) => {
+    set(
+      produce((state: State) => {
+        const note = find(state.notes, {id})
+        note.edit = true
+      })
+    )
+  },
+  updateNote: async (note) => {
+    const updatedNote = await annotationApi.updateAnnotation(note)
+
+    set(
+      produce((state: State) => {
+        console.log('updateNote', state)
+        const index = state.notes.findIndex(item => item.id === note.id)
+        state.notes.splice(index, 1, updatedNote)
+      })
+    )
+  },
+  createDraft: (locator) => {
+    set(
+      produce((state: State) => {
+        state.notes.unshift(createDraftNote(locator))
+      })
+    )
+  },
+  saveDraft: async (note) => {
+    const newNote = await annotationApi.createAnnotation(note)
+    set(
+      produce((state: State) => {
+        const index = state.notes.findIndex(item => item.id === note.id)
+        state.notes.splice(index, 1, newNote)
+      })
+    )
+  },
+  cancelDraft: async (note) => {
+    if(!note.draft) {
+      return
+    }
+    set(
+      produce((state: State) => {
+        const index = state.notes.findIndex(item => item.id === note.id)
+        state.notes.splice(index, 1)
+      })
+    )
+  },
+  fetch: async () => {
+    const response = await annotationApi.fetch();
+    set({notes: response})
+  }
+})
+
+
+const createCommentActions = commentApi => (set, get, api) => ({
+  fetch: async () => {
+    const response = await commentApi.fetch();
+    set({notes: response})
+  }
+})
+
+
+const createInterviewActions = interviewApi => (set, get, api) => ({
+  fetch: async () => {
+    const response = await interviewApi.fetch();
+    set({notes: response})
+  }
+})
+
 export const NotesProvider = ({ children, apiClient, diffId, reviewId, mode }) => {
-  const annotationApi = createDiffApi(apiClient, diffId)
-  const commentApi = createReviewApi(apiClient, reviewId)
+  const actionFactory = mode =>  (set, get, api) => {
+    switch(mode) {
+      case DiffMode.COMMENT:
+        const commentApi = createReviewApi(apiClient, reviewId)
+        return createCommentActions(commentApi)(set, get, api);
+      case DiffMode.ANNOTATION:
+        const annotationApi = createDiffApi(apiClient, diffId)
+        return createAnnotationActions(annotationApi)(set, get, api);
+      case DiffMode.INTERVIEW:
+        const interviewApi = createInterviewApi(apiClient, reviewId)
+        return createInterviewActions(interviewApi)(set, get, api);
+      default: throw new Error(`Mode ${mode} is unknown`)
+    }
+  }
   
-  // TODO: Create a store for each environment to not involve conditions
-  const createStore = () => create((set) => ({
+  const createActions = actionFactory(mode);
+  
+  const createStore = () => create((set, get, api) => ({
     mode: mode,
     notes: [],
-    cancelEdit: (id) => {
-      set(
-        produce((state: State) => {
-          const note = find(state.notes, {id})
-          note.edit = false
-        })
-      )
-    },
-    deleteNote: async (id) => {
-      await annotationApi.deleteAnnotation(id)
-      set(
-        produce((state: State) => {
-          const index = findIndex(state.notes, { id });
-          state.notes.splice(index, 1)
-        })
-      )
-    },
-    editNote: (id) => {
-      set(
-        produce((state: State) => {
-          const note = find(state.notes, {id})
-          note.edit = true
-        })
-      )
-    },
-    updateNote: async (note) => {
-      const updatedNote = await annotationApi.updateAnnotation(note)
-      
-      set(
-        produce((state: State) => {
-          console.log('updateNote', state)
-          const index = state.notes.findIndex(item => item.id === note.id)
-          state.notes.splice(index, 1, updatedNote)
-        })
-      )
-    },
-    createDraft: (locator) => {
-      set(
-        produce((state: State) => {
-          state.notes.unshift(createDraftNote(locator))
-        })
-      )
-    },
-    saveDraft: async (note) => {
-      const newNote = await annotationApi.createAnnotation(note)
-      set(
-        produce((state: State) => {
-          const index = state.notes.findIndex(item => item.id === note.id)
-          state.notes.splice(index, 1, newNote)
-        })
-      )
-    },
-    cancelDraft: async (note) => {
-      if(!note.draft) {
-        return
-      }
-      set(
-        produce((state: State) => {
-          const index = state.notes.findIndex(item => item.id === note.id)
-          state.notes.splice(index, 1)
-        })
-      )
-    },
-    fetch: async () => {
-      if(mode === DiffMode.COMMENT) {
-        const response = await commentApi.getComments();
-        set({notes: response})
-      }
-      
-      if(mode === DiffMode.ANNOTATION) {
-        const response = await annotationApi.getAnnotations();
-        set({notes: response})
-      }
-      
-      if(mode === DiffMode.INTERVIEW) {
-        const response = await apiClient.get(`/interview/${reviewId}`)
-        set({notes: response.data})
-      }
-    }
+    ...createActions(set, get, api)
   }))
   
   const contextValue: NotesContextData = {

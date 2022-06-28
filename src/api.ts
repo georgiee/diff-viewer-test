@@ -39,9 +39,13 @@ export function createDiffApi(client, diffId) {
     return response.data;
   }
 
+  const fetch = async () => {
+    const response = await client.get(`/diffs/${diffId}/annotations`)
+    return response.data;
+  }
 
   return {
-    getDiff, getAnnotations, createAnnotation, deleteAnnotation, updateAnnotation
+    fetch, getDiff, getAnnotations, createAnnotation, deleteAnnotation, updateAnnotation
   }
 }
 
@@ -49,7 +53,7 @@ export function createReviewApi(client, reviewId) {
   /**
    * comments
    */
-  const getComments = async () => {
+  const fetch = async () => {
     const response = await client.get(`/reviews/${reviewId}/comments`)
     return response.data;
   }
@@ -73,6 +77,20 @@ export function createReviewApi(client, reviewId) {
   }
 
   return {
-    getComments, createComment, delete: deleteComment, updateComment
+    fetch, createComment, delete: deleteComment, updateComment
+  }
+}
+
+export function createInterviewApi(client, reviewId) {
+  /**
+   * comments
+   */
+  const fetch = async () => {
+    const response = await client.get(`/interview/${reviewId}`)
+    return response.data;
+  }
+
+  return {
+    fetch
   }
 }
