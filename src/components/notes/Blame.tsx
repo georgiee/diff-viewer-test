@@ -54,7 +54,6 @@ const Meta = ({note}) => {
 }
 
 export function NoteBase({note, onSaveDraft, onCancelDraft, onUpdateNote, onEditNote, onDeleteNote, onCancelEdit}) {
-  
   const [editing, setEdit] = useState(false)
   const [message, setMessage] = useState(note.body);
   const handleChange = (event) => {
