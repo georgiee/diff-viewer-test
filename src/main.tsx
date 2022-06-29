@@ -1,4 +1,5 @@
 import React from 'react';
+import "./initializeFontAwesome";
 
 import { App } from "./app"
 import { createRootWithShadowDom } from './create-root-with-shadow-dom';
@@ -23,6 +24,9 @@ function injectFontawesome(otherRoot: Document) {
 
   const robotFont = injectStylesheet("https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap")
   target.appendChild(robotFont)
+
+  const bootstrap = injectStylesheet("https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css")
+  target.appendChild(bootstrap)
 }
 
 export default {

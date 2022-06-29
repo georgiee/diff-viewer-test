@@ -2,7 +2,10 @@ import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { NoteType } from '../../types';
 import { formatDate } from '../utils';
+import { Button, ButtonGroup } from 'react-bootstrap';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCoffee } from '@fortawesome/free-solid-svg-icons'
 const NoteContainer = styled.div`
   background-color: #cecece;
   padding: 20px;
@@ -69,20 +72,24 @@ export function NoteBase({note, onSaveDraft, onCancelDraft, onUpdateNote, onEdit
      ...note, body: message
     }
   }
+  
   return (
     <NoteContainer noteType={note.type}>
       <Meta note={note}/>
-      { editing && <textarea value={message} onChange={handleChange} placeholder="Provide your comment"/>}
+      { editing && <textarea className="form-control mb-2" value={message} onChange={handleChange} placeholder="Provide your comment"/>}
       { !editing && note.body}
 
       {/* Actions while viewing*/}
       <div>
         {
           !editing && (
-            <>
-              <button onClick={() => onEditNote()}>Edit</button>
-              <button onClick={() => onDeleteNote()}>Delete</button>
-            </>
+            <ButtonGroup size={"sm"}>
+              <Button variant={"primary"} onClick={() => onEditNote()}>
+                <span><FontAwesomeIcon icon="coffee" /></span>
+                Edit
+              </Button>
+              <Button variant={"danger"} onClick={() => onDeleteNote()}>Delete</Button>
+            </ButtonGroup>
           )
         }
       </div>
@@ -91,20 +98,20 @@ export function NoteBase({note, onSaveDraft, onCancelDraft, onUpdateNote, onEdit
       <div>
         {
           editing && !note.draft && (
-            <>
-              <button onClick={() => onCancelEdit()}>Cancel</button>
-              <button onClick={() => onUpdateNote(createNoteCopy())}>Save</button>
-            </>
+            <ButtonGroup size={"sm"}>
+              <Button onClick={() => onUpdateNote(createNoteCopy())}>Save</Button>
+              <Button variant={"secondary"} onClick={() => onCancelEdit()}>Cancel</Button>
+            </ButtonGroup>
           )
         }
       </div>
       
       {/* Action to save draft*/}
       {note.draft && (
-        <div>
-          <button onClick={() => onSaveDraft(createNoteCopy())}>Save</button>
-          <button onClick={onCancelDraft}>Cancel</button>
-        </div>
+        <ButtonGroup size={"sm"}>
+          <Button onClick={() => onSaveDraft(createNoteCopy())}>Save</Button>
+          <Button variant={"secondary"}  onClick={onCancelDraft}>Cancel</Button>
+        </ButtonGroup>
       )}
         
     </NoteContainer>
