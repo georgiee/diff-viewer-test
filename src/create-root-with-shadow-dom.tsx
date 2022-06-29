@@ -12,21 +12,17 @@ import React from 'react';
  * I wrapped the approach in a convenient function to easily render any root wrapped by a shadow dom.
  */
 
-export const createRootWithShadowDom = (element) => {
-  const shadow = element.attachShadow({ mode: 'open' });
 
-  const styleSlot = document.createElement('section');
-  const renderIn = document.createElement('div');
+export const createRootWithShadowDom = (element, initFn: Function) => {
+  const shadowRoot = element.attachShadow({ mode: 'open' });
 
-  shadow.appendChild(styleSlot);
-  styleSlot.appendChild(renderIn);
-
-  const root = createRoot(shadow);
-
+  const root = createRoot(shadowRoot);
+  initFn && initFn(shadowRoot);
+  
   return {
     render: (children) => {
       root.render(
-        <StyleSheetManager target={styleSlot}>
+        <StyleSheetManager target={shadowRoot}>
           {children}
         </StyleSheetManager>
       )
