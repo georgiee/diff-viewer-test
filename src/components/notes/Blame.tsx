@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { NoteType } from '../../types';
 import { formatDate } from '../utils';
@@ -72,11 +72,21 @@ export function NoteBase({note, onSaveDraft, onCancelDraft, onUpdateNote, onEdit
      ...note, body: message
     }
   }
+  const textareaElement = useRef<HTMLTextAreaElement>();
+  
+  // autofocus the textarea when editing and place the cursor at the end of any given text
+  useEffect(() => {
+    if (editing && textareaElement.current) {
+      textareaElement.current.focus()
+      textareaElement.current.setSelectionRange(message.length, message.length);
+    }
+  }, [editing])
+
   
   return (
     <NoteContainer noteType={note.type}>
       <Meta note={note}/>
-      { editing && <textarea className="form-control mb-2" value={message} onChange={handleChange} placeholder="Provide your comment"/>}
+      { editing && <textarea ref={textareaElement} className="form-control mb-2" value={message} onChange={handleChange} placeholder="Provide your comment"/>}
       { !editing && note.body}
 
       {/* Actions while viewing*/}
