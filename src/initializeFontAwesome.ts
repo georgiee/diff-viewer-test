@@ -1,4 +1,7 @@
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faCheckSquare, faCoffee } from '@fortawesome/free-solid-svg-icons'
+import { faPlusCircle, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
+library.add(faPlusCircle, faPlusSquare)
 
-library.add(faCheckSquare, faCoffee)
+// import * as icons from '@fortawesome/free-solid-svg-icons'
+// const allIcons = Object.values(icons).filter(item => !!item.iconName) as any
+// library.add(...allIcons)

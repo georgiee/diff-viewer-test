@@ -5,6 +5,7 @@ import { locatorEqual } from '../utils';
 import { useStore } from '../providers/NotesContext';
 import { DiffMode, NoteType } from '../../types';
 import { NoteRenderer } from '../notes/NoteRenderer';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface LineProps {
   line: diffTypes.Line;
@@ -64,7 +65,7 @@ export const Line = ({ line }: LineProps) => {
         {
           (mode !== DiffMode.INTERVIEW) && (
             <ActionContainer onClick={() => addDraft && addDraft(line.locator)}>
-              {hoverActive && "+"}
+              {hoverActive && <FontAwesomeIcon size="1x" bounce icon="plus-square" />}
             </ActionContainer>
           )
         }

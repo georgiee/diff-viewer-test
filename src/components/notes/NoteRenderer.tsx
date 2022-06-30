@@ -2,13 +2,11 @@ import React, { useMemo } from 'react';
 import { DiffMode, NoteType } from '../../types';
 import { useStore } from '../providers/NotesContext';
 import { locatorEqual } from '../utils';
-import { NoteBase, SimpleNoteViewer } from './Blame';
-import { Note } from './Note';
+import { Note, SimpleNoteViewer } from './Note';
 
 export function NoteRenderer({locator}) {
   const notes = useStore((state: any) => state.notes)
   const mode = useStore((state: any) => state.mode)
-  const addDraft = useStore((state: any) => state.createDraft)
 
   const matchingNotes = useMemo(() => notes.filter(note => locatorEqual(note.locator, locator)), [notes]);
   
@@ -21,18 +19,11 @@ export function NoteRenderer({locator}) {
   
   // only view things
   if(mode == DiffMode.INTERVIEW) {
-    return matchingNotes.map(note => {
-      if(note.type == NoteType.ANNOTATION) {
-        return <SimpleNoteViewer key={note.id} note={note}/>
-      }else {
-        return <SimpleNoteViewer key={note.id} note={note}/>
-        // return <Note onSaveDraft={(note) => saveDraft(note) } note={note} key={note.id}/>
-      }
-    })
+    return matchingNotes.map(note => <SimpleNoteViewer key={note.id} note={note}/>)
   }else {
     return matchingNotes.map(note => {
         return (
-          <NoteBase
+          <Note
             note={note} key={note.id}
             onEditNote={() => editNote(note.id) }
             onCancelEdit={() => cancelEdit(note.id) }
@@ -43,16 +34,4 @@ export function NoteRenderer({locator}) {
         )
     })
   }
-  
-  
-  
-
-  //
-  // return notes.map(note => {
-  //     switch(note.type) {
-  //       case NoteType.ANNOTATION: return <div>some annotation</div>
-  //       case NoteType.COMMENT: return <div>some comment</div>
-  //       default: return  <div>unknown type</div>
-  //     }
-  //   })
 }

@@ -1,89 +1,98 @@
-import React, { useState } from 'react';
-import { Note as NoteType } from '../../types';
+import React, { useEffect, useRef, useState } from 'react';
+import { Button, ButtonGroup } from 'react-bootstrap';
+import { Meta, NoteContainer } from './base';
 
-interface NoteProps {
-  note: NoteType,
-  onCancelDraft: Function,
-  onSaveDraft: Function,
-  onDeleteAnnotation: Function,
-  onSaveAnnotation: Function,
-  onlyRead: boolean
+/**
+ * Display both comments and annotations without any interactions
+ */
+export function SimpleNoteViewer({note}) {
+  return (
+    <NoteContainer noteType={note.type}>
+      <Meta note={note}/>
+      {note.body}
+    </NoteContainer>
+  )
 }
 
-const DraftAnnotation = ({note, onSaveDraft, onCancelDraft}) => {
+const ActionBarSave = ({onSave, onCancel}) => {
+  return (
+    <ButtonGroup size={"sm"}>
+      <Button onClick={onSave}>Save</Button>
+      <Button variant={"secondary"} onClick={onCancel}>Cancel</Button>
+    </ButtonGroup>
+  )
+}
+
+const Message = ({editing, message, onChange}) => {
+  const textareaElement = useRef<HTMLTextAreaElement>(null);
+
+  // autofocus the textarea when editing and place the cursor at the end of any given text
+  useEffect(() => {
+    if (editing && textareaElement.current) {
+      textareaElement.current.focus()
+      textareaElement.current.setSelectionRange(message.length, message.length);
+    }
+  }, [editing])
+
+  
+  return (
+    <>
+      { editing && <textarea ref={textareaElement} className="form-control mb-2" value={message} onChange={onChange} placeholder="Provide your comment"/>}
+      { !editing && message}
+    </>
+  )
+}
+export function Note({note, onSaveDraft, onCancelDraft, onUpdateNote, onEditNote, onDeleteNote, onCancelEdit}) {
+  const [editing, setEdit] = useState(false)
   const [message, setMessage] = useState(note.body);
+  
 
   const handleChange = (event) => {
     setMessage(event.target.value);
   };
 
-  return (
-    <div >
-          <textarea
-            value={message} onChange={handleChange}
-            placeholder="Provide your comment"/>
+  useEffect(() => {
+    setEdit(note.edit || note.draft);
+  }, [note.edit, note.draft])
 
-      <div>
-        <small>💡 press <code>ctrl + enter</code> to save, <code>ESC</code> to cancel</small>
-      </div>
-
-      <hr/>
-
-      <div>
-        <button onClick={() => onSaveDraft({...note, body: message})}>Submit</button>
-        <button onClick={() => onCancelDraft(note)}>Cancel</button>
-      </div>
-    </div>
-
-  )
-}
-
-export function Note({ onlyRead, note, onCancelDraft, onSaveDraft, onDeleteAnnotation, onSaveAnnotation }: NoteProps) {
-  const [isEdit, setEdit] = useState(false)
-  
-
-  if(note.draft) { 
-    return <DraftAnnotation 
-              note={note} 
-              onCancelDraft={onCancelDraft} 
-              onSaveDraft={onSaveDraft}/>
-  }else {
-    const [message, setMessage] = useState(note.body);
-
-    const handleChange = (event) => {
-      setMessage(event.target.value);
-    };
-    
-    return (
-      <div>
-        {
-          isEdit ?  <textarea
-            value={message} onChange={handleChange}
-            placeholder="Provide your comment"/> : note.body 
-        }
-        
-        <hr/>
-        {
-          isEdit && <button onClick={() => setEdit(false)}>Cancel</button>
-        }
-        {
-          isEdit && <button onClick={() => onDeleteAnnotation(note)}>Delete</button>
-        }
-        {
-          !onlyRead && !isEdit && <button onClick={() => setEdit(true)}>Edit</button>
-        }
-        {
-          isEdit && <button onClick={() => {
-            onSaveAnnotation({
-              ...note,
-              body: message
-            })
-          
-            setEdit(false)
-          }
-          }>Save</button>
-        }
-    </div>
-    )
+  const createNoteCopy = () => {
+    return {
+     ...note, body: message
+    }
   }
+
+  
+  return (
+    <NoteContainer noteType={note.type}>
+      <Meta note={note}/>
+      <Message editing={editing} message={message} onChange={handleChange}/>
+
+      {/* Actions while viewing*/}
+      <div>
+        {
+          !editing && (
+            <ButtonGroup size={"sm"}>
+              <Button variant={"primary"} onClick={() => onEditNote()}>
+                Edit
+              </Button>
+              <Button variant={"danger"} onClick={() => onDeleteNote()}>Delete</Button>
+            </ButtonGroup>
+          )
+        }
+      </div>
+      
+      {/* Actions while edit a note */}
+      {
+        editing && !note.draft && (
+          <ActionBarSave onSave={() => onUpdateNote(createNoteCopy())}  onCancel={onCancelEdit}/>
+        )
+      }
+      
+      {/* Action to save draft*/}
+      {note.draft && (
+        <ActionBarSave onSave={() => onSaveDraft(createNoteCopy())}  onCancel={onCancelDraft}/>
+      )}
+        
+    </NoteContainer>
+  )
 }
