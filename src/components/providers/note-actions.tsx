@@ -13,18 +13,10 @@ const createDraftNote = (locator, type): Note => ({
 /**
  * A shared set of actions for annotations and comments as long as they are similar.
  * Annotations will grow but can still extend from this by reusing the functions.
- * 
+ *
  * It relies on a gener
  */
 export const createNoteActions = (noteApi, type) => (set, get, storeApi) => ({
-  cancelEdit: (id) => {
-    set(
-      produce((state: NotesState) => {
-        const note = find(state.notes, {id})
-        note.edit = false
-      })
-    )
-  },
   deleteNote: async (id) => {
     await noteApi.remove(id)
     set(
@@ -42,7 +34,23 @@ export const createNoteActions = (noteApi, type) => (set, get, storeApi) => ({
       })
     )
   },
-  updateNote: async (note) => {
+  createDraft: (locator) => {
+    set(
+      produce((state: NotesState) => {
+        state.notes.unshift(createDraftNote(locator, type))
+      })
+    )
+  },
+  create: async (note) => {
+    const newNote = await noteApi.create(note)
+    set(
+      produce((state: NotesState) => {
+        const index = state.notes.findIndex(item => item.id === note.id)
+        state.notes.splice(index, 1, newNote)
+      })
+    )
+  },
+  update: async (note) => {
     const updatedNote = await noteApi.update(note)
 
     set(
@@ -53,30 +61,30 @@ export const createNoteActions = (noteApi, type) => (set, get, storeApi) => ({
       })
     )
   },
-  createDraft: (locator) => {
+  cancelDraft: (id) => {
     set(
       produce((state: NotesState) => {
-        state.notes.unshift(createDraftNote(locator, type))
+        const givenNote = find(state.notes, {id})
+
+        if(givenNote.draft) {
+          givenNote.edit = false
+          const index = state.notes.findIndex(item => item.id === id)
+          state.notes.splice(index, 1)
+        }
       })
     )
   },
-  saveDraft: async (note) => {
-    const newNote = await noteApi.create(note)
+  cancel: (id) => {
     set(
       produce((state: NotesState) => {
-        const index = state.notes.findIndex(item => item.id === note.id)
-        state.notes.splice(index, 1, newNote)
-      })
-    )
-  },
-  cancelDraft: async (note) => {
-    if(!note.draft) {
-      return
-    }
-    set(
-      produce((state: NotesState) => {
-        const index = state.notes.findIndex(item => item.id === note.id)
-        state.notes.splice(index, 1)
+        const givenNote = find(state.notes, {id: id})
+
+        if(!givenNote.draft) {
+          givenNote.edit = false
+        }else {
+          const index = state.notes.findIndex(item => item.id === id)
+          state.notes.splice(index, 1)
+        }
       })
     )
   },
