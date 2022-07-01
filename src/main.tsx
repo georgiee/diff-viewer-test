@@ -25,7 +25,9 @@ function injectFontawesome(otherRoot: Document) {
   const robotFont = injectStylesheet("https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap")
   target.appendChild(robotFont)
 
-  const bootstrap = injectStylesheet("https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css")
+  // ⚠️ Warning boostrap 5.2 relies on css variables btu they use :root instead of :host so they do not get populated
+  // right now the rails host also loads the same css so it should be fine as css variables bleed into the shadow dom
+  const bootstrap = injectStylesheet("https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css")
   target.appendChild(bootstrap)
 }
 

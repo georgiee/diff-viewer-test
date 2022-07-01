@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { File } from './File';
 import { useDiff } from '../providers/DiffContext';
 import { useStore } from '../providers/NotesContext';
@@ -17,7 +17,7 @@ export const DiffViewer = () => {
 
   return (
     <div>
-      <h1>{diffData.title} ({diffData.id }) (Mode: {mode})</h1>
+      
       {
         files.map(file => <File file={file} key={file.index} />)
       }
