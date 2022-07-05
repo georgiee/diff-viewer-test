@@ -10,7 +10,7 @@ interface DiffContextData {
   diffData: any
   status: string,
   mode: string,
-  LineRenderer: React.FC<{ locator: Locator }> | null | undefined
+  LineRenderer: React.FC<{ locator: Locator, addDraftFnRef: React.Ref<Function> }> | null | undefined
 }
 export const useDiff = () => useContext<DiffContextData>(DiffContext as any) as DiffContextData;
 
