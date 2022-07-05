@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { DiffMode } from '../../types';
 import { useStore } from '../providers/NotesContext';
 import { locatorEqual } from '../utils';
@@ -9,11 +9,17 @@ import { Note, SimpleNoteViewer } from './Note';
  * and pick the correct note component variant.
  */
 
-export function NoteRenderer({locator}) {
+export function NoteRenderer({locator, addDraftFnRef}) {
   const notes = useStore((state: any) => state.notes)
   const mode = useStore((state: any) => state.mode)
 
   const matchingNotes = useMemo(() => notes.filter(note => locatorEqual(note.locator, locator)), [notes]);
+  
+  const addDraft = useStore((state: any) => state.createDraft)
+  
+  useEffect(() => {
+    addDraftFnRef.current = addDraft
+  }, []);
   
   const cancelNote = useStore((state: any) => state.cancel)
   const cancelDraft = useStore((state: any) => state.cancelDraft)

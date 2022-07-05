@@ -1,13 +1,15 @@
 import React from "react";
 import { File } from './File';
-import { useDiff } from '../providers/DiffContext';
-import { useStore } from '../providers/NotesContext';
+import { useDiff } from './DiffContext';
+import { useStore } from '../components/providers/NotesContext';
 
 export const DiffViewer = () => {
-  const { diffData, status, mode } = useDiff();
-
+  const { diffData, status} = useDiff();
+  
+  // TODO: REMOVE
   const fetch = useStore((state: any) => state.fetch);
   fetch()
+  
   if(status === 'error'){
     return <div style={{color: 'red'}}>⚠️ error loading the given diff</div>;
   }else if (status !== 'fetched') {
@@ -17,7 +19,6 @@ export const DiffViewer = () => {
 
   return (
     <div>
-      
       {
         files.map(file => <File file={file} key={file.index} />)
       }

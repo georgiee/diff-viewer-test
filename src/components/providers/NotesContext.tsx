@@ -1,4 +1,4 @@
-import React, { createContext } from 'react';
+import React, { createContext, useEffect } from 'react';
 import create from 'zustand'
 import createZustandContext from 'zustand/context'
 import { DiffMode, NoteType } from '../../types';
@@ -20,7 +20,6 @@ export interface NotesState {
   notes: any[]
 }
 
-
 export const NotesProvider = ({ children, apiClient, diffId, reviewId, mode }) => {
   /**
    * generate a specific set of actions for the given mode being annotate, review or interview
@@ -36,6 +35,15 @@ export const NotesProvider = ({ children, apiClient, diffId, reviewId, mode }) =
   const contextValue: NotesContextData = {
     items: []
   }
+
+  useEffect(() => {
+    const fetchData = async () => {
+     console.log('fetch note data once')
+    };
+
+    fetchData();
+  }, [diffId]);
+
 
   return (
     <Provider createStore={createStore}>

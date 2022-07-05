@@ -1,16 +1,13 @@
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import styled from "styled-components";
-import * as diffTypes from '../../types';
-import { locatorEqual } from '../utils';
-import { useStore } from '../providers/NotesContext';
-import { DiffMode, NoteType } from '../../types';
-import { NoteRenderer } from '../notes/NoteRenderer';
+import * as diffTypes from '../types';
+import { useDiff } from './DiffContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Locator } from '../types';
 
 interface LineProps {
   line: diffTypes.Line;
 }
-
 
 const LineContainer = styled.div<{ type: "context" | "add" | "remove" }>`
   display: grid;
@@ -47,10 +44,19 @@ const getLineGutter = (type: string) => {
 
 export const Line = ({ line }: LineProps) => {
   const [hoverActive, setHoverActive] = useState(false);
+  const addDraftFn = useRef<Function>(null);
 
-  const mode = useStore((state: any) => state.mode)
-  const addDraft = useStore((state: any) => state.createDraft)
+  const addDraft = useCallback(
+    (locator) => {
+      if(addDraftFn.current) {
+        addDraftFn.current(locator)
+      }
+    },
+    [addDraftFn.current],
+  );
   
+  const { readonly, LineRenderer} = useDiff()
+  // const addDraft = useStore((state: any) => state.createDraft)
   return (
     <>
       <LineContainer
@@ -61,9 +67,8 @@ export const Line = ({ line }: LineProps) => {
       >
         <div>{line.original_line_number}</div>
         <div>{line.new_line_number}</div>
-
         {
-          (mode !== DiffMode.INTERVIEW) && (
+          (!readonly) && (
             <ActionContainer onClick={() => addDraft && addDraft(line.locator)}>
               {hoverActive && <FontAwesomeIcon size="1x" bounce icon="plus-square" />}
             </ActionContainer>
@@ -74,7 +79,7 @@ export const Line = ({ line }: LineProps) => {
         <div>{line.content}</div>
       </LineContainer>
       
-      <NoteRenderer locator={line.locator}/>
+      { LineRenderer && <LineRenderer addDraftFnRef={addDraftFn} locator={line.locator}  /> }
     </>
   );
 };

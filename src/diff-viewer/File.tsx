@@ -1,7 +1,7 @@
 import React from "react";
 import { Hunk } from "./Hunk";
 import styled from "styled-components";
-import * as diffTypes from '../../types';
+import * as diffTypes from '../types';
 
 interface FileProps {
   file: diffTypes.File;

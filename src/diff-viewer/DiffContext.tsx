@@ -1,17 +1,20 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { createDiffApi } from '../../api';
+import { createDiffApi } from '../api';
+import { DiffMode, Locator } from '../types';
 
 const DiffContext = createContext('Default Value');
 
 interface DiffContextData {
+  readonly: boolean
   diffId: string
   diffData: any
   status: string,
-  mode: string
+  mode: string,
+  LineRenderer: React.FC<{ locator: Locator }> | null | undefined
 }
 export const useDiff = () => useContext<DiffContextData>(DiffContext as any) as DiffContextData;
 
-export const DiffProvider = ({ children, mode, apiClient, diffId }) => {
+export const DiffProvider = ({ children, mode, apiClient, diffId, lineRenderer = null }) => {
   const api = createDiffApi(apiClient, diffId)
   
   const [status, setStatus] = useState('idle');
@@ -30,10 +33,12 @@ export const DiffProvider = ({ children, mode, apiClient, diffId }) => {
 
 
   const contextValue: DiffContextData = {
+    LineRenderer: lineRenderer,
     diffId,
     mode,
     diffData: markup,
-    status
+    status,
+    readonly: mode === DiffMode.INTERVIEW
   }
   
   return (

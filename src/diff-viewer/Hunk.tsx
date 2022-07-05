@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import * as diffTypes from '../../types';
+import * as diffTypes from '../types';
 import { Line } from './Line';
 
 interface HunkProps {
