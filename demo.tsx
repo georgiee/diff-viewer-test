@@ -1,33 +1,34 @@
 import DiffViewer from './src/main';
+import axios from 'axios';
+
+const API_BASE = "http://satellytes.lvh.me:3000/api"
+
+// fetch some demo data includin tokens
+const {data}: any = await axios.get(`${API_BASE}/demo` ) ;
+
 const apiDatasets = {
-  reviewId: 18,
-  diffId: 39
-}
-const applicant = {
-  token: 'eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MjEsImV4cCI6MTY4NzkxMDQwMCwidHlwZSI6IkFwcGxpY2FudCJ9.cqY9yYakQ_VeyPbdICymKLCe57sY2BWGzg37kOeaXPI'
-}
-const admin = {
-  token: 'eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MTksImV4cCI6MTY4NzkxMDQwMCwidHlwZSI6IlVzZXIifQ.VVc1vsJa6ywdSSCA-vg_bChnnOutT9aVTwI186upGxo'
+  reviewId: data.reviewId,
+  diffId: data.diffId
 }
 
 DiffViewer.config({
-  API_BASE: "http://satellytes.lvh.me:3000/api"
+  API_BASE: `${API_BASE}/v1`
 });
 
 DiffViewer.attach(document.getElementById("root-annotations"), {
   ...apiDatasets,
-  ...admin,
+  token: data.userToken,
   mode: "annotate",
 })
 
 DiffViewer.attach(document.getElementById("root-comment"), {
   ...apiDatasets,
-  ...applicant,
+  token: data.applicantToken,
   mode: "comment", // interview (admin), annotate (admin) or comment (applicant), provide a matching token for the given role
 })
 
 DiffViewer.attach(document.getElementById("root-interview"), {
   ...apiDatasets,
-  ...admin,
+  token: data.userToken,
   mode: "interview", // interview (admin), annotate (admin) or comment (applicant), provide a matching token for the given role
 })

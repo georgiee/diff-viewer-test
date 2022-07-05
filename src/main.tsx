@@ -3,6 +3,7 @@ import "./initializeFontAwesome";
 
 import { App } from "./app"
 import { createRootWithShadowDom } from './create-root-with-shadow-dom';
+import { App2 } from './app2';
 
 let DiffConfig: any = {};
 
@@ -40,6 +41,6 @@ export default {
     const root = createRootWithShadowDom(element, shadowRoot => {
       injectFontawesome(shadowRoot);
     }); // createRoot(container!) if you use TypeScript
-    root.render(<App config={config}/>);
+    root.render(<App2 config={config}/>);
   }
 }
