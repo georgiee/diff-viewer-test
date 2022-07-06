@@ -3,7 +3,6 @@ import styled from "styled-components";
 import * as diffTypes from '../types';
 import { useDiff } from './DiffContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Locator } from '../types';
 
 interface LineProps {
   line: diffTypes.Line;

@@ -1,47 +1,52 @@
-import React, { createContext, useEffect } from 'react';
-import create from 'zustand'
+import React, { useEffect } from 'react';
+import create, { StoreApi } from 'zustand'
 import createZustandContext from 'zustand/context'
-import { DiffMode, NoteType } from '../../types';
-import { actionFactory, createNoteActions } from './note-actions';
+import { actionFactory } from '../../store/note-actions';
+import { Locator, Note } from '../../types';
 
-import * as api from '../../api';
+const context = createZustandContext<StoreApi<State>>()
+export const useStore = context.useStore;
 
-const NotesContext = createContext<any>(null);
-
-interface NotesContextData {
-  items: any[]
+export interface NotesMutations {
+  addDraft: (locator: Locator) => void
+  edit: (id: string) => void
+  cancel: (id: string) => void
+  fetch:  () => Promise<void>,
+  create: (note: Note) => Promise<void>,
+  update: (note: Note) => Promise<void>,
+  delete: (id: string) => Promise<void>,
 }
 
-const { Provider, useStore: useZustandStore } = createZustandContext()
-export const useStore = useZustandStore;
+export interface State {
+  mode: string;
+  notes: any[];
+  mutations: NotesMutations
+}
 
+const InitalizeStore = () => {
+  const fetch = useStore((state) => state.mutations.fetch);
 
-export interface NotesState {
-  notes: any[]
+  useEffect(() => {
+    fetch()
+
+  }, [])
+
+  return null;
 }
 
 export const NotesProvider = ({ children, apiClient, diffId, reviewId, mode }) => {
   const createActions = actionFactory(mode, apiClient, diffId, reviewId);
   
-  const createStore = () => create((set, get, api) => ({
+  const createStore = () => create<State>((set) => ({
     mode: mode,
     notes: [],
-    ...createActions(set, get, api),
-    initialize: () => {
-      console.log('initialize notes')
-    }
+    mutations: createActions(set)
   }))
   
-  const contextValue: NotesContextData = {
-    items: []
-  }
-
-
   return (
-    <Provider createStore={createStore}>
-      <NotesContext.Provider value={contextValue}>
-        {children}
-      </NotesContext.Provider>
-    </Provider>
+    <context.Provider createStore={createStore}>
+      <InitalizeStore/>
+      {children}
+    </context.Provider>
   );
 };

@@ -52,7 +52,7 @@ export const NoteContainer = styled.div`
 `
 
 
-export function Note({note, onSaveDraft, onCancelDraft, onUpdateNote, onEditNote, onDeleteNote, onCancelEdit}) {
+export function Note({note, onSave, onEditNote, onDeleteNote, onCancel}) {
   const [editing, setEdit] = useState(false)
   const [message, setMessage] = useState(note.body);
   
@@ -86,13 +86,13 @@ export function Note({note, onSaveDraft, onCancelDraft, onUpdateNote, onEditNote
         {/* Actions while edit a note */}
         {
           editing && !note.draft && (
-            <ActionBarSave onSave={() => onUpdateNote(createNoteCopy())}  onCancel={onCancelEdit}/>
+            <ActionBarSave onSave={() => onSave(createNoteCopy())}  onCancel={onCancel}/>
           )
         }
 
         {/* Action to save draft*/}
         {note.draft && (
-          <ActionBarSave onSave={() => onSaveDraft(createNoteCopy())}  onCancel={onCancelDraft}/>
+          <ActionBarSave onSave={() => onSave(createNoteCopy())}  onCancel={onCancel}/>
         )}
       </ActionContainer>
     </NoteContainer>
