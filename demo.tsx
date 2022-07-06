@@ -12,7 +12,7 @@ const apiDatasets = {
 }
 
 DiffViewer.config({
-  API_BASE: `${API_BASE}/v1`
+  API_BASE: `${API_BASE}/v2`
 });
 
 DiffViewer.attach(document.getElementById("root-annotations"), {

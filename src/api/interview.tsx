@@ -5,7 +5,7 @@ export function createInterviewApi(client, reviewId): NoteApiInterface {
    * comments
    */
   const fetch = async () => {
-    const response = await client.get(`/interview/${reviewId}`)
+    const response = await client.get(`/reviews/${reviewId}/interview`)
     return response.data;
   }
 
