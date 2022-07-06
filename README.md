@@ -8,6 +8,7 @@ Vite is the backbone for the building and bundling.
 
 ```
 # run a local integration example. Make sure the rails backedn is locally available.
+# This will mount a demo html file that will fetch data directly from Rails
 yarn dev
 
 # If you want to test the integration on the rails you need to provide the preview server
@@ -40,3 +41,12 @@ That's the most pragmatic way and we do not release on npm yet.
 
 If you need to bust the cache from jsdelivr invoke the url and swap `cdn` with `purge`
 `https://purge.jsdelivr.net/gh/georgiee/diff-viewer-test/dist/diff-viewer.umd.js`
+
+## Development
+The Diff Viewer to display the diff works as is without any involvement of comments & annotations.
+Instead it offers a way to pass in a `lineRenderer` that will be rendered after every single line.
+
+We use that to implement the commenting functionality on top of the diff viewer.
+Right now it's a provider to offer the data & api + the component which then fetches
+the necessary data per line (if any).
+

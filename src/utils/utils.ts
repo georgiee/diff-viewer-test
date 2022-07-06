@@ -6,7 +6,7 @@ export const locatorEqual = (a, b) => {
     a[2] === b[2] &&
     a[3] === b[3]
 }
-
+ 
 export const formatDate = dateString => {
   const date = new Date(dateString);
   return new Intl.DateTimeFormat('default', {dateStyle: 'long'}).format(date);

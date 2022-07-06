@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import { DiffMode } from '../../types';
 import { useStore } from '../providers/NotesContext';
-import { locatorEqual } from '../utils';
+import { locatorEqual } from '../../utils/utils';
 import { Note, SimpleNoteViewer } from './Note';
 
 /**

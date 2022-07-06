@@ -1,7 +1,7 @@
 import React from 'react';
-import "./initializeFontAwesome";
+import "./utils/initializeFontAwesome";
 
-import { createRootWithShadowDom } from './create-root-with-shadow-dom';
+import { createRootWithShadowDom } from './utils/create-root-with-shadow-dom';
 import { App } from './app';
 
 let DiffConfig: any = {};
