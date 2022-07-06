@@ -21,28 +21,20 @@ export interface NotesState {
 }
 
 export const NotesProvider = ({ children, apiClient, diffId, reviewId, mode }) => {
-  /**
-   * generate a specific set of actions for the given mode being annotate, review or interview
-   */
   const createActions = actionFactory(mode, apiClient, diffId, reviewId);
   
   const createStore = () => create((set, get, api) => ({
     mode: mode,
     notes: [],
-    ...createActions(set, get, api)
+    ...createActions(set, get, api),
+    initialize: () => {
+      console.log('initialize notes')
+    }
   }))
   
   const contextValue: NotesContextData = {
     items: []
   }
-
-  useEffect(() => {
-    const fetchData = async () => {
-     console.log('fetch note data once')
-    };
-
-    fetchData();
-  }, [diffId]);
 
 
   return (
