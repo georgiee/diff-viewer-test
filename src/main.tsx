@@ -3,6 +3,7 @@ import "./utils/initializeFontAwesome";
 
 import { createRootWithShadowDom } from './utils/create-root-with-shadow-dom';
 import { App } from './app';
+import { api } from './api';
 
 let DiffConfig: any = {};
 
@@ -37,6 +38,9 @@ export default {
   },
   attach: (element, instanceConfig = {}) => {
     const config = { ...DiffConfig, ...instanceConfig};
+    api.defaults.baseURL = config.API_BASE
+    api.defaults.headers.common['Authorization'] = 'Bearer '+ config.token;
+
     const root = createRootWithShadowDom(element, shadowRoot => {
       injectFontawesome(shadowRoot);
     }); // createRoot(container!) if you use TypeScript

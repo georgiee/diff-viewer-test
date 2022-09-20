@@ -51,7 +51,6 @@ export const NoteContainer = styled.div`
   ${({noteType}) => noteType == NoteType.ANNOTATION && css`background: #85b9ff`}
 `
 
-
 export function Note({note, onSave, onEditNote, onDeleteNote, onCancel}) {
   const [editing, setEdit] = useState(false)
   const [message, setMessage] = useState(note.body);

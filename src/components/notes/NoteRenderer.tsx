@@ -3,13 +3,14 @@ import { DiffMode } from '../../types';
 import { useStore } from '../providers/NotesContext';
 import { locatorEqual } from '../../utils/utils';
 import { Note, SimpleNoteViewer } from './Note';
+import { NoteComponentInterface } from '../../diff-viewer/shared';
 
 /**
  * The wiring component to connect our note with the store
  * and pick the correct note component variant.
  */
 
-export function NoteRenderer({locator, addDraftFnRef}) {
+export function NoteRenderer({locator, addDraftFnRef}: NoteComponentInterface) {
   const notes = useStore((state) => state.notes)
   const mode = useStore((state) => state.mode)
 
