@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { createDiffApi } from '../api';
 import { DiffMode, Locator } from '../types';
+import { createDiffApi } from '../api';
 
 const DiffContext = createContext('Default Value');
 
