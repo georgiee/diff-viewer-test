@@ -1,6 +1,5 @@
 import { api } from '../api';
 import { Note } from '../types';
-import { AnnotationConfigSingleton } from './config';
 
 /**
  * idea to organize 

@@ -9,8 +9,6 @@ import { NoteRenderer } from './components/notes/NoteRenderer';
 import { NotesProvider } from './components/providers/NotesContext';
 import { DiffMode } from './types';
 import { DiffAnnotation } from './annotation/DiffAnnotation';
-import { AnnotationConfigSingleton } from './annotation/config';
-
 
 const Debug = styled.div`
   text-align: right;
@@ -21,7 +19,6 @@ export function App({config: {API_BASE, diffId, token, mode, reviewId}}){
   const apiClient = createApiClient({base: API_BASE, token: token });
 
   if(mode == DiffMode.ANNOTATION) {
-    AnnotationConfigSingleton.initialize({diffId, mode})
     return <DiffAnnotation {...{API_BASE, diffId, token, mode, reviewId}}/>
   }
   
