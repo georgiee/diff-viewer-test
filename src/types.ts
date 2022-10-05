@@ -38,7 +38,7 @@ export interface ClientConfiguration {
 }
 
 export interface Note {
-  id?: string;
+  id: string;
   body: string;
   locator: Locator;
   draft?: boolean;

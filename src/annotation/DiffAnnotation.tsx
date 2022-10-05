@@ -15,7 +15,7 @@ const Debug = styled.div`
 export function DiffAnnotation({API_BASE, diffId, reviewId, mode, token}) {
   const apiClient = createApiClient({base: API_BASE, token: token });
 
-  // Create a client
+  // Create a mandatory client for react query
   const queryClient = new QueryClient()
   
   return (
