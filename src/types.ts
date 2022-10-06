@@ -44,9 +44,16 @@ export interface Note {
   draft?: boolean;
   created_at?: string;
   type: string;
-  
+  questions: Question[]
+
   // ui state
   edit?: boolean;
+}
+
+export interface Question {
+  id: string;
+  questions: string;
+  answer: string;
 }
 
 export enum DiffMode {

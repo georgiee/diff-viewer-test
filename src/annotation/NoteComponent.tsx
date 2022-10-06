@@ -1,7 +1,6 @@
 import React, { useReducer, useState } from 'react';
 import { Message } from '../components/notes/components/Message';
 import { Button, ButtonGroup } from 'react-bootstrap';
-import { MetaComponent } from './MetaComponent';
 import styled from 'styled-components';
 
 
@@ -28,7 +27,7 @@ export const NoteComponent = ({note, onSave, onDelete, onCancel}) => {
       body: message
     })
   }
-
+  
   return (
     <Container>
       <Message editing={isEditing} message={message} onChange={(event) => setMessage(event.target.value)}/>
@@ -42,8 +41,6 @@ export const NoteComponent = ({note, onSave, onDelete, onCancel}) => {
             toggleEditing(); onCancel()
           }}>Cancel</Button>}
         </ButtonGroup>
-        
-        <MetaComponent />
       </div>
     </Container>
   )

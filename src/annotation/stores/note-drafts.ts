@@ -1,4 +1,4 @@
-import { Locator, Note, NoteType } from '../types';
+import { Locator, Note, NoteType } from '../../types';
 import create from 'zustand';
 import produce from 'immer';
 

@@ -12,6 +12,12 @@ export async function patchNote(diffId, {id, note}) {
   })
 }
 
+export async function setQuestions(diffId, {id, questions}) {
+  return api.post<Note>(`/diffs/${diffId}/notes/${id}/questions`, {
+    questions: questions
+  })
+}
+
 export async function deleteNote(diffId, {id}){
   return api.delete<Note>( `/diffs/${diffId}/notes/${id}`)
 }

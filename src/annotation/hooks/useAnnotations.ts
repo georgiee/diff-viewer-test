@@ -18,11 +18,17 @@ export const useAnnotations = (diffId) => {
   const newAnnotation = useMutation(async (params: { body: string, locator: Locator}) => {
     return noteApi.newNote(diffId, params)
   }, {onSuccess: () => queryClient.invalidateQueries(['annotations'])})
+
+
+  const setQuestions = useMutation(async (params: { id: string, questions: string[] }) => {
+    return noteApi.setQuestions(diffId, params)
+  }, {onSuccess: () => queryClient.invalidateQueries(['annotations'])})
   
   return {
     annotationsQuery,
     updateAnnotation,
     deleteAnnotation,
-    newAnnotation
+    newAnnotation,
+    setQuestions
   }
 }
