@@ -3,7 +3,7 @@ import { locatorEqual } from '../utils/utils';
 import { Note } from '../types';
 import { NoteComponentInterface } from '../diff-viewer/shared';
 import { useDiff } from '../diff-viewer/DiffContext';
-import { useAnnotations } from './useAnnotations';
+import { useAnnotations } from './hooks/useAnnotations';
 import { NoteComponent } from './NoteComponent';
 import { useAnnotationDrafts } from './store';
 

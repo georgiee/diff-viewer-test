@@ -2,6 +2,7 @@ import React, { useReducer, useState } from 'react';
 import { Message } from '../components/notes/components/Message';
 import { Button, ButtonGroup } from 'react-bootstrap';
 import styled from 'styled-components';
+import { useQuestions } from './hooks/useQuestions';
 
 const Container = styled.div`
   border: 1px dotted red;
@@ -10,12 +11,16 @@ const Container = styled.div`
 `
 
 export const MetaComponent = () => {
+  const {questionsQuery} = useQuestions()
+  const { isLoading, isError, data, error } = questionsQuery
+  
+  if (isLoading) {
+    return <span>Loading...</span>
+  }
 
-  const availableQuestions = [
-    { value: 'chocolate', label: 'The first question' },
-    { value: 'strawberry', label: 'The second question' },
-  ]
-
+  if (isError) {
+    return <span>Error</span>
+  }
 
   return (
     <div>
@@ -42,8 +47,8 @@ export const MetaComponent = () => {
         <label>
           <p>Assign related questions that are interesting in the context of this annotation</p>
           <select multiple>
-            {availableQuestions.map(item => (
-              <option key={item.value}>{item.label}</option>
+            {data.map(item => (
+              <option key={item.id}>{item.question}</option>
             ))}
           </select>
         </label>
