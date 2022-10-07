@@ -30,6 +30,13 @@ export const NoteComponent = ({note, onSave, onDelete, onCancel}) => {
   
   return (
     <Container>
+      {note.author && (
+        <div>
+          <strong>Author</strong>:
+          {note.author.name}
+        </div>
+      ) }
+      
       <Message editing={isEditing} message={message} onChange={(event) => setMessage(event.target.value)}/>
 
       <div>

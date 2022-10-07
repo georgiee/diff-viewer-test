@@ -9,6 +9,8 @@ const Container = styled.div`
 `
 
 export const MetaComponent = ({saveQuestionsCallback, questions}) => {
+  return;
+  
   const {questionsQuery} = useQuestions()
 
   const { isLoading, isError, data, error } = questionsQuery

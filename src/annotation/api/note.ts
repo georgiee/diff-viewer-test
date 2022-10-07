@@ -7,29 +7,29 @@ import { Note } from '../../types';
  * https://betterprogramming.pub/7-tips-for-using-react-query-in-large-projects-22ccc49d61c2
  */
 export async function patchNote(diffId, {id, note}) {
-  return api.patch<Note>(`/diffs/${diffId}/notes/${id}`, {
+  return api.patch<Note>(`/diffs/${diffId}/annotations/${id}`, {
     body: note.body
   })
 }
 
 export async function setQuestions(diffId, {id, questions}) {
-  return api.post<Note>(`/diffs/${diffId}/notes/${id}/questions`, {
+  return api.post<Note>(`/diffs/${diffId}/annotations/${id}/questions`, {
     questions: questions
   })
 }
 
 export async function deleteNote(diffId, {id}){
-  return api.delete<Note>( `/diffs/${diffId}/notes/${id}`)
+  return api.delete<Note>( `/diffs/${diffId}/annotations/${id}`)
 }
 
 export async function fetchNotes (diffId){
-  return api.get(`/diffs/${diffId}/notes`).then(res => {
+  return api.get(`/diffs/${diffId}/annotations`).then(res => {
     return res.data
   })
 }
 
 export async function newNote(diffId, {body, locator}){
-  const url = `/diffs/${diffId}/notes`
+  const url = `/diffs/${diffId}/annotations`
 
   const meta = {optional: true}
   const data = {body: body, locator: locator.join(','), meta: meta}
