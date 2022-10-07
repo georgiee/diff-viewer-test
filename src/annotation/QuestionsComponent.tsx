@@ -8,8 +8,11 @@ const Container = styled.div`
   background-color: antiquewhite;
 `
 
-export const MetaComponent = ({saveQuestionsCallback, questions}) => {
-  return;
+export const QuestionsComponent = ({saveQuestionsCallback, questions}) => {
+  
+  if(!questions) {
+    return <div>error with questions</div>
+  }
   
   const {questionsQuery} = useQuestions()
 
@@ -49,32 +52,17 @@ export const MetaComponent = ({saveQuestionsCallback, questions}) => {
   
   return (
     <div>
-      {/*<div>*/}
-      {/*  Skill Level*/}
-      {/*  */}
-      {/*  <p>Select the minimum level this issue should be found by</p>*/}
-
-      {/*  <label>*/}
-      {/*    Junior <input type={'radio'}/>*/}
-      {/*  </label>*/}
-      {/*  <label>*/}
-      {/*    Intermediate <input type={'radio'}/>*/}
-      {/*  </label>*/}
-      {/*  <label>*/}
-      {/*    Expert <input type={'radio'}/>*/}
-      {/*  </label>*/}
-      {/*  */}
-      {/*</div>*/}
-  
       <Container>
         <label>
           <p>Assign related questions that are interesting in the context of this annotation</p>
           <button onClick={handleAddQuestions}>Update Questions</button>
+          
           {!isEditingQuestions && (
             <div>
-          {questions.map(question => (<div key={question.id}>{question.question}</div>))}
+                {questions.map(question => (<div key={question.id}>{question.question}</div>))}
             </div>
           )}
+          
           {isEditingQuestions && (
             <div>
               <select defaultValue={givenQuestionIds} multiple onChange={handleSelectedQuestionsChanged}>

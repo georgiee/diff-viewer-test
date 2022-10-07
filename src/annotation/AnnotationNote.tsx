@@ -6,26 +6,22 @@ import { useDiff } from '../diff-viewer/DiffContext';
 import { useAnnotations } from './hooks/useAnnotations';
 import { NoteComponent } from './NoteComponent';
 import { useAnnotationDrafts } from './stores/note-drafts';
-import { MetaComponent } from './MetaComponent';
+import { QuestionsComponent } from './QuestionsComponent';
 
 export function AnnotationNote(data: NoteComponentInterface) {
   const {diffId} = useDiff();
   
-  const {annotationsQuery, updateAnnotation, deleteAnnotation, newAnnotation, setQuestions  } = useAnnotations(diffId)
+  const {annotationsQuery, updateAnnotation, deleteAnnotation, newAnnotation, saveQuestions  } = useAnnotations(diffId)
   
   const drafts = useAnnotationDrafts(state => state.drafts);
   const draftMutations = useAnnotationDrafts(state => state.mutations);
   
   useEffect(() => {
     data.addDraftFnRef.current = (locator) => draftMutations.addDraft(locator)
-  }, []);
+  }, [draftMutations]);
   
   const notes = drafts.concat(annotationsQuery.data ?? [])
   const matchingNotes = useMemo(() => notes.filter(note => locatorEqual(note.locator, data.locator)) || [], [annotationsQuery.data, drafts]);
-
-  const saveQuestions = (noteId, questionIds) => {
-    setQuestions.mutate({id: noteId, questions: questionIds})
-  }
   
   return matchingNotes.map((note: Note) => {
     return (
@@ -43,9 +39,11 @@ export function AnnotationNote(data: NoteComponentInterface) {
             }
           }}
           onDelete={() => deleteAnnotation.mutate({ id: note.id })}/>
-          <MetaComponent
+        { !note.draft && (
+          <QuestionsComponent
             questions={note.questions}
-            saveQuestionsCallback={(questionIds) => saveQuestions(note.id, questionIds)}/>
+            saveQuestionsCallback={(questionIds) => saveQuestions.mutate({id: note.id, questions: questionIds}) }/>
+        )}
       </Fragment>
     )
   })
