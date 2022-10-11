@@ -44,7 +44,19 @@ export interface Note {
   draft?: boolean;
   created_at?: string;
   type: string;
-  questions: Question[]
+  questions?: Question[]
+
+  // ui state
+  edit?: boolean;
+}
+
+export interface Comment {
+  id: string;
+  body: string;
+  locator: Locator;
+  draft?: boolean;
+  created_at?: string;
+  type: string;
 
   // ui state
   edit?: boolean;

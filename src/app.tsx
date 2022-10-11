@@ -9,6 +9,7 @@ import { NoteRenderer } from './components/notes/NoteRenderer';
 import { NotesProvider } from './components/providers/NotesContext';
 import { DiffMode } from './types';
 import { DiffAnnotation } from './annotation/DiffAnnotation';
+import { DiffComment } from './comment/DiffComment';
 
 const Debug = styled.div`
   text-align: right;
@@ -19,9 +20,13 @@ export function App({config: {API_BASE, diffId, token, mode, reviewId}}){
   const apiClient = createApiClient({base: API_BASE, token: token });
 
   if(mode == DiffMode.ANNOTATION) {
-    return <DiffAnnotation {...{API_BASE, diffId, token, mode, reviewId}}/>
+    return <DiffAnnotation {...{API_BASE, diffId, token, mode}}/>
   }
-  
+
+  if(mode == DiffMode.COMMENT) {
+    return <DiffComment {...{API_BASE, diffId, token, mode, reviewId}}/>
+  }
+
   return (
     <NotesProvider apiClient={apiClient} reviewId={reviewId} diffId={diffId} mode={mode}>
       <DiffProvider apiClient={apiClient} diffId={diffId} mode={mode} lineRenderer={NoteRenderer as any}>
