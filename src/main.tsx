@@ -3,7 +3,7 @@ import "./utils/initializeFontAwesome";
  
 import { createRootWithShadowDom } from './utils/create-root-with-shadow-dom';
 import { App } from './app';
-import { api } from './api';
+import { api } from './shared/api';
 
 let DiffConfig: any = {};
 

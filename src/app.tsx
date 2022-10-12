@@ -1,8 +1,8 @@
 import React from 'react';
 import { DiffMode } from './types';
-import { DiffAnnotation } from './annotation/DiffAnnotation';
-import { DiffComment } from './comment/DiffComment';
-import { DiffInterview } from './interview/DiffInterview';
+import { DiffAnnotation } from './line-modules/annotation/DiffAnnotation';
+import { DiffComment } from './line-modules/comment/DiffComment';
+import { DiffInterview } from './line-modules/interview/DiffInterview';
 
 export function App({config: {API_BASE, diffId, token, mode, reviewId}}){
   if(mode == DiffMode.ANNOTATION) {

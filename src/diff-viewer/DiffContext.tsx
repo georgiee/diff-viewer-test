@@ -1,7 +1,7 @@
-import React, { createContext, FunctionComponent, ReactElement, useContext, useEffect, useState } from 'react';
-import { DiffMode, Locator } from '../types';
-import { createDiffApi } from '../api';
+import React, { createContext, FunctionComponent, useContext, useEffect, useState } from 'react';
+import { DiffMode } from '../types';
 import { NoteComponentInterface } from './shared';
+import { api } from '../shared/api';
 
 const DiffContext = createContext('Default Value');
 
@@ -22,8 +22,13 @@ interface DiffProviderProps {
   diffId: string
   lineRenderer: FunctionComponent<NoteComponentInterface> | null
 }
+
+const getDiff = async (diffId) => {
+  const response = await api.get(`/diffs/${diffId}`)
+  return response.data;
+}
+
 export const DiffProvider = ({ children, mode, apiClient, diffId, lineRenderer = null }: DiffProviderProps) => {
-  const api = createDiffApi(apiClient, diffId)
   
   const [status, setStatus] = useState('idle');
   const [markup, setMarkup] = useState({});
@@ -31,7 +36,7 @@ export const DiffProvider = ({ children, mode, apiClient, diffId, lineRenderer =
   useEffect(() => {
     const fetchData = async () => {
       setStatus('fetching');
-      const markup = await api.getDiff();
+      const markup = await getDiff(diffId);
       setMarkup(markup);
       setStatus('fetched');
     };
