@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo } from 'react';
-import { useComments } from './hooks/useComments';
-import { useCommentDrafts } from './stores/drafts';
-import { Comment, Note } from '../types';
-import { locatorEqual } from '../utils/utils';
-import { NoteComponentInterface } from '../diff-viewer/shared';
+import { useComments } from '../hooks/useComments';
+import { useCommentDrafts } from '../stores/drafts';
+import { Comment, Note } from '../../types';
+import { locatorEqual } from '../../utils/utils';
+import { NoteComponentInterface } from '../../diff-viewer/shared';
 import { NoteComponent } from './NoteComponent';
 
 export function CommentNote(data: NoteComponentInterface) {

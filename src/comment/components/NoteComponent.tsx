@@ -1,5 +1,5 @@
 import React, { useReducer, useState } from 'react';
-import { Message } from '../components/notes/components/Message';
+import { Message } from '../../components/notes/components/Message';
 import { Button, ButtonGroup } from 'react-bootstrap';
 import styled from 'styled-components';
 

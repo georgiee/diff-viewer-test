@@ -5,8 +5,9 @@ import { DiffViewer } from '../diff-viewer/DiffViewer';
 import { createApiClient } from '../api/base';
 import styled from 'styled-components';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { CommentNote } from './components/CommentNote';
-import { useCommentDrafts } from './stores/drafts';
+import { InterviewNote } from './components/InterviewNote';
+import { useCommentDrafts } from '../comment/stores/drafts';
+import { useInterviewStore } from './stores/interview';
 
 const Debug = styled.div`
   text-align: right;
@@ -19,9 +20,9 @@ const Debug = styled.div`
  * which makes it easier to grow on the Rails side too.
  */
 
-export function DiffComment({API_BASE, diffId, reviewId, mode, token}) {
+export function DiffInterview({API_BASE, diffId, reviewId, mode, token}) {
   const apiClient = createApiClient({base: API_BASE, token: token });
-  const setReviewId = useCommentDrafts(state => state.mutations.setReviewId);
+  const setReviewId = useInterviewStore(store => store.mutations.setReviewId);
 
   setReviewId(reviewId);
   
@@ -30,7 +31,7 @@ export function DiffComment({API_BASE, diffId, reviewId, mode, token}) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <DiffProvider apiClient={apiClient} diffId={diffId} mode={mode} lineRenderer={CommentNote as any}>
+      <DiffProvider apiClient={apiClient} diffId={diffId} mode={mode} lineRenderer={InterviewNote}>
         <GlobalStyle />
 
         <Debug>

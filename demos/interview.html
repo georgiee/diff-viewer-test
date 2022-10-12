@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/src/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="node_modules/react-select/dist/react-select.css">
+    <title>Diff Viewer Vite App</title>
+    <style>
+        .grid {
+            display: grid;
+            justify-content: center;
+        }
+
+        .grid-item {
+            resize: horizontal;
+            overflow: auto;
+        }
+    </style>
+</head>
+<body>
+<div class="grid">
+    <div class="grid-item" id="root-annotations"></div>
+</div>
+<script type="module">
+  import DiffViewer from '../src/main';
+  import axios from 'axios';
+
+  const API_BASE = "http://satellytes.lvh.me:3000/api"
+
+  // fetch some demo data includin tokens
+  const {data} = await axios.get(`${API_BASE}/demo` ) ;
+
+  const apiDatasets = {
+    reviewId: data.reviewId,
+    diffId: data.diffId
+  }
+
+  DiffViewer.config({
+    API_BASE: `${API_BASE}/v2`
+  });
+
+  DiffViewer.attach(document.getElementById("root-annotations"), {
+    ...apiDatasets,
+    token: data.userToken,
+    mode: "interview",
+  })
+
+</script>
+</body>
+</html>

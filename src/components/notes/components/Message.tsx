@@ -1,6 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, { ChangeEventHandler, useEffect, useRef } from 'react';
 
-export const Message = ({editing, message, onChange}) => {
+interface MessageProps {
+  onChange?: ChangeEventHandler<HTMLTextAreaElement>
+  message: string;
+  editing?: boolean;
+}
+export const Message = ({editing = false, message, onChange}: MessageProps) => {
   const textareaElement = useRef<HTMLTextAreaElement>(null);
 
   // autofocus the textarea when editing and place the cursor at the end of any given text

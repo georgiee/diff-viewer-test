@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, FunctionComponent, ReactElement, useContext, useEffect, useState } from 'react';
 import { DiffMode, Locator } from '../types';
 import { createDiffApi } from '../api';
+import { NoteComponentInterface } from './shared';
 
 const DiffContext = createContext('Default Value');
 
@@ -10,11 +11,18 @@ interface DiffContextData {
   diffData: any
   status: string,
   mode: string,
-  LineRenderer: React.FC<{ locator: Locator, addDraftFnRef: React.Ref<Function> }> | null | undefined
+  LineRenderer: FunctionComponent<NoteComponentInterface> | null
 }
 export const useDiff = () => useContext<DiffContextData>(DiffContext as any) as DiffContextData;
 
-export const DiffProvider = ({ children, mode, apiClient, diffId, lineRenderer = null }) => {
+interface DiffProviderProps {
+  children: React.ReactElement[]
+  mode: string
+  apiClient: any
+  diffId: string
+  lineRenderer: FunctionComponent<NoteComponentInterface> | null
+}
+export const DiffProvider = ({ children, mode, apiClient, diffId, lineRenderer = null }: DiffProviderProps) => {
   const api = createDiffApi(apiClient, diffId)
   
   const [status, setStatus] = useState('idle');
