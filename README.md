@@ -35,6 +35,7 @@ as the umd build ensures there is a global set to access, configuring and run th
 In case you want to integrate in production you can pull the latest build 
 from `"https://cdn.jsdelivr.net/gh/georgiee/diff-viewer-test/dist/diff-viewer.umd.js`.
  
+## Release
 In order to release you have to run `yarn build` and check in the latest `dist/` folder.
 That's the most pragmatic way and we do not release on npm yet.
 
