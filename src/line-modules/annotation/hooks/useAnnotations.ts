@@ -7,11 +7,19 @@ export const useAnnotations = (diffId) => {
   
   const annotationsQuery = useQuery(['annotations'], () => noteApi.fetchNotes(diffId))
 
-  const updateAnnotation = useMutation(async (params: { id: string, note: any }) => {
-    return noteApi.patchNote(diffId, params.id, {body: params.note.body})
+  const updateAnnotation = useMutation(async (data: { id: string, payload: any }) => {
+    return noteApi.patchNote(diffId, data.id, data.payload)
   }, {
-    onSuccess: (updatedAnnotation, variables) => {
-      queryClient.setQueryData(['annotations', variables.id], updatedAnnotation)
+
+    onSuccess: (newAnnotation: any) => {
+      // optimistic update instead of invalidating everything. no error handling yet.
+      queryClient.setQueryData(['annotations'], (old: any) => {
+        const index =  old.findIndex(obj => obj.id === newAnnotation.id)
+        const newList = old.slice(0)
+        newList.splice(index, 1, newAnnotation)
+
+        return newList
+      })
     },
   })
 
@@ -49,7 +57,6 @@ export const useAnnotations = (diffId) => {
     annotationsQuery,
     updateAnnotation,
     deleteAnnotation,
-    newAnnotation,
-    saveQuestions
+    newAnnotation
   }
 }

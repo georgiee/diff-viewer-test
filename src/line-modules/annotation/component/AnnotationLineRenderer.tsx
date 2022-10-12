@@ -6,12 +6,11 @@ import { useDiff } from '../../../diff-viewer/DiffContext';
 import { useAnnotations } from '../hooks/useAnnotations';
 import { NoteComponent } from './NoteComponent';
 import { useAnnotationDrafts } from '../stores/note-drafts';
-import { QuestionsComponent } from './QuestionsComponent';
 
 export function AnnotationLineRenderer(data: NoteComponentInterface) {
   const {diffId} = useDiff();
   
-  const {annotationsQuery, updateAnnotation, deleteAnnotation, newAnnotation, saveQuestions  } = useAnnotations(diffId)
+  const {annotationsQuery, updateAnnotation, deleteAnnotation, newAnnotation } = useAnnotations(diffId)
   
   const drafts = useAnnotationDrafts(state => state.drafts);
   const draftMutations = useAnnotationDrafts(state => state.mutations);
@@ -35,15 +34,10 @@ export function AnnotationLineRenderer(data: NoteComponentInterface) {
                 onSuccess: () => draftMutations.removeDraft(newNote)
               })
             }else {
-              updateAnnotation.mutate({ id: newNote.id, note: newNote })
+              updateAnnotation.mutate({ id: newNote.id, payload: newNote })
             }
           }}
           onDelete={() => deleteAnnotation.mutate({ id: note.id })}/>
-        { !note.draft && (
-          <QuestionsComponent
-            questions={note.questions}
-            saveQuestionsCallback={(questionIds) => saveQuestions.mutate({id: note.id, questions: questionIds}) }/>
-        )}
       </Fragment>
     )
   })

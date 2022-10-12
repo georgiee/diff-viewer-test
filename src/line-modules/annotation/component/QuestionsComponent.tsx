@@ -6,9 +6,10 @@ const Container = styled.div`
   border: 1px dotted red;
   padding: 10px;
   background-color: antiquewhite;
+  margin-top: 20px;
 `
 
-export const QuestionsComponent = ({saveQuestionsCallback, questions}) => {
+export const QuestionsComponent = ({saveQuestionsCallback, questions, onChangeQuestions, editing}) => {
   
   if(!questions) {
     return <div>error with questions</div>
@@ -17,8 +18,6 @@ export const QuestionsComponent = ({saveQuestionsCallback, questions}) => {
   const {questionsQuery} = useQuestions()
 
   const { isLoading, isError, data, error } = questionsQuery
-  const [isEditingQuestions, toggleEditingQuestions] = useReducer((state) => !state, false);
-  const [selectedQuestions, setSelectedQuestions] = useState<string[]>();
   
   if (isLoading) {
     return <span>Loading...</span>
@@ -28,55 +27,39 @@ export const QuestionsComponent = ({saveQuestionsCallback, questions}) => {
     return <span>Error</span>
   }
 
-  
-  const handleAddQuestions = () => {
-    toggleEditingQuestions()
-  }
-  
-  const handleSaveQuestions = () => {
-    saveQuestionsCallback(selectedQuestions);
-    toggleEditingQuestions()
-  }
-
-  const handleCancelQuestions = () => {
-    setSelectedQuestions([]);
-    toggleEditingQuestions()
-  }
-
   const handleSelectedQuestionsChanged = (event) => {
     const values = Array.from(event.target.selectedOptions, (option:any) => option.value);
-    setSelectedQuestions(values)
+    onChangeQuestions(values)
   }
   
   const givenQuestionIds = questions.map(q => q.id);
   
-  return (
-    <div>
+  if(editing) {
+    return (
       <Container>
-        <label>
-          <p>Assign related questions that are interesting in the context of this annotation</p>
-          <button onClick={handleAddQuestions}>Update Questions</button>
-          
-          {!isEditingQuestions && (
-            <div>
-                {questions.map(question => (<div key={question.id}>{question.question}</div>))}
-            </div>
-          )}
-          
-          {isEditingQuestions && (
-            <div>
-              <select defaultValue={givenQuestionIds} multiple onChange={handleSelectedQuestionsChanged}>
-                {data.map(item => (
-                  <option key={item.id} value={item.id}>{item.question}</option>
-                ))}
-              </select>
-              <br/>
-              <button onClick={handleSaveQuestions}>Save</button>
-              <button onClick={handleCancelQuestions}>Cancel</button>
-            </div>
-          )}
-        </label>
+        <p>Assign related questions that are interesting in the context of this annotation</p>
+        <div>
+          <select defaultValue={givenQuestionIds} multiple onChange={handleSelectedQuestionsChanged}>
+            {data.map(item => (
+              <option key={item.id} value={item.id}>{item.question}</option>
+            ))}
+          </select>
+        </div>
       </Container>
-    </div>
-  )
+    )
+  }else if(questions.length > 0) {
+    return (
+      <Container>
+        <details>
+          <summary>
+            <strong>Assigned Questions({questions.length})</strong>
+          </summary>
+          {questions.map(question => (<div key={question.id}>{question.question}</div>))}
+        </details>
+      </Container>
+    )
+  }
+  
+  
+  return null
 }
