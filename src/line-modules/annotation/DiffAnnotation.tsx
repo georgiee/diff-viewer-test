@@ -3,7 +3,7 @@ import { DiffProvider } from '../../diff-viewer/DiffContext';
 import { GlobalStyle } from '../../globalStyles';
 import { DiffViewer } from '../../diff-viewer/DiffViewer';
 import styled from 'styled-components';
-import { AnnotationNote } from './component/AnnotationNote';
+import { AnnotationLineRenderer } from './component/AnnotationLineRenderer';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createApiClient } from '../../shared/api';
 
@@ -26,7 +26,7 @@ export function DiffAnnotation({API_BASE, diffId, mode, token}) {
   
   return (
     <QueryClientProvider client={queryClient}>
-      <DiffProvider apiClient={apiClient} diffId={diffId} mode={mode} lineRenderer={AnnotationNote as any}>
+      <DiffProvider apiClient={apiClient} diffId={diffId} mode={mode} lineRenderer={AnnotationLineRenderer as any}>
         <GlobalStyle />
   
         <Debug>

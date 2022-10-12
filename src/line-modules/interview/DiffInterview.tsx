@@ -4,7 +4,7 @@ import { GlobalStyle } from '../../globalStyles';
 import { DiffViewer } from '../../diff-viewer/DiffViewer';
 import styled from 'styled-components';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { InterviewNote } from './components/InterviewNote';
+import { InterviewLineRenderer } from './components/InterviewLineRenderer';
 import { useInterviewStore } from './stores/interview';
 import { createApiClient } from '../../shared/api';
 
@@ -30,7 +30,7 @@ export function DiffInterview({API_BASE, diffId, reviewId, mode, token}) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <DiffProvider apiClient={apiClient} diffId={diffId} mode={mode} lineRenderer={InterviewNote}>
+      <DiffProvider apiClient={apiClient} diffId={diffId} mode={mode} lineRenderer={InterviewLineRenderer}>
         <GlobalStyle />
 
         <Debug>

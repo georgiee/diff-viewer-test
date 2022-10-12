@@ -8,7 +8,7 @@ import { NoteComponent } from './NoteComponent';
 import { useAnnotationDrafts } from '../stores/note-drafts';
 import { QuestionsComponent } from './QuestionsComponent';
 
-export function AnnotationNote(data: NoteComponentInterface) {
+export function AnnotationLineRenderer(data: NoteComponentInterface) {
   const {diffId} = useDiff();
   
   const {annotationsQuery, updateAnnotation, deleteAnnotation, newAnnotation, saveQuestions  } = useAnnotations(diffId)

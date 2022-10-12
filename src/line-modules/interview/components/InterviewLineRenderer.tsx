@@ -6,7 +6,7 @@ import { NoteComponent } from './NoteComponent';
 import { useInterview } from '../hooks/useInterview';
 import { useInterviewStore } from '../stores/interview';
 
-export function InterviewNote(data: NoteComponentInterface) {
+export function InterviewLineRenderer(data: NoteComponentInterface) {
   const reviewId = useInterviewStore(store => store.reviewId)
   const {commentsQuery} = useInterview(reviewId);
 

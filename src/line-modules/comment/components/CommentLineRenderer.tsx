@@ -6,7 +6,7 @@ import { locatorEqual } from '../../../utils/utils';
 import { NoteComponentInterface } from '../../../diff-viewer/shared';
 import { NoteComponent } from './NoteComponent';
 
-export function CommentNote(data: NoteComponentInterface) {
+export function CommentLineRenderer(data: NoteComponentInterface) {
   
   const reviewId = useCommentDrafts(state => state.reviewId);
 

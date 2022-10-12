@@ -4,7 +4,7 @@ import { GlobalStyle } from '../../globalStyles';
 import { DiffViewer } from '../../diff-viewer/DiffViewer';
 import styled from 'styled-components';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { CommentNote } from './components/CommentNote';
+import { CommentLineRenderer } from './components/CommentLineRenderer';
 import { useCommentDrafts } from './stores/drafts';
 import { createApiClient } from '../../shared/api';
 
@@ -30,7 +30,7 @@ export function DiffComment({API_BASE, diffId, reviewId, mode, token}) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <DiffProvider apiClient={apiClient} diffId={diffId} mode={mode} lineRenderer={CommentNote as any}>
+      <DiffProvider apiClient={apiClient} diffId={diffId} mode={mode} lineRenderer={CommentLineRenderer as any}>
         <GlobalStyle />
 
         <Debug>
