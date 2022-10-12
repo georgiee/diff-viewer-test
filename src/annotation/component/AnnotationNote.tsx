@@ -1,11 +1,11 @@
 import React, { Fragment, useEffect, useMemo } from 'react';
-import { locatorEqual } from '../utils/utils';
-import { Note } from '../types';
-import { NoteComponentInterface } from '../diff-viewer/shared';
-import { useDiff } from '../diff-viewer/DiffContext';
-import { useAnnotations } from './hooks/useAnnotations';
+import { locatorEqual } from '../../utils/utils';
+import { Note } from '../../types';
+import { NoteComponentInterface } from '../../diff-viewer/shared';
+import { useDiff } from '../../diff-viewer/DiffContext';
+import { useAnnotations } from '../hooks/useAnnotations';
 import { NoteComponent } from './NoteComponent';
-import { useAnnotationDrafts } from './stores/note-drafts';
+import { useAnnotationDrafts } from '../stores/note-drafts';
 import { QuestionsComponent } from './QuestionsComponent';
 
 export function AnnotationNote(data: NoteComponentInterface) {

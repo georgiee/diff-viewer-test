@@ -1,6 +1,6 @@
 import React, { useReducer, useState } from 'react';
 import styled from 'styled-components';
-import { useQuestions } from './hooks/useQuestions';
+import { useQuestions } from '../hooks/useQuestions';
 
 const Container = styled.div`
   border: 1px dotted red;

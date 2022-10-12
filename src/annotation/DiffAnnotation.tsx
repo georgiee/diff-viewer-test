@@ -4,7 +4,7 @@ import { GlobalStyle } from '../globalStyles';
 import { DiffViewer } from '../diff-viewer/DiffViewer';
 import { createApiClient } from '../api/base';
 import styled from 'styled-components';
-import { AnnotationNote } from './AnnotationNote';
+import { AnnotationNote } from './component/AnnotationNote';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const Debug = styled.div`
