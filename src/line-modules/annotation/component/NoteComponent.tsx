@@ -19,7 +19,7 @@ export const NoteComponent = ({note, onSave, onDelete, onCancel}) => {
   }, note.draft);
 
   const [message, setMessage] = useState(note.body);
-  const [selectedQuestions, setSelectedQuestions] = useState<string[]>(note.questions.map(q => q.id));
+  const [selectedQuestions, setSelectedQuestions] = useState<string[]>(note.questions?.map(q => q.id));
   
   function saveNote() {
     toggleEditing()
