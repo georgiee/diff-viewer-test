@@ -3,7 +3,7 @@ import { Message } from '../../../shared/Message';
 import { Button, ButtonGroup } from 'react-bootstrap';
 import styled from 'styled-components';
 import { QuestionsComponent } from './QuestionsComponent';
-
+import ReactMarkdown from 'react-markdown'
 
 const Container = styled.div`
   background-color:  floralwhite;
@@ -43,8 +43,15 @@ export const NoteComponent = ({note, onSave, onDelete, onCancel}) => {
           {note.author.name}
         </div>
       ) }
+
+      {
+        isEditing ? <Message 
+          editing={true} 
+          message={message} 
+          onChange={(event) => setMessage(event.target.value)}/> : <ReactMarkdown>{message}</ReactMarkdown>
+      }
       
-      <Message editing={isEditing} message={message} onChange={(event) => setMessage(event.target.value)}/>
+      
 
       {
         !note.draft && (
