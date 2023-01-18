@@ -8,6 +8,8 @@ import { InterviewLineRenderer } from './components/InterviewLineRenderer';
 import { useInterviewStore } from './stores/interview';
 import { createApiClient } from '../../shared/api';
 import { InterviewGutterRenderer } from './components/InterviewGutterRenderer';
+import { isVisibleAtom, useInterview } from './hooks/useInterview';
+import { useAtom } from 'jotai';
 
 const Debug = styled.div`
   text-align: right;
@@ -28,9 +30,13 @@ export function DiffInterview({API_BASE, diffId, reviewId, mode, token}) {
   
   // Create a mandatory client for react query
   const queryClient = new QueryClient()
-
+  const [visible, toggleVisibility] = useAtom(isVisibleAtom)
+  
   return (
     <QueryClientProvider client={queryClient}>
+      <div>
+        <button onClick={() => toggleVisibility()}>toggle all</button>
+      </div>
       <DiffProvider 
         apiClient={apiClient} diffId={diffId} mode={mode}
         gutterRenderer={InterviewGutterRenderer}

@@ -25,12 +25,12 @@ export const LineContentMarker = styled.div`
 
 export function InterviewGutterRenderer(data: GutterComponentInterface) {
   const reviewId = useInterviewStore(store => store.reviewId)
-  const {commentsQuery} = useInterview(reviewId);
+  const {commentsQuery, toggleNoteVisibility} = useInterview(reviewId);
 
   const notes = commentsQuery.data ?? []
   const matchingNotes = notes.filter(note => locatorEqual(note.locator, data.locator))
-
+  
   return matchingNotes.map((note: Note) => (
-    <LineContentMarker key={note.id} noteType={note.type}/>
+    <LineContentMarker key={note.id} noteType={note.type} onClick={() => toggleNoteVisibility(note.id)}/>
   )) 
 }

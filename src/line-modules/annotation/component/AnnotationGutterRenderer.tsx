@@ -3,8 +3,6 @@ import { Note, NoteType } from '../../../types';
 import { locatorEqual } from '../../../utils/utils';
 import { GutterComponentInterface } from '../../../diff-viewer/shared';
 import styled, { css } from 'styled-components';
-import { useCommentDrafts } from '../stores/drafts';
-import { useComments } from '../hooks/useComments';
 import { useDiff } from '../../../diff-viewer/DiffContext';
 import { useAnnotations } from '../hooks/useAnnotations';
 import { useAnnotationDrafts } from '../stores/note-drafts';
