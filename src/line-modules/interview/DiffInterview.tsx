@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { InterviewLineRenderer } from './components/InterviewLineRenderer';
 import { useInterviewStore } from './stores/interview';
 import { createApiClient } from '../../shared/api';
+import { InterviewGutterRenderer } from './components/InterviewGutterRenderer';
 
 const Debug = styled.div`
   text-align: right;
@@ -30,7 +31,10 @@ export function DiffInterview({API_BASE, diffId, reviewId, mode, token}) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <DiffProvider apiClient={apiClient} diffId={diffId} mode={mode} lineRenderer={InterviewLineRenderer}>
+      <DiffProvider 
+        apiClient={apiClient} diffId={diffId} mode={mode}
+        gutterRenderer={InterviewGutterRenderer}
+        lineRenderer={InterviewLineRenderer}>
         <GlobalStyle />
 
         <Debug>

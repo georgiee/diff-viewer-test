@@ -10,7 +10,7 @@ interface LineProps {
 
 const LineContainer = styled.div<{ type: "context" | "add" | "remove" }>`
   display: grid;
-  grid-template-columns: 50px 50px 30px 30px auto 1fr;
+  grid-template-columns: 50px 50px 50px 30px 30px auto 1fr;
   white-space: pre;
 
   padding-left: 16px;
@@ -40,6 +40,10 @@ const getLineGutter = (type: string) => {
   }
 };
 
+export const LineGutterMarkerContainer = styled.div`
+  display: flex;
+  align-items: center;
+`
 
 export const Line = ({ line }: LineProps) => {
   const [hoverActive, setHoverActive] = useState(false);
@@ -54,7 +58,13 @@ export const Line = ({ line }: LineProps) => {
     [addDraftFn.current],
   );
   
-  const { readonly, LineRenderer} = useDiff()
+  const toggleLineContentFn =() => {
+    console.log('toggle line content')
+  }
+  const toggleLineContentFnRef = useRef<Function>(toggleLineContentFn);
+  
+  const { readonly, LineRenderer, GutterRenderer} = useDiff()
+  
   // const addDraft = useStore((state: any) => state.createDraft)
   return (
     <>
@@ -64,6 +74,10 @@ export const Line = ({ line }: LineProps) => {
         onMouseEnter={() => setHoverActive(true)}
         onMouseLeave={() => setHoverActive(false)}
       >
+        {/*line content markers*/}
+        <LineGutterMarkerContainer>
+          { GutterRenderer && <GutterRenderer toggleLineContentFnRef={toggleLineContentFnRef} locator={line.locator}  /> }
+        </LineGutterMarkerContainer>
         <div>{line.original_line_number}</div>
         <div>{line.new_line_number}</div>
         {
