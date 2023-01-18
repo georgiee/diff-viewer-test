@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { AnnotationLineRenderer } from './component/AnnotationLineRenderer';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createApiClient } from '../../shared/api';
+import { AnnotationGutterRenderer } from './component/AnnotationGutterRenderer';
 
 const Debug = styled.div`
   text-align: right;
@@ -26,7 +27,11 @@ export function DiffAnnotation({API_BASE, diffId, mode, token}) {
   
   return (
     <QueryClientProvider client={queryClient}>
-      <DiffProvider apiClient={apiClient} diffId={diffId} mode={mode} lineRenderer={AnnotationLineRenderer as any}>
+      <DiffProvider 
+        apiClient={apiClient} diffId={diffId} 
+        mode={mode}
+        gutterRenderer={AnnotationGutterRenderer}
+        lineRenderer={AnnotationLineRenderer as any}>
         <GlobalStyle />
   
         <Debug>

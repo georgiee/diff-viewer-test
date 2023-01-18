@@ -1,15 +1,10 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Note, NoteType } from '../../../types';
 import { locatorEqual } from '../../../utils/utils';
 import { GutterComponentInterface } from '../../../diff-viewer/shared';
-import { NoteComponent } from './NoteComponent';
-import { useInterview } from '../hooks/useInterview';
-import { useInterviewStore } from '../stores/interview';
 import styled, { css } from 'styled-components';
-
-interface GutterContentProps {
-  note: Note
-}
+import { useCommentDrafts } from '../stores/drafts';
+import { useComments } from '../hooks/useComments';
 
 export const LineContentMarker = styled.div`
   aspect-ratio: 1;
@@ -23,14 +18,19 @@ export const LineContentMarker = styled.div`
 `
 
 
-export function InterviewGutterRenderer(data: GutterComponentInterface) {
-  const reviewId = useInterviewStore(store => store.reviewId)
-  const {commentsQuery} = useInterview(reviewId);
+export function CommentGutterRenderer(data: GutterComponentInterface) {
 
-  const notes = commentsQuery.data ?? []
-  const matchingNotes = notes.filter(note => locatorEqual(note.locator, data.locator))
+  const reviewId = useCommentDrafts(state => state.reviewId);
 
+  const {commentsQuery} = useComments(reviewId);
+
+  const drafts = useCommentDrafts(state => state.drafts);
+
+
+  const comments = drafts.concat(commentsQuery.data ?? [])
+  const matchingNotes = useMemo(() => comments.filter(note => locatorEqual(note.locator, data.locator)) || [], [commentsQuery.data, drafts]);
+  
   return matchingNotes.map((note: Note) => (
     <LineContentMarker key={note.id} noteType={note.type}/>
-  )) 
+  )) as any;
 }

@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { CommentLineRenderer } from './components/CommentLineRenderer';
 import { useCommentDrafts } from './stores/drafts';
 import { createApiClient } from '../../shared/api';
+import { CommentGutterRenderer } from './components/CommentGutterRenderer';
 
 const Debug = styled.div`
   text-align: right;
@@ -30,7 +31,11 @@ export function DiffComment({API_BASE, diffId, reviewId, mode, token}) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <DiffProvider apiClient={apiClient} diffId={diffId} mode={mode} lineRenderer={CommentLineRenderer as any}>
+      <DiffProvider
+        apiClient={apiClient} diffId={diffId} 
+        mode={mode} 
+        gutterRenderer={CommentGutterRenderer}
+        lineRenderer={CommentLineRenderer as any}>
         <GlobalStyle />
 
         <Debug>
