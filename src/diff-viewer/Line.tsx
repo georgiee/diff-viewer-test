@@ -74,10 +74,11 @@ export const Line = ({ line }: LineProps) => {
         onMouseEnter={() => setHoverActive(true)}
         onMouseLeave={() => setHoverActive(false)}
       >
-        {/*line content markers*/}
+        {/*line gutter markers*/}
         <LineGutterMarkerContainer>
           { GutterRenderer && <GutterRenderer toggleLineContentFnRef={toggleLineContentFnRef} locator={line.locator}  /> }
         </LineGutterMarkerContainer>
+        
         <div>{line.original_line_number}</div>
         <div>{line.new_line_number}</div>
         {
